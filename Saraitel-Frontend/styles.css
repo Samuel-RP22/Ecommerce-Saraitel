@@ -1,0 +1,355 @@
+/* ==========================================
+   CONFIGURACIÓN GENERAL Y RESETS
+========================================== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f5f9;
+    color: #1e293b;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Contenedor unificado para centrar y dar balance horizontal */
+.store-layout, .auth-container, #vistaCrearProducto, #vistaModificarProducto {
+    max-width: 1400px; /* Evita que se estire hasta las esquinas en pantallas gigantes */
+    width: 92%;        /* Le da aire limpio a los lados en pantallas medianas */
+    margin: 0 auto;    /* ¡El truco maestro para centrar todo horizontalmente! */
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   HEADER PRINCIPAL (CENTRADO)
+========================================== */
+header {
+    background-color: #0f172a;
+    color: white;
+    padding: 15px 0;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Alinea el contenido interno del header con el resto de la tienda */
+header > div:first-child, 
+header .header-wrap { 
+    max-width: 1400px;
+    width: 92%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+#userPanel {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* fallback si no tienes un contenedor interno en el HTML para el header */
+header {
+    display: flex;
+    justify-content: center;
+}
+header h1, #userPanel {
+    max-width: 1400px;
+}
+
+/* ==========================================
+   DISTRIBUCIÓN DE LA TIENDA (LAYOUT) - ¡ACTUALIZADO!
+========================================== */
+.store-layout {
+    display: block;       /* Cambiamos de grid a block para que no reserve espacio invisible a la derecha */
+    width: 92%;           /* Mantiene un margen limpio a los lados */
+    max-width: 1400px;    /* Evita que se estire demasiado en pantallas gigantes */
+    margin: 0 auto;       /* Centra perfectamente todo el bloque de la tienda */
+    padding: 20px 0;
+}
+
+.col-main {
+    width: 100%;          /* Obliga al contenedor del catálogo a usar todo el ancho disponible */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Rediseño de la cuadrícula para que distribuya y centre los productos de forma simétrica */
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Tarjetas ligeramente más grandes y estéticas */
+    gap: 30px;            /* Espaciado elegante y uniforme entre cada producto */
+    justify-content: center; /* Si sobra espacio, centra los elementos restantes de la última fila */
+    width: 100%;
+}
+
+/* ==========================================
+   CUADRÍCULA DE PRODUCTOS (EXPANDIDA)
+========================================== */
+.productos-grid {
+    display: grid;
+    /* Auto-ajuste para rellenar el espacio horizontal de forma fluida */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px; 
+    padding: 10px 0;
+}
+
+/* Tarjetas de Producto Modernas */
+.card-item {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e2e8f0;
+}
+
+.card-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.producto-img-container {
+    width: 100%;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.producto-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* ==========================================
+   COMPONENTES DE TARJETAS (CARDS)
+========================================== */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.card-header-admin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+.card-header-admin h2 {
+    margin: 0;
+}
+
+/* ==========================================
+   PANEL ADMINISTRADOR (EXPANDIDO)
+========================================== */
+.admin-sections-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Columnas perfectas e iguales */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.admin-box {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 300px;
+}
+
+/* ==========================================
+   VISTAS DE LOGIN Y REGISTRO
+========================================== */
+.auth-container {
+    text-align: center;
+    max-width: 550px;
+    margin-top: 80px;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+/* ==========================================
+   ETIQUETAS DE CATEGORÍAS (TAGS)
+========================================== */
+#categorias {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.categoria-tag {
+    background-color: #e2e8f0;
+    color: #334155;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* ==========================================
+   BOTONES
+========================================== */
+button {
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.95rem;
+}
+
+.btn-success { background-color: #10b981; color: white; }
+.btn-success:hover { background-color: #059669; }
+
+.btn-danger { background-color: #ef4444; color: white; }
+.btn-danger:hover { background-color: #dc2626; }
+
+.btn-dark-blue { background-color: #2563eb; color: white; }
+.btn-dark-blue:hover { background-color: #1d4ed8; }
+
+.btn-secondary { background-color: #64748b; color: white; }
+.btn-secondary:hover { background-color: #475569; }
+
+.btn-add {
+    background-color: #0f172a;
+    color: white;
+    margin-top: 10px;
+}
+.btn-add:hover { background-color: #1e293b; }
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+/* ==========================================
+   UTILIDADES
+========================================== */
+.hidden {
+    display: none !important;
+}
+
+.text-muted {
+    color: #64748b;
+}
+
+/* Responsividad para pantallas medianas o celulares */
+@media (max-width: 1024px) {
+    .store-layout {
+        grid-template-columns: 1fr;
+    }
+    .admin-sections-grid {
+        grid-template-columns: 1fr;
+    }
+    .col-side {
+        position: static;
+    }
+}
+
+/* Añade esto al final de tu CSS si el título no se alinea con las tarjetas */
+.col-main > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* ==========================================
+   PERFIL, RECUPERAR ACCESO (Sprint 1)
+========================================== */
+#vistaPerfil {
+    max-width: 1400px;
+    width: 92%;
+    margin: 0 auto;
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+
+.perfil-card {
+    max-width: 500px;
+    margin: 40px auto;
+    text-align: left;
+}
+
+.perfil-card label {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.perfil-card input:disabled {
+    background-color: #f1f5f9;
+    color: #475569;
+    cursor: not-allowed;
+}
+
+.link-olvido {
+    margin: 14px 0 0;
+    font-size: 0.9rem;
+}
+
+.link-olvido a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.link-olvido a:hover {
+    text-decoration: underline;
+}
+
+.info-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e3a8a;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-align: left;
+    margin-bottom: 8px;
+}

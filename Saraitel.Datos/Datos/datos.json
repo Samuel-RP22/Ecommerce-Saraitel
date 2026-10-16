@@ -1,0 +1,971 @@
+{
+  "Usuarios": [
+    {
+      "tipo": "Administrador",
+      "IdUsuario": 1,
+      "Nombre": "Samuel Ria\u00F1o",
+      "Correo": "samuelriapati222008@gmail.com",
+      "Telefono": "3158185857",
+      "Contrasena": "3158185857s",
+      "Rol": "Administrador",
+      "TokenRecuperacion": null,
+      "FechaExpiracionToken": null
+    },
+    {
+      "tipo": "Cliente",
+      "Direccion": "Cra 46 Nro 30 40",
+      "HistorialCompras": [
+        {
+          "IdPedido": 1,
+          "Fecha": "2026-05-28T07:27:17.6118761-05:00",
+          "EstadoPedido": "Pagado",
+          "TotalPedido": 300000,
+          "Productos": [
+            {
+              "IdProducto": 6,
+              "Nombre": "Note 15/15 pro",
+              "Descripcion": "Anti-impactos",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://http2.mlstatic.com/D_NQ_NP_607344-MCO106756035216_022026-O.webp",
+              "Categoria": {
+                "IdCategoria": 3,
+                "NombreCategoria": "Estuches Xiaomi"
+              }
+            },
+            {
+              "IdProducto": 34,
+              "Nombre": "Tripode 163cm",
+              "Descripcion": "Tripode 64 Pulgadas",
+              "Precio": 250000,
+              "Stock": 10,
+              "Imagen": "https://http2.mlstatic.com/D_NQ_NP_721481-MCO92797538353_092025-O.webp",
+              "Categoria": {
+                "IdCategoria": 10,
+                "NombreCategoria": "Tripodes"
+              }
+            }
+          ]
+        },
+        {
+          "IdPedido": 2,
+          "Fecha": "2026-07-24T18:38:48.1608708-05:00",
+          "EstadoPedido": "Pagado",
+          "TotalPedido": 100000,
+          "Productos": [
+            {
+              "IdProducto": 54,
+              "Nombre": "Audifonos iPhone",
+              "Descripcion": "Audifonos BT495",
+              "Precio": 45000,
+              "Stock": 10,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2023/03/audifono-iphone-b01-iph-1.jpeg",
+              "Categoria": {
+                "IdCategoria": 15,
+                "NombreCategoria": "Aud\u00EDfonos"
+              }
+            },
+            {
+              "IdProducto": 1,
+              "Nombre": "17 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 55000,
+              "Stock": 10,
+              "Imagen": "https://mobilestore.ec/wp-content/uploads/2025/10/CASE-ArtsCase-Impact-Hybrid-MagSafe-for-Apple-iPhone-17-Clear-Mobile-Store-Ecuador.jpg",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            }
+          ]
+        }
+      ],
+      "Carrito": {
+        "IdCarrito": 0,
+        "ListaProductos": [],
+        "CantidadProductos": 0,
+        "TotalCompra": 0
+      },
+      "IdUsuario": 2,
+      "Nombre": "Alejandra Pati\u00F1o",
+      "Correo": "alepatisaraitel@gmail.com",
+      "Telefono": "3113898080",
+      "Contrasena": "3113898080",
+      "Rol": "Cliente",
+      "TokenRecuperacion": null,
+      "FechaExpiracionToken": null
+    }
+  ],
+  "Productos": [
+    {
+      "IdProducto": 1,
+      "Nombre": "17 Pro Max",
+      "Descripcion": "Space",
+      "Precio": 55000,
+      "Stock": 10,
+      "Imagen": "https://mobilestore.ec/wp-content/uploads/2025/10/CASE-ArtsCase-Impact-Hybrid-MagSafe-for-Apple-iPhone-17-Clear-Mobile-Store-Ecuador.jpg",
+      "Categoria": {
+        "IdCategoria": 1,
+        "NombreCategoria": "Estuches iPhone"
+      }
+    },
+    {
+      "IdProducto": 2,
+      "Nombre": "16 Pro Max",
+      "Descripcion": "Space",
+      "Precio": 50000,
+      "Stock": 10,
+      "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+      "Categoria": {
+        "IdCategoria": 0,
+        "NombreCategoria": "Estuches iPhone"
+      }
+    },
+    {
+      "IdProducto": 3,
+      "Nombre": "15 Pro Max",
+      "Descripcion": "Space",
+      "Precio": 50000,
+      "Stock": 10,
+      "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+      "Categoria": {
+        "IdCategoria": 1,
+        "NombreCategoria": "Estuches iPhone"
+      }
+    },
+    {
+      "IdProducto": 4,
+      "Nombre": "Note 13/13 Pro",
+      "Descripcion": "Anti-impactos",
+      "Precio": 45000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_825892-MCO74849834239_032024-O.webp",
+      "Categoria": {
+        "IdCategoria": 3,
+        "NombreCategoria": "Estuches Xiaomi"
+      }
+    },
+    {
+      "IdProducto": 5,
+      "Nombre": "Note 14 Pro",
+      "Descripcion": "Anti-impactos",
+      "Precio": 45000,
+      "Stock": 10,
+      "Imagen": "https://exitocol.vtexassets.com/arquivos/ids/30724461/funda-estuche-forro-antichoque-reforzado-para-xiaomi-note-14-pro-5g-note-14-pro-plus-5g-note-14-pro-4g-poco-x7.jpg?v=638930277770930000",
+      "Categoria": {
+        "IdCategoria": 3,
+        "NombreCategoria": "Estuches Xiaomi"
+      }
+    },
+    {
+      "IdProducto": 6,
+      "Nombre": "Note 15/15 pro",
+      "Descripcion": "Anti-impactos",
+      "Precio": 50000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_607344-MCO106756035216_022026-O.webp",
+      "Categoria": {
+        "IdCategoria": 3,
+        "NombreCategoria": "Estuches Xiaomi"
+      }
+    },
+    {
+      "IdProducto": 7,
+      "Nombre": "A36/56",
+      "Descripcion": "Dise\u00F1o Resistente",
+      "Precio": 40000,
+      "Stock": 10,
+      "Imagen": "https://neocases.net/upload/items/2025/2/7880_350.jpg?atv=82284",
+      "Categoria": {
+        "IdCategoria": 2,
+        "NombreCategoria": "Estuches Samsung"
+      }
+    },
+    {
+      "IdProducto": 8,
+      "Nombre": "A35/55",
+      "Descripcion": "Dise\u00F1o Resistente",
+      "Precio": 40000,
+      "Stock": 10,
+      "Imagen": "https://phonetify.com.co/wp-content/uploads/productos/fundas/shockproof/imagenes/galaxy-a35-5g/rose%CC%81_galaxy-a35-5g.webp",
+      "Categoria": {
+        "IdCategoria": 2,
+        "NombreCategoria": "Estuches Samsung"
+      }
+    },
+    {
+      "IdProducto": 9,
+      "Nombre": "S24 Ultra",
+      "Descripcion": "Dise\u00F1o Anti-impactos",
+      "Precio": 45000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_950894-MLU78223369651_082024-O.webp",
+      "Categoria": {
+        "IdCategoria": 2,
+        "NombreCategoria": "Estuches Samsung"
+      }
+    },
+    {
+      "IdProducto": 10,
+      "Nombre": "S25 Ultra",
+      "Descripcion": "Anti-impactos",
+      "Precio": 50000,
+      "Stock": 10,
+      "Imagen": "https://latiendajak.com.co/cdn/shop/files/1_c711c4c4-3623-4f66-934f-6f220ee33134.jpg?v=1737748526",
+      "Categoria": {
+        "IdCategoria": 2,
+        "NombreCategoria": "Estuches Samsung"
+      }
+    },
+    {
+      "IdProducto": 11,
+      "Nombre": "A16",
+      "Descripcion": "Smart Clear Magn\u00E9tico",
+      "Precio": 90000,
+      "Stock": 10,
+      "Imagen": "https://media.falabella.com/falabellaCO/147557379_01/w=1500,h=1500,fit=cover",
+      "Categoria": {
+        "IdCategoria": 4,
+        "NombreCategoria": "Estuches Ipad"
+      }
+    },
+    {
+      "IdProducto": 12,
+      "Nombre": "Air 11",
+      "Descripcion": "Smart Case",
+      "Precio": 95000,
+      "Stock": 10,
+      "Imagen": "https://media.falabella.com/falabellaCO/143256735_01/w=1004,h=1500,fit=pad",
+      "Categoria": {
+        "IdCategoria": 4,
+        "NombreCategoria": "Estuches Ipad"
+      }
+    },
+    {
+      "IdProducto": 13,
+      "Nombre": "Boombox 3",
+      "Descripcion": "Parlante JBL",
+      "Precio": 300000,
+      "Stock": 10,
+      "Imagen": "https://mac-center.com/cdn/shop/products/JBLBOOMBOX3BLKA-1.jpg?v=1679420122",
+      "Categoria": {
+        "IdCategoria": 5,
+        "NombreCategoria": "Bafles"
+      }
+    },
+    {
+      "IdProducto": 14,
+      "Nombre": "S1 Pro",
+      "Descripcion": "Bafle BOSE",
+      "Precio": 290000,
+      "Stock": 10,
+      "Imagen": "https://carulla.vtexassets.com/arquivos/ids/8142892/parlante-bose-s1-pro-portatil-multiposicion-inalambrico-con-bateria-recargable.jpg?v=637904971456700000",
+      "Categoria": {
+        "IdCategoria": 5,
+        "NombreCategoria": "Bafles"
+      }
+    },
+    {
+      "IdProducto": 15,
+      "Nombre": "JBL Charge 6",
+      "Descripcion": "Portatil WaterProof",
+      "Precio": 250000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_647411-MCO93579702722_102025-O.webp",
+      "Categoria": {
+        "IdCategoria": 5,
+        "NombreCategoria": "Bafles"
+      }
+    },
+    {
+      "IdProducto": 16,
+      "Nombre": "Ultra 2",
+      "Descripcion": "Apple Watch 49MM",
+      "Precio": 2000000,
+      "Stock": 10,
+      "Imagen": "https://mac-center.com/cdn/shop/files/Watch_Ultra2_LTE_49mm_Titanium_White_Ocean_Band_PDP_Image_Position-1__COES_607c25f9-bd82-465c-b6fc-32dd3c0b8740.jpg?v=1719770109",
+      "Categoria": {
+        "IdCategoria": 6,
+        "NombreCategoria": "SmartWatch"
+      }
+    },
+    {
+      "IdProducto": 17,
+      "Nombre": "Series 11",
+      "Descripcion": "Apple Watch 46MM",
+      "Precio": 1900000,
+      "Stock": 10,
+      "Imagen": "https://mac-center.com/cdn/shop/files/IMG-18077343_m_jpeg_1_bea8676b-990e-4b25-bf01-a8d1fea773da.jpg?v=1757464789",
+      "Categoria": {
+        "IdCategoria": 6,
+        "NombreCategoria": "SmartWatch"
+      }
+    },
+    {
+      "IdProducto": 18,
+      "Nombre": "Watch 5 Active",
+      "Descripcion": "Xiaomi Watch IPX8",
+      "Precio": 200000,
+      "Stock": 10,
+      "Imagen": "https://media.falabella.com/falabellaCO/136972313_01/w=1500,h=1500,fit=cover",
+      "Categoria": {
+        "IdCategoria": 6,
+        "NombreCategoria": "SmartWatch"
+      }
+    },
+    {
+      "IdProducto": 19,
+      "Nombre": "USB 4GB",
+      "Descripcion": "USB Kingston",
+      "Precio": 22000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_886164-MCO77550965740_072024-O.webp",
+      "Categoria": {
+        "IdCategoria": 7,
+        "NombreCategoria": "USB\u0027s"
+      }
+    },
+    {
+      "IdProducto": 20,
+      "Nombre": "USB 8GB",
+      "Descripcion": "USB Kingston",
+      "Precio": 28000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_869385-MCO32410141231_102019-O.webp",
+      "Categoria": {
+        "IdCategoria": 7,
+        "NombreCategoria": "USB\u0027s"
+      }
+    },
+    {
+      "IdProducto": 21,
+      "Nombre": "USB 16GB",
+      "Descripcion": "USB Kingston",
+      "Precio": 35000,
+      "Stock": 10,
+      "Imagen": "https://exitocol.vtexassets.com/arquivos/ids/29853403/memoria-usb-16gb-kingston-metalica.jpg?v=638920328899630000",
+      "Categoria": {
+        "IdCategoria": 7,
+        "NombreCategoria": "USB\u0027s"
+      }
+    },
+    {
+      "IdProducto": 22,
+      "Nombre": "USB 32GB",
+      "Descripcion": "USB Kingston",
+      "Precio": 45000,
+      "Stock": 10,
+      "Imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXq0AyqOPCftT5fyuuvSdtQZFioPwU8w_PdA\u0026s",
+      "Categoria": {
+        "IdCategoria": 7,
+        "NombreCategoria": "USB\u0027s"
+      }
+    },
+    {
+      "IdProducto": 23,
+      "Nombre": "USB 64GB",
+      "Descripcion": "USB Kingston",
+      "Precio": 65000,
+      "Stock": 10,
+      "Imagen": "https://panamericana.vtexassets.com/arquivos/ids/375788/memoria-usb-64gb-exodia-3-2-kingston-740617309829.jpg?v=637454007841270000",
+      "Categoria": {
+        "IdCategoria": 7,
+        "NombreCategoria": "USB\u0027s"
+      }
+    },
+    {
+      "IdProducto": 24,
+      "Nombre": "USB 128GB",
+      "Descripcion": "USB Kingston",
+      "Precio": 90000,
+      "Stock": 10,
+      "Imagen": "https://www.multiexpress.com.co/wp-content/uploads/2020/07/131-Memoria-USB-Kingston-128-Gb.jpg",
+      "Categoria": {
+        "IdCategoria": 7,
+        "NombreCategoria": "USB\u0027s"
+      }
+    },
+    {
+      "IdProducto": 25,
+      "Nombre": "SD 4GB",
+      "Descripcion": "Micro SD Kingston",
+      "Precio": 22000,
+      "Stock": 10,
+      "Imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUE04SxhugEQqgxNdQ1XYaQ-l4tYWdqdaVAA\u0026s",
+      "Categoria": {
+        "IdCategoria": 8,
+        "NombreCategoria": "Micro SD\u0027s"
+      }
+    },
+    {
+      "IdProducto": 26,
+      "Nombre": "SD 8GB",
+      "Descripcion": "Micro SD Kingston",
+      "Precio": 28000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_700693-MCO72111248197_102023-O.webp",
+      "Categoria": {
+        "IdCategoria": 8,
+        "NombreCategoria": "Micro SD\u0027s"
+      }
+    },
+    {
+      "IdProducto": 27,
+      "Nombre": "SD 16GB",
+      "Descripcion": "Micro SD Kingston",
+      "Precio": 35000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_713480-MCO42485933208_072020-O.webp",
+      "Categoria": {
+        "IdCategoria": 8,
+        "NombreCategoria": "Micro SD\u0027s"
+      }
+    },
+    {
+      "IdProducto": 28,
+      "Nombre": "SD 32GB",
+      "Descripcion": "Micro SD Kingston",
+      "Precio": 45000,
+      "Stock": 10,
+      "Imagen": "https://carulla.vtexassets.com/arquivos/ids/17129090/Memoria-Micro-SD-32GB-KINGSTON-SIN-REF-3321309_c.jpg?v=638600529775130000",
+      "Categoria": {
+        "IdCategoria": 8,
+        "NombreCategoria": "Micro SD\u0027s"
+      }
+    },
+    {
+      "IdProducto": 29,
+      "Nombre": "SD 64GB",
+      "Descripcion": "Micro SD Kingston",
+      "Precio": 65000,
+      "Stock": 10,
+      "Imagen": "https://exitocol.vtexassets.com/arquivos/ids/23153495/memoria-kingston-micro-sd-64-gb-clase-10-adaptador-sd.jpg?v=638538236614600000",
+      "Categoria": {
+        "IdCategoria": 8,
+        "NombreCategoria": "Micro SD\u0027s"
+      }
+    },
+    {
+      "IdProducto": 30,
+      "Nombre": "SD 128GB",
+      "Descripcion": "Micro SD Kingston",
+      "Precio": 90000,
+      "Stock": 10,
+      "Imagen": "https://panamericana.vtexassets.com/arquivos/ids/357306/memoria-microsd-kingston-128gb-clase-10-1-740617298703.jpg?v=637315513279730000",
+      "Categoria": {
+        "IdCategoria": 8,
+        "NombreCategoria": "Micro SD\u0027s"
+      }
+    },
+    {
+      "IdProducto": 31,
+      "Nombre": "Power Bank 20.000 mAh",
+      "Descripcion": "Power Bank 1Hora",
+      "Precio": 190000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_Q_NP_2X_674449-MLA99930621889_112025-T.webp",
+      "Categoria": {
+        "IdCategoria": 9,
+        "NombreCategoria": "Power Banks"
+      }
+    },
+    {
+      "IdProducto": 32,
+      "Nombre": "Power Bank 10.000 mAh",
+      "Descripcion": "Power Bank Igoma",
+      "Precio": 150000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_Q_NP_914637-MCO79281137051_092024-O.webp",
+      "Categoria": {
+        "IdCategoria": 9,
+        "NombreCategoria": "Power Banks"
+      }
+    },
+    {
+      "IdProducto": 33,
+      "Nombre": "Power Bank 5.000 mAh",
+      "Descripcion": "Power Bank 1Hora",
+      "Precio": 90000,
+      "Stock": 10,
+      "Imagen": "https://hellomobile.com.co/wp-content/uploads/2024/09/POWER-BANK-1H-CABLES-NEGRO-5000MAH.jpg.webp",
+      "Categoria": {
+        "IdCategoria": 9,
+        "NombreCategoria": "Power Banks"
+      }
+    },
+    {
+      "IdProducto": 34,
+      "Nombre": "Tripode 163cm",
+      "Descripcion": "Tripode 64 Pulgadas",
+      "Precio": 250000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_721481-MCO92797538353_092025-O.webp",
+      "Categoria": {
+        "IdCategoria": 10,
+        "NombreCategoria": "Tripodes"
+      }
+    },
+    {
+      "IdProducto": 35,
+      "Nombre": "Tripode 180 cm",
+      "Descripcion": "Tripode y Selfie Stick con Accion de c\u00E1mara",
+      "Precio": 190000,
+      "Stock": 10,
+      "Imagen": "https://sebra.pe/wp-content/uploads/2025/02/ULP680_0006_img1.jpg",
+      "Categoria": {
+        "IdCategoria": 10,
+        "NombreCategoria": "Tripodes"
+      }
+    },
+    {
+      "IdProducto": 36,
+      "Nombre": "ST-17 Igoma",
+      "Descripcion": "Estabilizador y tridope de seguimiento Igoma",
+      "Precio": 230000,
+      "Stock": 10,
+      "Imagen": "https://lydtechonline.com/wp-content/uploads/2025/02/LYD-ST-17-5.jpg",
+      "Categoria": {
+        "IdCategoria": 10,
+        "NombreCategoria": "Tripodes"
+      }
+    },
+    {
+      "IdProducto": 37,
+      "Nombre": "Mouse Ergonomico",
+      "Descripcion": "Mouse inalambrico gen\u00E9rico",
+      "Precio": 50000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_923797-MLA91460992198_092025-O.webp",
+      "Categoria": {
+        "IdCategoria": 11,
+        "NombreCategoria": "Mouses"
+      }
+    },
+    {
+      "IdProducto": 38,
+      "Nombre": "Mouse inalambrico",
+      "Descripcion": "Mouse Game Logitech G309",
+      "Precio": 200000,
+      "Stock": 10,
+      "Imagen": "https://tauretcomputadores.com/images/products/Product_202408261227161196795540.perfilPNG.webp",
+      "Categoria": {
+        "IdCategoria": 11,
+        "NombreCategoria": "Mouses"
+      }
+    },
+    {
+      "IdProducto": 39,
+      "Nombre": "Mouse Alambrico",
+      "Descripcion": "Mouse Genius DX-101",
+      "Precio": 40000,
+      "Stock": 10,
+      "Imagen": "https://tiendasparadox.co/wp-content/uploads/2024/06/Mouse-Alambrico-Genius-DX-101-USB-negro-2.jpg",
+      "Categoria": {
+        "IdCategoria": 11,
+        "NombreCategoria": "Mouses"
+      }
+    },
+    {
+      "IdProducto": 40,
+      "Nombre": "Teclado inalambrico",
+      "Descripcion": "Teclado Logitech K250",
+      "Precio": 200000,
+      "Stock": 10,
+      "Imagen": "https://www.logitechstore.com.co/cdn/shop/files/k-250-graphite-top-view-2-esp.jpg?v=1758596915",
+      "Categoria": {
+        "IdCategoria": 12,
+        "NombreCategoria": "Teclados"
+      }
+    },
+    {
+      "IdProducto": 41,
+      "Nombre": "Teclado Inalambrico Gamer",
+      "Descripcion": "Teclado Klim Chroma Gamer Retroiluminado",
+      "Precio": 230000,
+      "Stock": 10,
+      "Imagen": "https://m.media-amazon.com/images/I/71zPs9UgSbL.jpg",
+      "Categoria": {
+        "IdCategoria": 12,
+        "NombreCategoria": "Teclados"
+      }
+    },
+    {
+      "IdProducto": 42,
+      "Nombre": "Teclado Alambrico",
+      "Descripcion": "Teclado HP 150",
+      "Precio": 90000,
+      "Stock": 10,
+      "Imagen": "https://panamericana.vtexassets.com/arquivos/ids/485785/teclado-alambrico-hp-150-negro-2-196548244195.jpg?v=638132778202300000",
+      "Categoria": {
+        "IdCategoria": 12,
+        "NombreCategoria": "Teclados"
+      }
+    },
+    {
+      "IdProducto": 43,
+      "Nombre": "Cable USB-Tipo C 3A",
+      "Descripcion": "Cable 3A 1Hora",
+      "Precio": 25000,
+      "Stock": 10,
+      "Imagen": "https://media.falabella.com/falabellaCO/73212796_1/w=1500,h=1500,fit=cover",
+      "Categoria": {
+        "IdCategoria": 13,
+        "NombreCategoria": "Cables"
+      }
+    },
+    {
+      "IdProducto": 44,
+      "Nombre": "Cable USB-Tipo C 5A",
+      "Descripcion": "Cable 5A 1Hora",
+      "Precio": 35000,
+      "Stock": 10,
+      "Imagen": "https://luegopagocdn.azureedge.net/content-process/products-images/prod/2022/9d310b46-d29d-40bb-b870-7d8bd076b968.webp",
+      "Categoria": {
+        "IdCategoria": 13,
+        "NombreCategoria": "Cables"
+      }
+    },
+    {
+      "IdProducto": 45,
+      "Nombre": "Cable Tipo C-C 3A",
+      "Descripcion": "Cable 1Hora 3A",
+      "Precio": 25000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_607497-MLA90210861210_082025-O.webp",
+      "Categoria": {
+        "IdCategoria": 13,
+        "NombreCategoria": "Cables"
+      }
+    },
+    {
+      "IdProducto": 46,
+      "Nombre": "Cargador Tipo C 3A",
+      "Descripcion": "Cargador Batri 3A",
+      "Precio": 35000,
+      "Stock": 10,
+      "Imagen": "https://muqi.com.co/cdn/shop/files/PhotoRoom_20240430_164256_1200x1200.jpg?v=1716406668",
+      "Categoria": {
+        "IdCategoria": 14,
+        "NombreCategoria": "Cargadores"
+      }
+    },
+    {
+      "IdProducto": 47,
+      "Nombre": "Cargador Xiaomi",
+      "Descripcion": "Cargador 67W Carga R\u00E1pida",
+      "Precio": 55000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_814359-MCO93724739264_102025-O.webp",
+      "Categoria": {
+        "IdCategoria": 14,
+        "NombreCategoria": "Cargadores"
+      }
+    },
+    {
+      "IdProducto": 48,
+      "Nombre": "Cargador Samsung",
+      "Descripcion": "Cargador 25W Samsung",
+      "Precio": 50000,
+      "Stock": 10,
+      "Imagen": "https://exitocol.vtexassets.com/arquivos/ids/32593181/cargador-100-original-samsung-25w-open-box-sin-cable-negro.jpg?v=639071317002570000",
+      "Categoria": {
+        "IdCategoria": 14,
+        "NombreCategoria": "Cargadores"
+      }
+    },
+    {
+      "IdProducto": 49,
+      "Nombre": "Cargador Samsung",
+      "Descripcion": "Cargador 45W Carga R\u00E1pida",
+      "Precio": 70000,
+      "Stock": 10,
+      "Imagen": "https://carulla.vtexassets.com/arquivos/ids/23282570/cargador-original-samsung-tipo-c-45w-carga-super-rapida-cable-tipo-c-a-tipo-c.jpg?v=638935933521800000",
+      "Categoria": {
+        "IdCategoria": 14,
+        "NombreCategoria": "Cargadores"
+      }
+    },
+    {
+      "IdProducto": 50,
+      "Nombre": "Cargador iPhone",
+      "Descripcion": "Cargador 25W IOS",
+      "Precio": 60000,
+      "Stock": 10,
+      "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/EK14-LT-IP14-CARGADOR-PARA-IPHONE-300x300.webp",
+      "Categoria": {
+        "IdCategoria": 14,
+        "NombreCategoria": "Cargadores"
+      }
+    },
+    {
+      "IdProducto": 51,
+      "Nombre": "Cargador iPhone",
+      "Descripcion": "Cargador 35W IOS",
+      "Precio": 75000,
+      "Stock": 10,
+      "Imagen": "https://confiatechnology.com/wp-content/uploads/2023/02/cargador-iphone-35W-USB-CC.jpeg",
+      "Categoria": {
+        "IdCategoria": 14,
+        "NombreCategoria": "Cargadores"
+      }
+    },
+    {
+      "IdProducto": 52,
+      "Nombre": "Audifonos AUX",
+      "Descripcion": "Aud\u00EDfonos Batri BT860",
+      "Precio": 30000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_883941-MCO44019156716_112020-O.webp",
+      "Categoria": {
+        "IdCategoria": 15,
+        "NombreCategoria": "Aud\u00EDfonos"
+      }
+    },
+    {
+      "IdProducto": 53,
+      "Nombre": "Audifonos Tipo-C",
+      "Descripcion": "Audifonos Batri BT950",
+      "Precio": 35000,
+      "Stock": 10,
+      "Imagen": "https://mymsuministros.com/wp-content/uploads/2025/05/Audifonos-manos-libre-tipo-C-Batri-Ref-BT950.jpeg",
+      "Categoria": {
+        "IdCategoria": 15,
+        "NombreCategoria": "Aud\u00EDfonos"
+      }
+    },
+    {
+      "IdProducto": 54,
+      "Nombre": "Audifonos iPhone",
+      "Descripcion": "Audifonos BT495",
+      "Precio": 45000,
+      "Stock": 10,
+      "Imagen": "https://confiatechnology.com/wp-content/uploads/2023/03/audifono-iphone-b01-iph-1.jpeg",
+      "Categoria": {
+        "IdCategoria": 15,
+        "NombreCategoria": "Aud\u00EDfonos"
+      }
+    },
+    {
+      "IdProducto": 55,
+      "Nombre": "Airpods Pro 2da Gen",
+      "Descripcion": "Audifonos Replica iPhone",
+      "Precio": 120000,
+      "Stock": 10,
+      "Imagen": "https://mac-center.com/cdn/shop/files/AirPods_Pro_en_su_estuche_con_MagSafe.jpg?v=1742255727\u0026width=1445",
+      "Categoria": {
+        "IdCategoria": 15,
+        "NombreCategoria": "Aud\u00EDfonos"
+      }
+    },
+    {
+      "IdProducto": 56,
+      "Nombre": "Airpods Pro 3ra Gen",
+      "Descripcion": "Audifonos Replica iPhone",
+      "Precio": 110000,
+      "Stock": 10,
+      "Imagen": "https://carulla.vteximg.com.br/arquivos/ids/18404582/airpods-pro-3-generacion-11.jpg?v=638646880919600000",
+      "Categoria": {
+        "IdCategoria": 15,
+        "NombreCategoria": "Aud\u00EDfonos"
+      }
+    },
+    {
+      "IdProducto": 57,
+      "Nombre": "Airpods 4",
+      "Descripcion": "Audifonos Replica iPhone",
+      "Precio": 130000,
+      "Stock": 10,
+      "Imagen": "https://www.smartgadgets.com.co/cdn/shop/files/airpodssss.jpg?v=1734211088",
+      "Categoria": {
+        "IdCategoria": 15,
+        "NombreCategoria": "Aud\u00EDfonos"
+      }
+    },
+    {
+      "IdProducto": 58,
+      "Nombre": "Holder Carro Magnetico",
+      "Descripcion": "Holder Magn\u00E9tico C4",
+      "Precio": 45000,
+      "Stock": 10,
+      "Imagen": "https://http2.mlstatic.com/D_NQ_NP_992197-MCO82481347732_022025-O.webp",
+      "Categoria": {
+        "IdCategoria": 16,
+        "NombreCategoria": "Holders"
+      }
+    },
+    {
+      "IdProducto": 59,
+      "Nombre": "Holder Carro",
+      "Descripcion": "Holder de Chupa Batri",
+      "Precio": 50000,
+      "Stock": 10,
+      "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+      "Categoria": {
+        "IdCategoria": 16,
+        "NombreCategoria": "Holders"
+      }
+    },
+    {
+      "IdProducto": 60,
+      "Nombre": "Holder Moto",
+      "Descripcion": "Holder Moto Batri C1",
+      "Precio": 40000,
+      "Stock": 10,
+      "Imagen": "https://luegopagocdn.azureedge.net/content-process/products-images/prod/2144/285334fb-39d4-429a-a511-1f9dc2400f36.webp",
+      "Categoria": {
+        "IdCategoria": 16,
+        "NombreCategoria": "Holders"
+      }
+    }
+  ],
+  "Categorias": [
+    {
+      "IdCategoria": 1,
+      "NombreCategoria": "Estuches iPhone"
+    },
+    {
+      "IdCategoria": 2,
+      "NombreCategoria": "Estuches Samsung"
+    },
+    {
+      "IdCategoria": 3,
+      "NombreCategoria": "Estuches Xiaomi"
+    },
+    {
+      "IdCategoria": 4,
+      "NombreCategoria": "Estuches Ipad"
+    },
+    {
+      "IdCategoria": 5,
+      "NombreCategoria": "Bafles"
+    },
+    {
+      "IdCategoria": 6,
+      "NombreCategoria": "SmartWatch"
+    },
+    {
+      "IdCategoria": 7,
+      "NombreCategoria": "USB\u0027s"
+    },
+    {
+      "IdCategoria": 8,
+      "NombreCategoria": "Micro SD\u0027s"
+    },
+    {
+      "IdCategoria": 9,
+      "NombreCategoria": "Power Banks"
+    },
+    {
+      "IdCategoria": 10,
+      "NombreCategoria": "Tripodes"
+    },
+    {
+      "IdCategoria": 11,
+      "NombreCategoria": "Mouses"
+    },
+    {
+      "IdCategoria": 12,
+      "NombreCategoria": "Teclados"
+    },
+    {
+      "IdCategoria": 13,
+      "NombreCategoria": "Cables"
+    },
+    {
+      "IdCategoria": 14,
+      "NombreCategoria": "Cargadores"
+    },
+    {
+      "IdCategoria": 15,
+      "NombreCategoria": "Aud\u00EDfonos"
+    },
+    {
+      "IdCategoria": 16,
+      "NombreCategoria": "Holders"
+    },
+    {
+      "IdCategoria": 17,
+      "NombreCategoria": "Otros"
+    }
+  ],
+  "Pedidos": [
+    {
+      "IdPedido": 1,
+      "Fecha": "2026-05-28T07:27:17.6118761-05:00",
+      "EstadoPedido": "Pagado",
+      "TotalPedido": 300000,
+      "Productos": [
+        {
+          "IdProducto": 6,
+          "Nombre": "Note 15/15 pro",
+          "Descripcion": "Anti-impactos",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://http2.mlstatic.com/D_NQ_NP_607344-MCO106756035216_022026-O.webp",
+          "Categoria": {
+            "IdCategoria": 3,
+            "NombreCategoria": "Estuches Xiaomi"
+          }
+        },
+        {
+          "IdProducto": 34,
+          "Nombre": "Tripode 163cm",
+          "Descripcion": "Tripode 64 Pulgadas",
+          "Precio": 250000,
+          "Stock": 10,
+          "Imagen": "https://http2.mlstatic.com/D_NQ_NP_721481-MCO92797538353_092025-O.webp",
+          "Categoria": {
+            "IdCategoria": 10,
+            "NombreCategoria": "Tripodes"
+          }
+        }
+      ]
+    },
+    {
+      "IdPedido": 2,
+      "Fecha": "2026-07-24T18:38:48.1608708-05:00",
+      "EstadoPedido": "Pagado",
+      "TotalPedido": 100000,
+      "Productos": [
+        {
+          "IdProducto": 54,
+          "Nombre": "Audifonos iPhone",
+          "Descripcion": "Audifonos BT495",
+          "Precio": 45000,
+          "Stock": 10,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2023/03/audifono-iphone-b01-iph-1.jpeg",
+          "Categoria": {
+            "IdCategoria": 15,
+            "NombreCategoria": "Aud\u00EDfonos"
+          }
+        },
+        {
+          "IdProducto": 1,
+          "Nombre": "17 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 55000,
+          "Stock": 10,
+          "Imagen": "https://mobilestore.ec/wp-content/uploads/2025/10/CASE-ArtsCase-Impact-Hybrid-MagSafe-for-Apple-iPhone-17-Clear-Mobile-Store-Ecuador.jpg",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        }
+      ]
+    }
+  ],
+  "Soportes": [
+    {
+      "IdSoporte": 1,
+      "Mensaje": "HOLA",
+      "FechaSolicitud": "2026-05-28T07:27:14.9640605-05:00",
+      "EstadoSolicitud": "Resuelto"
+    },
+    {
+      "IdSoporte": 2,
+      "Mensaje": "HIJUEPUTA",
+      "FechaSolicitud": "2026-07-24T18:39:00.3799581-05:00",
+      "EstadoSolicitud": "Resuelto"
+    }
+  ]
+}

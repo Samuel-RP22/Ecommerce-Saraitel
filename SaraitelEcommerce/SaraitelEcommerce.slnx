@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="../Saraitel.Datos/Saraitel.Datos.csproj" Id="c41484e8-563f-4a1c-a208-cd96057ec0a5" />
+  <Project Path="../Saraitel.Entidades/Saraitel.Entidades.csproj" />
+  <Project Path="Saraitel.API.csproj" />
+</Solution>

@@ -1,0 +1,137 @@
+{
+  "Usuarios": [
+    {
+      "tipo": "Administrador",
+      "IdUsuario": 1,
+      "Nombre": "Samuel Ria\u00F1o",
+      "Correo": "samuelriapati222008@gmail.com",
+      "Telefono": "3158185857",
+      "Contrasena": "3158185857s",
+      "Rol": "Administrador"
+    },
+    {
+      "tipo": "Cliente",
+      "Direccion": "Cra 46 #30-40",
+      "HistorialCompras": [],
+      "Carrito": {
+        "IdCarrito": 0,
+        "ListaProductos": [],
+        "CantidadProductos": 0,
+        "TotalCompra": 0
+      },
+      "IdUsuario": 2,
+      "Nombre": "Alejandra Pati\u00F1o",
+      "Correo": "alepatisaraitel@gmail.com",
+      "Telefono": "3113898080",
+      "Contrasena": "3113898080",
+      "Rol": "Cliente"
+    },
+    {
+      "tipo": "Cliente",
+      "Direccion": "Cra 46 #30-40, Finca La Cantera",
+      "HistorialCompras": [],
+      "Carrito": {
+        "IdCarrito": 0,
+        "ListaProductos": [],
+        "CantidadProductos": 0,
+        "TotalCompra": 0
+      },
+      "IdUsuario": 3,
+      "Nombre": "Sarai Ria\u00F1o Pati\u00F1o",
+      "Correo": "sarissrp@gmail.com",
+      "Telefono": "3115680065",
+      "Contrasena": "3115680065",
+      "Rol": "Cliente"
+    }
+  ],
+  "Productos": [],
+  "Categorias": [
+    {
+      "IdCategoria": 1,
+      "NombreCategoria": "Estuches iPhone",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 2,
+      "NombreCategoria": "Estuches Samsung",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 3,
+      "NombreCategoria": "Estuches Xiaomi",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 4,
+      "NombreCategoria": "Estuches Ipad",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 5,
+      "NombreCategoria": "Bafles",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 6,
+      "NombreCategoria": "SmartWatch",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 7,
+      "NombreCategoria": "USB\u0027s",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 8,
+      "NombreCategoria": "Micro SD\u0027s",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 9,
+      "NombreCategoria": "Power Banks",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 10,
+      "NombreCategoria": "Tripodes",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 11,
+      "NombreCategoria": "Mouses",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 12,
+      "NombreCategoria": "Teclados",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 13,
+      "NombreCategoria": "Cables",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 14,
+      "NombreCategoria": "Cargadores",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 15,
+      "NombreCategoria": "Aud\u00EDfonos",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 16,
+      "NombreCategoria": "Holders",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    },
+    {
+      "IdCategoria": 17,
+      "NombreCategoria": "Otros",
+      "Descripcion": "Categor\u00EDa creada desde el panel de administraci\u00F3n"
+    }
+  ],
+  "Pedidos": [],
+  "Soportes": []
+}

@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Saraitel.Datos/1.0.0": {
+        "dependencies": {
+          "Saraitel.Entidades": "1.0.0"
+        },
+        "runtime": {
+          "Saraitel.Datos.dll": {}
+        }
+      },
+      "Saraitel.Entidades/1.0.0": {
+        "runtime": {
+          "Saraitel.Entidades.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Saraitel.Datos/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Saraitel.Entidades/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

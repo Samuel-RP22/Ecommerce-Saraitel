@@ -1,0 +1,6 @@
+@SaraitelEcommerce_HostAddress = http://localhost:8800
+
+GET {{SaraitelEcommerce_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Saraitel E-Commerce PRO</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="vistaAuth" class="auth-container">
+        <h1>¡Bienvenido a Saraitel! 🛒</h1>
+        <p>Tu tienda de confianza de manera fácil y rápida.</p>
+        <div class="auth-buttons">
+            <button onclick="mostrarFormulario('login')">Iniciar Sesión</button>
+            <button onclick="mostrarFormulario('registro')">Crear Cuenta</button>
+        </div>
+
+        <section id="formLogin" class="card auth-card hidden">
+            <h2>Iniciar Sesión</h2>
+            <input id="correo" placeholder="Correo">
+            <input id="contrasena" type="password" placeholder="Contraseña">
+            <div class="form-actions">
+                <button class="btn-success" onclick="login()">Entrar</button>
+                <button class="btn-secondary" onclick="volverAInicio()">Volver</button>
+            </div>
+            <p class="link-olvido">
+                <a href="#" onclick="mostrarFormulario('recuperar'); return false;">¿Olvidaste tu contraseña?</a>
+            </p>
+        </section>
+
+        <section id="formRegistro" class="card auth-card hidden">
+            <h2>Registro de Usuario</h2>
+            <input id="regNombre" placeholder="Nombre">
+            <input id="regCorreo" placeholder="Correo">
+            <input id="regTelefono" placeholder="Teléfono">
+            <input id="regPassword" type="password" placeholder="Contraseña">
+            <input id="regDireccion" placeholder="Dirección">
+            
+            <div class="form-actions">
+                <button class="btn-success" onclick="ejecutarRegistro()">Registrar</button>
+                <button class="btn-secondary" onclick="volverAInicio()">Volver</button>
+            </div>
+        </section>
+
+        <section id="formRecuperar" class="card auth-card hidden">
+            <h2>Recuperar acceso</h2>
+            <p class="text-muted">Escribe el correo de tu cuenta y te generaremos un código para restablecer tu contraseña.</p>
+            <input id="recCorreo" placeholder="Correo registrado">
+            <div class="form-actions">
+                <button class="btn-success" onclick="solicitarRecuperacion()">Enviar código</button>
+                <button class="btn-secondary" onclick="mostrarFormulario('login')">Volver</button>
+            </div>
+            <p class="link-olvido">
+                <a href="#" onclick="mostrarFormulario('restablecer'); return false;">Ya tengo un código</a>
+            </p>
+        </section>
+
+        <section id="formRestablecer" class="card auth-card hidden">
+            <h2>Restablecer contraseña</h2>
+            <div id="avisoCodigo" class="info-box hidden"></div>
+            <input id="resCorreo" placeholder="Correo">
+            <input id="resCodigo" placeholder="Código de 6 dígitos" maxlength="6">
+            <input id="resPassword" type="password" placeholder="Nueva contraseña (mínimo 6 caracteres)">
+            <input id="resPasswordConfirmar" type="password" placeholder="Confirmar nueva contraseña">
+            <div class="form-actions">
+                <button class="btn-success" onclick="ejecutarRestablecer()">Cambiar contraseña</button>
+                <button class="btn-secondary" onclick="mostrarFormulario('login')">Cancelar</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="vistaCrearProducto" class="hidden" style="padding: 20px;">
+        <section id="formCrearProducto" class="card auth-card" style="max-width: 500px; margin: 40px auto; text-align: left;">
+            <h2>📦 Registrar Nuevo Producto</h2>
+            <p class="text-muted" style="font-size: 0.85rem; margin-top: -8px; color: #64748b;">Añade un nuevo accesorio al catálogo</p>
+            
+            <label style="font-weight: 500; font-size: 0.9rem;">Nombre del accesorio:</label>
+            <input id="prodNombre" placeholder="Ej: Estuche iPhone 17 Pro Max">
+            
+            <label style="font-weight: 500; font-size: 0.9rem;">Descripción o especificaciones:</label>
+            <input id="prodDescripcion" placeholder="Ej: Material silicona, anti-impactos">
+            
+            <label style="font-weight: 500; font-size: 0.9rem;">Precio de venta ($):</label>
+            <input id="prodPrecio" type="number" placeholder="Ej: 45000">
+            
+            <label style="font-weight: 500; font-size: 0.9rem;">Enlace URL de la imagen:</label>
+            <input id="prodImagen" placeholder="https://ejemplo.com/imagen.jpg">
+
+            <label style="font-weight: 500; font-size: 0.9rem; display: block; margin-top: 10px;">Categoría del producto:</label>
+            <select id="prodCategoria" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-size: 0.9rem;">
+                <option value="">Cargando categorías...</option>
+            </select>
+            
+            <div class="form-actions">
+                <button class="btn-success" onclick="ejecutarCrearProducto()">Guardar Producto</button>
+                <button class="btn-secondary" onclick="cancelarCrearProducto()">Cancelar</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="vistaModificarProducto" class="hidden" style="padding: 20px;">
+        <section id="formModificarProducto" class="card auth-card" style="max-width: 500px; margin: 40px auto; text-align: left;">
+            <h2>📝 Modificar Producto</h2>
+            <p class="text-muted" style="font-size: 0.85rem; margin-top: -8px; color: #64748b;">Actualiza los datos del accesorio seleccionado</p>
+            
+            <input type="hidden" id="modProdId">
+
+            <label style="font-weight: 500; font-size: 0.9rem;">Nombre del accesorio:</label>
+            <input id="modProdNombre" placeholder="Ej: Estuche iPhone 17 Pro Max">
+            
+            <label style="font-weight: 500; font-size: 0.9rem;">Descripción o especificaciones:</label>
+            <input id="modProdDescripcion" placeholder="Ej: Material silicona, anti-impactos">
+            
+            <label style="font-weight: 500; font-size: 0.9rem;">Precio de venta ($):</label>
+            <input id="modProdPrecio" type="number" placeholder="Ej: 45000">
+
+            <label style="font-weight: 500; font-size: 0.9rem;">Stock disponible (Unidades):</label>
+            <input id="modProdStock" type="number" placeholder="Ej: 15">
+            
+            <label style="font-weight: 500; font-size: 0.9rem;">Enlace URL de la imagen:</label>
+            <input id="modProdImagen" placeholder="https://ejemplo.com/imagen.jpg">
+
+            <label style="font-weight: 500; font-size: 0.9rem; display: block; margin-top: 10px;">Categoría del producto:</label>
+            <select id="modProdCategoria" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-size: 0.9rem;">
+                <option value="">Cargando categorías...</option>
+            </select>
+            
+            <div class="form-actions">
+                <button class="btn-dark-blue" onclick="ejecutarModificarProducto()">Modificar Producto</button>
+                <button class="btn-secondary" onclick="cancelarModificarProducto()">Cancelar</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="vistaPerfil" class="hidden">
+        <section class="card auth-card perfil-card">
+            <h2>👤 Mi Perfil</h2>
+            <p class="text-muted" id="perfilSubtitulo">Estos son los datos de tu cuenta</p>
+
+            <label>Nombre:</label>
+            <input id="perfNombre" disabled>
+
+            <label>Correo:</label>
+            <input id="perfCorreo" disabled>
+
+            <label>Teléfono:</label>
+            <input id="perfTelefono" disabled>
+
+            <div id="perfDireccionBox">
+                <label>Dirección:</label>
+                <input id="perfDireccion" disabled>
+            </div>
+
+            <label>Rol:</label>
+            <input id="perfRol" disabled>
+
+            <div class="form-actions">
+                <button id="btnEditarPerfil" class="btn-dark-blue" onclick="editarPerfil()">Editar perfil</button>
+                <button id="btnGuardarPerfil" class="btn-success hidden" onclick="guardarPerfil()">Guardar cambios</button>
+                <button id="btnCancelarPerfil" class="btn-secondary hidden" onclick="cancelarEdicionPerfil()">Cancelar</button>
+                <button id="btnVolverPerfil" class="btn-secondary" onclick="cerrarPerfil()">Volver a la tienda</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="vistaTienda" class="hidden">
+        <header>
+    <div class="header-wrap">
+        <h1>Saraitel 🛒</h1>
+        <div id="userPanel">
+            <span id="userInfo">No logueado</span>
+            <button class="btn-dark-blue" onclick="abrirPerfil()">Mi Perfil</button>
+            <button class="btn-danger" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </div>
+</header>
+
+        <main class="store-layout">
+            
+            <div class="col-main">
+                <section class="card">
+                    <div class="card-header-admin">
+                        <h2>Productos Disponibles</h2>
+                        <button id="btnCrearProductoAdmin" class="btn-success hidden" onclick="crearProducto()">➕ Nuevo Producto</button>
+                    </div>
+                    <div id="productos" class="productos-grid"></div>
+                </section>
+                
+                <section id="panelAdministrador" class="card hidden">
+                    <h2>📊 Panel de Gestión del Administrador</h2>
+                    <hr>
+                    
+                    <div class="admin-sections-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 15px;">
+                        <div class="admin-box" style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                            <h3>📦 Historial de Pedidos Globales</h3>
+                            <button class="btn-dark-blue" style="width:100%; margin-bottom:10px;" onclick="verPedidos()">Ver todos los pedidos</button>
+                            <div style="display: flex; gap: 4px;">
+                                <input type="text" id="searchPedidoCorreo" placeholder="Correo del cliente..." style="flex:1; padding:6px;">
+                                <button class="btn-success" onclick="buscarPedidoPorCorreo()" style="padding:6px 12px;">Buscar</button>
+                            </div>
+                            <div id="listaPedidosAdmin" style="margin-top: 10px; max-height:200px; overflow-y:auto;"></div>
+                        </div>
+
+                        <div class="admin-box" style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                            <h3>🛠 Gestión de Categorías Generales</h3>
+                            <button id="btnCrearCategoriaAdmin" class="btn-success" style="width:100%; margin-bottom:10px;" onclick="agregarCategoriaPrompt()">➕ Crear Nueva Categoría</button>
+                            <div id="categorias" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
+                        </div>
+
+                        <div class="admin-box" style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                            <h3>💬 Mensajes de Soporte</h3>
+                            <button class="btn-dark-blue" style="width:100%; margin-bottom:10px;" onclick="cargarSoportesAdmin()">🔄 Actualizar Mensajes</button>
+                            <div id="listaSoportesAdmin" style="max-height:200px; overflow-y:auto;"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="componentesCliente" class="col-side">
+                <section class="card side-card">
+                    <h2>Mi Carrito</h2>
+                    <hr>
+                    <div id="carrito">
+                        <p class="text-muted">El carrito está vacío</p>
+                    </div>
+                    <div class="cart-buttons" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+                        <button class="btn-success" style="width: 100%;" onclick="comprar()">Comprar Pedido</button>
+                        <button class="btn-danger" style="width: 100%;" onclick="vaciarCarrito()">Vaciar Carrito</button>
+                    </div>
+                </section>
+
+                <section class="card side-card" style="margin-top: 16px;">
+                    <h2>Soporte Técnico</h2>
+                    <hr>
+                    <textarea id="msgSoporte" rows="3" placeholder="Escribe tu duda o problema aquí..." style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1; resize: none; font-family: inherit; font-size: 0.9rem; margin-bottom: 8px; box-sizing: border-box;"></textarea>
+                    <button class="btn-dark-blue" style="width: 100%;" onclick="crearSoporte()">Enviar a Soporte</button>
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.deps.json
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfoInputs.cache
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfo.cs
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.CoreCompileInputs.cache
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\refint\Saraitel.Datos.dll
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\ref\Saraitel.Datos.dll
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.dll
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.pdb
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.AssemblyReference.cache
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.26956A22.Up2Date
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.deps.json
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.dll
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.pdb
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.AssemblyReference.cache
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfoInputs.cache
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfo.cs
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.CoreCompileInputs.cache
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.26956A22.Up2Date
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\refint\Saraitel.Datos.dll
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\EQUIPO\Desktop\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\ref\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.deps.json
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.dll
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.pdb
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.AssemblyReference.cache
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfoInputs.cache
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfo.cs
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.CoreCompileInputs.cache
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.26956A22.Up2Date
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\refint\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\samue\Desktop\Non-important things\Codigos importantes\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\ref\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.deps.json
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.dll
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.pdb
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.AssemblyReference.cache
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfoInputs.cache
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfo.cs
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.CoreCompileInputs.cache
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.26956A22.Up2Date
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\refint\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\samue\Desktop\Non-important things\Codigos UCO\Estructura de datos y POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\ref\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.deps.json
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.dll
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\bin\Debug\net8.0\Saraitel.Entidades.pdb
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.AssemblyReference.cache
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfoInputs.cache
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.AssemblyInfo.cs
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.csproj.CoreCompileInputs.cache
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.26956A22.Up2Date
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\refint\Saraitel.Datos.dll
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\Saraitel.Datos.pdb
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Datos\obj\Debug\net8.0\ref\Saraitel.Datos.dll
