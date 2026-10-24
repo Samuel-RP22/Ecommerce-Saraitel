@@ -6,6 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- Conexión a PostgreSQL (base de datos en Neon) -->
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="8.0.5" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Saraitel.Entidades\Saraitel.Entidades.csproj" />
   </ItemGroup>

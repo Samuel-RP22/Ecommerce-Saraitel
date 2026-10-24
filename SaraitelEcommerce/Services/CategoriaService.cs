@@ -25,28 +25,21 @@ namespace Saraitel.API.Services
 
         public Categoria AgregarCategoria(Categoria categoria)
         {
-            int nuevoId = ObtenerCategorias().Any()? ObtenerCategorias().Max(c => c.IdCategoria) + 1: 1;
-            categoria.IdCategoria = nuevoId;
+            // Si ya existe una con el mismo nombre, se devuelve esa (no se repiten)
+            var existente = ObtenerCategorias().FirstOrDefault(c =>
+                c.NombreCategoria.Trim().Equals((categoria.NombreCategoria ?? "").Trim(), StringComparison.OrdinalIgnoreCase));
+
+            if (existente != null)
+                return existente;
+
+            // El id lo asigna la base de datos al guardar
             _repo.AgregarCategoria(categoria);
             return categoria;
         }
 
         public string EliminarCategoria(int id)
         {
-            var productos = _productoRepo.ObtenerProductos();
-            foreach (var producto in productos)
-            {
-                if (producto.Categoria != null &&
-                    producto.Categoria.IdCategoria == id)
-                {
-                    producto.Categoria = new Categoria
-                    {
-                        IdCategoria = 0,
-                        NombreCategoria = ""
-                    };
-                    _productoRepo.ActualizarProducto(producto);
-                }
-            }
+            // La base de datos deja sin categoría a sus productos (ON DELETE SET NULL)
             _repo.EliminarCategoria(id);
             return "Categoria eliminada";
         }

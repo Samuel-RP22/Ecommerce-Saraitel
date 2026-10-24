@@ -10,13 +10,12 @@ namespace Saraitel.Entidades
     {
         public string Direccion { get; set; } = string.Empty;
 
-        public List<Pedido> HistorialCompras { get; set; }
+        // Sus compras ya no se copian aquí: están en la tabla pedidos (id_usuario)
 
         public CarritoCompra Carrito { get; set; }
 
         public Cliente()
         {
-            HistorialCompras = new List<Pedido>();
             Carrito = new CarritoCompra();
             Rol = "Cliente";
         }

@@ -40,6 +40,26 @@ namespace Saraitel.API.Controllers
             return Ok(_service.ObtenerPedidosDeUsuario(idUsuario));
         }
 
+        // Consulta de compras por criterios (fechas, factura y, para el administrador, documento).
+        // Fechas en formato yyyy-MM-dd.
+        [HttpGet("compras")]
+        public IActionResult ConsultarCompras(
+            int idUsuario,
+            DateTime? fechaInicial,
+            DateTime? fechaFinal,
+            string? numeroFactura = null,
+            string? tipoDocumento = null,
+            string? numeroDocumento = null)
+        {
+            var (compras, mensaje) = _service.ConsultarCompras(
+                idUsuario, fechaInicial, fechaFinal, numeroFactura, tipoDocumento, numeroDocumento);
+
+            if (compras == null)
+                return BadRequest(mensaje);
+
+            return Ok(compras);
+        }
+
         // HU-15: costo de envío e IVA que usa el resumen del checkout
         [HttpGet("tarifas")]
         public IActionResult Tarifas()

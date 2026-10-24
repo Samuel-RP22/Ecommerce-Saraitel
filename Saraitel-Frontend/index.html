@@ -33,6 +33,10 @@
                         <button id="opcionMisPedidos" class="dropdown-opcion" onclick="cerrarMenus(); abrirMisPedidos()">
                             <span class="ico" data-icon="package"></span> Mis pedidos
                         </button>
+                        <!-- Consulta de compras por criterios (cliente y administrador) -->
+                        <button id="opcionConsultarCompras" class="dropdown-opcion" onclick="cerrarMenus(); abrirConsultaCompras()">
+                            <span class="ico" data-icon="receipt"></span> Consultar compras
+                        </button>
                         <button class="dropdown-opcion opcion-peligro" onclick="cerrarMenus(); logout()">
                             <span class="ico" data-icon="logout"></span> Cerrar sesión
                         </button>
@@ -44,6 +48,14 @@
                     <button id="btnPedidosAdmin" class="btn-header btn-carrito" onclick="abrirGestionPedidos()" aria-label="Gestión de pedidos" title="Gestión de pedidos">
                         <span class="ico" data-icon="package"></span>
                         <span id="pedidosAdminBadge" class="carrito-badge hidden">0</span>
+                    </button>
+                </div>
+
+                <!-- HU-21 y HU-23: devoluciones y garantías (solo administrador) -->
+                <div id="menuPosventaAdminWrap" class="hidden">
+                    <button id="btnPosventaAdmin" class="btn-header btn-carrito" onclick="abrirPosventaAdmin()" aria-label="Devoluciones y garantías" title="Devoluciones y garantías">
+                        <span class="ico" data-icon="returns"></span>
+                        <span id="posventaAdminBadge" class="carrito-badge hidden">0</span>
                     </button>
                 </div>
 
@@ -349,6 +361,109 @@
     <!-- ==========================================
          HU-18: CONSULTA DE COMPRAS
     =========================================== -->
+    <!-- ==========================================
+         CONSULTA DE COMPRAS POR CRITERIOS
+         Cliente: fechas y número de factura.
+         Administrador: además, tipo y número de documento del cliente.
+    =========================================== -->
+    <div id="vistaConsultaCompras" class="hidden">
+        <section class="card mis-pedidos consulta-compras">
+            <div class="carrito-encabezado">
+                <h2>Consultar compras</h2>
+                <button class="btn-secondary" onclick="irATienda()">
+                    <span class="ico" data-icon="arrowLeft"></span> Volver a la tienda
+                </button>
+            </div>
+
+            <form id="formConsultaCompras" class="consulta-form" novalidate onsubmit="consultarCompras(event)">
+                <div class="consulta-campos">
+                    <div class="campo campo-select">
+                        <input id="consultaFechaInicial" type="date">
+                        <label for="consultaFechaInicial">Fecha inicial</label>
+                        <span class="campo-mensaje"></span>
+                    </div>
+                    <div class="campo campo-select">
+                        <input id="consultaFechaFinal" type="date">
+                        <label for="consultaFechaFinal">Fecha final</label>
+                        <span class="campo-mensaje"></span>
+                    </div>
+                    <div class="campo">
+                        <input id="consultaFactura" placeholder=" " maxlength="12" autocomplete="off">
+                        <label for="consultaFactura">Número de factura (opcional)</label>
+                        <span class="campo-mensaje"></span>
+                    </div>
+                </div>
+
+                <!-- Solo para el administrador -->
+                <div id="consultaCamposAdmin" class="consulta-campos consulta-admin hidden">
+                    <div class="campo campo-select">
+                        <select id="consultaTipoDocumento"></select>
+                        <label for="consultaTipoDocumento">Tipo de documento del cliente</label>
+                    </div>
+                    <div class="campo">
+                        <input id="consultaNumeroDocumento" placeholder=" " maxlength="15" autocomplete="off">
+                        <label for="consultaNumeroDocumento">Número de documento del cliente (opcional)</label>
+                        <span class="campo-mensaje"></span>
+                    </div>
+                </div>
+
+                <div id="consultaError" class="aviso-pago aviso-error hidden" role="alert"></div>
+
+                <div class="consulta-acciones">
+                    <button type="button" class="btn-secondary" onclick="limpiarConsultaCompras()">Limpiar</button>
+                    <button type="submit" id="btnConsultarCompras" class="btn-success">
+                        <span class="ico" data-icon="search"></span> Consultar
+                    </button>
+                </div>
+            </form>
+
+            <div id="resultadosCompras" class="resultados-compras"></div>
+            <nav id="paginacionCompras" class="paginacion" aria-label="Páginas de compras"></nav>
+        </section>
+    </div>
+
+    <!-- Detalle de una compra y su factura -->
+    <div id="vistaDetalleCompra" class="hidden">
+        <section class="card detalle-pedido" id="compraContenido"></section>
+    </div>
+
+    <!-- ==========================================
+         HU-19: SOLICITAR DEVOLUCIÓN · HU-22: REPORTAR GARANTÍA (cliente)
+    =========================================== -->
+    <div id="vistaSolicitudPosventa" class="hidden">
+        <section class="card solicitud-posventa" id="solicitudPosventaContenido"></section>
+    </div>
+
+    <!-- ==========================================
+         HU-21 y HU-23: DEVOLUCIONES Y GARANTÍAS (administrador)
+    =========================================== -->
+    <div id="vistaPosventaAdmin" class="hidden">
+        <section class="card mis-pedidos posventa-admin">
+            <div class="carrito-encabezado">
+                <h2>Devoluciones y garantías</h2>
+                <button class="btn-secondary" onclick="irATienda()">
+                    <span class="ico" data-icon="arrowLeft"></span> Volver a la tienda
+                </button>
+            </div>
+            <div id="tiposPosventa" class="tipos-posventa" role="tablist" aria-label="Tipo de solicitud"></div>
+            <div id="avisoPosventa" class="aviso-pago hidden" role="status"></div>
+            <div id="filtrosPosventa" class="filtros-pedidos" role="tablist" aria-label="Filtrar por estado"></div>
+            <div id="listaPosventa" class="lista-pedidos"></div>
+            <nav id="paginacionPosventa" class="paginacion" aria-label="Páginas de solicitudes"></nav>
+        </section>
+    </div>
+
+    <!-- Visor de fotos de evidencia -->
+    <div id="visorFoto" class="visor-foto hidden" onclick="cerrarVisorFoto(event)">
+        <div class="visor-contenido">
+            <img id="visorImagen" alt="Foto de evidencia">
+            <div class="visor-acciones">
+                <button class="btn-secondary" onclick="descargarFotoVisor()">Descargar</button>
+                <button class="btn-success" onclick="cerrarVisorFoto()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="vistaMisPedidos" class="hidden">
         <section class="card mis-pedidos">
             <div class="carrito-encabezado">
@@ -376,7 +491,10 @@
 
             <div class="admin-pedidos-buscar">
                 <span class="ico" data-icon="search"></span>
-                <input id="buscarPedidoAdmin" type="text" placeholder="Buscar por # de pedido, cliente o cédula..." oninput="buscarPedidosAdmin()" autocomplete="off">
+                <input id="buscarPedidoAdmin" type="text" placeholder="Buscar por pedido, factura, cliente, documento, teléfono, ciudad, guía o producto..." oninput="buscarPedidosAdmin()" autocomplete="off">
+                <button id="limpiarBusquedaAdmin" type="button" class="btn-limpiar-busqueda hidden" onclick="limpiarBusquedaAdmin()" aria-label="Limpiar búsqueda">
+                    <span class="ico" data-icon="x"></span>
+                </button>
             </div>
             <div id="avisoAdminPedidos" class="aviso-pago hidden" role="status"></div>
             <div id="filtrosPedidosAdmin" class="filtros-pedidos" role="tablist" aria-label="Filtrar pedidos"></div>

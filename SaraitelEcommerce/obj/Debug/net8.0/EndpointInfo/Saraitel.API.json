@@ -331,6 +331,65 @@
         }
       }
     },
+    "/api/Pedido/compras": {
+      "get": {
+        "tags": [
+          "Pedido"
+        ],
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "fechaInicial",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "fechaFinal",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "numeroFactura",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tipoDocumento",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numeroDocumento",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Pedido/tarifas": {
       "get": {
         "tags": [
@@ -645,6 +704,363 @@
             "name": "idUsuario",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Posventa/pedido/{idPedido}": {
+      "get": {
+        "tags": [
+          "Posventa"
+        ],
+        "parameters": [
+          {
+            "name": "idPedido",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idUsuario",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Posventa/usuario/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Posventa"
+        ],
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Posventa/devoluciones": {
+      "post": {
+        "tags": [
+          "Posventa"
+        ],
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitudDevolucion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitudDevolucion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitudDevolucion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Posventa"
+        ],
+        "parameters": [
+          {
+            "name": "idAdministrador",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Posventa/garantias": {
+      "post": {
+        "tags": [
+          "Posventa"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "IdUsuario": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "IdPedido": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "IdProducto": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Cantidad": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Descripcion": {
+                    "type": "string"
+                  },
+                  "Fotos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "IdUsuario": {
+                  "style": "form"
+                },
+                "IdPedido": {
+                  "style": "form"
+                },
+                "IdProducto": {
+                  "style": "form"
+                },
+                "Cantidad": {
+                  "style": "form"
+                },
+                "Descripcion": {
+                  "style": "form"
+                },
+                "Fotos": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Posventa"
+        ],
+        "parameters": [
+          {
+            "name": "idAdministrador",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Posventa/garantias/{idTicket}/evidencias/{archivo}": {
+      "get": {
+        "tags": [
+          "Posventa"
+        ],
+        "parameters": [
+          {
+            "name": "idTicket",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "archivo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idUsuario",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Posventa/devoluciones/{idDevolucion}/{accion}": {
+      "post": {
+        "tags": [
+          "Posventa"
+        ],
+        "parameters": [
+          {
+            "name": "idDevolucion",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "accion",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idAdministrador",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "motivo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "referencia",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Posventa/garantias/{idTicket}/{accion}": {
+      "post": {
+        "tags": [
+          "Posventa"
+        ],
+        "parameters": [
+          {
+            "name": "idTicket",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "accion",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idAdministrador",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "motivo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cubiertoPor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idProductoReemplazo",
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1068,6 +1484,10 @@
             "type": "string",
             "nullable": true
           },
+          "tipoDocumento": {
+            "type": "string",
+            "nullable": true
+          },
           "cedula": {
             "type": "string",
             "nullable": true
@@ -1125,6 +1545,20 @@
           "subtotal": {
             "type": "number",
             "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LineaSolicitada": {
+        "type": "object",
+        "properties": {
+          "idProducto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cantidad": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1244,6 +1678,19 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "tipoPedido": {
+            "type": "string",
+            "nullable": true
+          },
+          "idPedidoOriginal": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "numeroGarantia": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1292,6 +1739,31 @@
           },
           "facturacion": {
             "$ref": "#/components/schemas/DatosEnvio"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudDevolucion": {
+        "type": "object",
+        "properties": {
+          "idPedido": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lineas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineaSolicitada"
+            },
+            "nullable": true
+          },
+          "motivo": {
+            "type": "string",
+            "nullable": true
+          },
+          "comentario": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

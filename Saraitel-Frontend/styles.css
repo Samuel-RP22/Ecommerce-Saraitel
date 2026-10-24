@@ -2956,3 +2956,853 @@ b.carrito-dato {
     }
 }
 
+
+/* ==========================================
+   CHECKOUT: TIPO Y NÚMERO DE DOCUMENTO
+========================================== */
+.fila-documento {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+}
+
+/* Campos de fecha: etiqueta siempre arriba y calendario oscuro */
+.campo input[type="date"] {
+    color-scheme: dark;
+    cursor: pointer;
+}
+
+/* ==========================================
+   CONSULTAR COMPRAS
+========================================== */
+#vistaConsultaCompras,
+#vistaDetalleCompra {
+    max-width: 1100px;
+    width: 92%;
+    margin: 0 auto;
+    padding: 20px 0 48px;
+}
+
+.consulta-form {
+    margin-top: 22px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--borde);
+}
+
+.consulta-campos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.consulta-admin {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    margin-top: 4px;
+}
+
+.consulta-form .aviso-pago {
+    margin: 4px 0 0;
+}
+
+.consulta-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.consulta-acciones button {
+    min-width: 130px;
+    padding: 12px 20px;
+}
+
+.resultados-compras {
+    margin-top: 22px;
+}
+
+.consulta-resumen {
+    margin: 0 0 12px;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+}
+
+/* 5.1: sin resultados */
+.consulta-vacia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 40px 0;
+    text-align: center;
+    color: var(--texto-suave);
+}
+
+.consulta-vacia > .ico {
+    width: 40px;
+    height: 40px;
+    color: var(--texto-tenue);
+}
+
+.consulta-vacia p {
+    margin: 0;
+    color: var(--texto);
+    font-size: 1.02rem;
+    font-weight: 600;
+}
+
+.consulta-vacia span {
+    font-size: 0.88rem;
+}
+
+/* Listado: Factura | Fecha | (Cliente) | Medio de pago | Valor total */
+.compras-tabla {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.compra-fila {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1.4fr) minmax(0, 1fr) 140px 24px;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--superficie-2);
+    color: var(--texto);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    text-align: left;
+    font-weight: 400;
+    justify-content: stretch;
+}
+
+.compra-fila.con-cliente {
+    grid-template-columns: 110px minmax(0, 1.2fr) minmax(0, 1.4fr) minmax(0, 0.9fr) 130px 24px;
+}
+
+button.compra-fila:hover {
+    border-color: var(--blanco);
+}
+
+button.compra-fila:hover .pedido-item-flecha {
+    color: var(--blanco);
+}
+
+.compra-fila-titulos {
+    background: transparent;
+    border-color: transparent;
+    padding-top: 0;
+    padding-bottom: 4px;
+    color: var(--texto-tenue);
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.compra-factura {
+    font-family: var(--fuente-titulos);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.compra-cliente {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.compra-cliente small {
+    color: var(--texto-tenue);
+    font-size: 0.78rem;
+}
+
+.compra-total {
+    text-align: right;
+}
+
+/* ---------- Detalle de la compra ---------- */
+.compra-bloques {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.compra-subtitulo {
+    margin: 8px 0 10px;
+    color: var(--texto-tenue);
+    font-family: var(--fuente-texto);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Productos: Producto | Cantidad | Valor unitario | Subtotal */
+.factura-fila {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 90px 140px 140px;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--borde);
+}
+
+.factura-fila-titulos {
+    padding-top: 0;
+    color: var(--texto-tenue);
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.factura-fila > :not(:first-child) {
+    text-align: right;
+}
+
+.factura-fila > :nth-child(2) {
+    text-align: center;
+}
+
+.factura-producto {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.factura-producto .pedido-foto {
+    margin-left: 0;
+    flex-shrink: 0;
+}
+
+.factura-producto > span:last-child {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+}
+
+.factura-producto small {
+    color: var(--texto-tenue);
+    font-size: 0.76rem;
+    font-weight: 400;
+}
+
+.factura-totales {
+    width: min(380px, 100%);
+    margin: 18px 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.factura-totales > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.93rem;
+}
+
+.factura-suave {
+    color: var(--texto-tenue);
+    font-size: 0.86rem !important;
+}
+
+.factura-total {
+    margin-top: 8px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--blanco);
+    color: var(--negro);
+    font-family: var(--fuente-titulos);
+    font-weight: 800;
+    font-size: 1.1rem !important;
+    letter-spacing: 0.05em;
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 760px) {
+    .consulta-campos,
+    .consulta-admin,
+    .compra-bloques {
+        grid-template-columns: 1fr;
+    }
+
+    .consulta-acciones button {
+        flex: 1;
+    }
+
+    .compra-fila,
+    .compra-fila.con-cliente {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 4px 12px;
+    }
+
+    .compra-fila-titulos {
+        display: none;
+    }
+
+    .compra-fila .compra-dato:not(.compra-factura):not(.compra-total)::before {
+        content: attr(data-label) ": ";
+        color: var(--texto-tenue);
+    }
+
+    .compra-fila .compra-dato {
+        grid-column: 1;
+        font-size: 0.88rem;
+    }
+
+    .compra-fila .compra-factura {
+        font-size: 1rem;
+    }
+
+    .compra-fila .compra-total {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .compra-fila .pedido-item-flecha {
+        display: none;
+    }
+
+    .factura-fila {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 6px 12px;
+    }
+
+    .factura-fila-titulos {
+        display: none;
+    }
+
+    .factura-fila .factura-producto {
+        grid-column: 1 / -1;
+    }
+
+    .factura-fila > .factura-dato {
+        text-align: left !important;
+        font-size: 0.88rem;
+    }
+
+    .factura-fila > .factura-dato::before {
+        content: attr(data-label) ": ";
+        color: var(--texto-tenue);
+    }
+}
+
+/* ==========================================
+   GESTIÓN DE PEDIDOS: BUSCADOR
+========================================== */
+.admin-pedidos-buscar input {
+    padding-right: 44px;
+}
+
+.btn-limpiar-busqueda {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--texto-suave);
+    border: none;
+}
+
+.btn-limpiar-busqueda:hover {
+    color: var(--blanco);
+    background: var(--superficie-3);
+}
+
+/* El ícono de la lupa se ubica a la izquierda; el de limpiar no */
+.btn-limpiar-busqueda .ico {
+    position: static;
+    transform: none;
+    color: inherit;
+}
+
+.busqueda-vacia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 34px 0;
+    text-align: center;
+    color: var(--texto-suave);
+}
+
+.busqueda-vacia p {
+    margin: 0;
+    color: var(--texto);
+    font-weight: 600;
+}
+
+.busqueda-vacia span {
+    font-size: 0.86rem;
+    max-width: 520px;
+}
+
+
+/* ==========================================
+   HU-19 A HU-23: DEVOLUCIONES Y GARANTÍAS
+========================================== */
+#vistaSolicitudPosventa,
+#vistaPosventaAdmin {
+    max-width: 1100px;
+    width: 92%;
+    margin: 0 auto;
+    padding: 20px 0 48px;
+}
+
+/* Áreas de texto con la misma etiqueta flotante de los demás campos */
+.campo textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 24px 14px 10px;
+    margin: 0;
+    background: var(--superficie-2);
+    color: var(--texto);
+    border: 1px solid var(--borde-fuerte);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: var(--fuente-texto);
+    resize: vertical;
+}
+
+.campo textarea:focus {
+    outline: none;
+    border-color: var(--blanco);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+}
+
+.campo-textarea label {
+    top: 18px;
+}
+
+.campo textarea:focus + label,
+.campo textarea:not(:placeholder-shown) + label {
+    top: 13px;
+    font-size: 0.72rem;
+}
+
+.campo-error textarea {
+    border-color: var(--rojo);
+}
+
+/* Marcas en las tarjetas de pedidos */
+.marca-posventa {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--superficie-3);
+    color: var(--texto-suave);
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.marca-posventa .ico {
+    width: 0.95em;
+    height: 0.95em;
+}
+
+/* ---------- Cliente: sección en el detalle del pedido ---------- */
+.posventa-pedido:not(:empty) {
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px solid var(--borde);
+}
+
+.opciones-posventa {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.opcion-posventa {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px 14px;
+    padding: 18px;
+    border: 1px solid var(--borde-fuerte);
+    border-radius: 14px;
+    background: var(--superficie-2);
+}
+
+.opcion-posventa h4 {
+    margin: 0 0 4px;
+    font-size: 1rem;
+}
+
+.opcion-posventa p {
+    margin: 0;
+    color: var(--texto-suave);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.opcion-posventa button {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 8px;
+}
+
+.opcion-posventa.deshabilitada {
+    opacity: 0.6;
+}
+
+.opcion-posventa button:disabled {
+    cursor: not-allowed;
+}
+
+.opcion-posventa-icono .ico {
+    width: 28px;
+    height: 28px;
+}
+
+.solicitudes-posventa {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.solicitud-posventa-item {
+    padding: 16px 18px;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    background: var(--superficie-2);
+}
+
+.solicitud-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.solicitud-cabecera > span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.solicitud-productos {
+    margin: 10px 0 4px;
+    font-weight: 500;
+}
+
+.solicitud-detalle {
+    margin: 4px 0 0;
+    color: var(--texto-suave);
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.solicitud-detalle a {
+    color: var(--blanco);
+}
+
+/* Historial de estados */
+.historial-posventa {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0 0 0 14px;
+    border-left: 2px solid var(--borde-fuerte);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.historial-posventa li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+}
+
+.historial-posventa li::before {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--blanco);
+}
+
+.historial-posventa li span {
+    color: var(--texto-tenue);
+    font-size: 0.8rem;
+}
+
+/* ---------- Cliente: formularios de devolución y garantía ---------- */
+.solicitud-titulo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 6px;
+    font-size: 1.7rem;
+}
+
+.lineas-devolucion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.linea-devolucion {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border: 1px solid var(--borde-fuerte);
+    border-radius: 12px;
+    background: var(--superficie-2);
+    cursor: pointer;
+}
+
+.linea-devolucion.elegida {
+    border-color: var(--blanco);
+    box-shadow: inset 0 0 0 1px var(--blanco);
+}
+
+.linea-devolucion input[type="checkbox"],
+.linea-devolucion input[type="radio"] {
+    accent-color: var(--blanco);
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.linea-devolucion .pedido-foto {
+    margin-left: 0;
+}
+
+.linea-devolucion-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.linea-devolucion-info small {
+    color: var(--texto-tenue);
+}
+
+.nota-legal {
+    margin: 18px 0 0;
+    color: var(--texto-tenue);
+    font-size: 0.82rem;
+    line-height: 1.55;
+}
+
+.contador-caracteres {
+    margin: -6px 0 14px;
+    text-align: right;
+    color: var(--texto-tenue);
+    font-size: 0.78rem;
+}
+
+.fotos-garantia {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.fotos-elegidas {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.foto-elegida {
+    position: relative;
+    width: 88px;
+    height: 88px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--borde-fuerte);
+}
+
+.foto-elegida img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.foto-elegida button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.75);
+    color: var(--blanco);
+}
+
+/* Es un <label> (para abrir el selector de archivos) con aspecto de botón */
+.btn-agregar-foto {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+    font-weight: 600;
+    font-size: 0.93rem;
+    cursor: pointer;
+}
+
+/* ---------- Visor de fotos ---------- */
+.visor-foto {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.88);
+}
+
+.visor-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: min(900px, 100%);
+}
+
+.visor-contenido img {
+    max-width: 100%;
+    max-height: 75vh;
+    object-fit: contain;
+    border-radius: 12px;
+    background: var(--superficie);
+}
+
+.visor-acciones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* ---------- Administrador ---------- */
+.tipos-posventa {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 20px 0 6px;
+}
+
+.tipo-posventa {
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 16px 18px;
+    background: var(--superficie-2);
+    color: var(--texto-suave);
+    border: 1px solid var(--borde-fuerte);
+    border-radius: 12px;
+    font-size: 1rem;
+}
+
+.tipo-posventa span {
+    margin-left: auto;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--texto-tenue);
+}
+
+.tipo-posventa.activo {
+    border-color: var(--blanco);
+    color: var(--blanco);
+    box-shadow: inset 0 0 0 1px var(--blanco);
+}
+
+.posventa-admin .aviso-pago {
+    margin: 12px 0 0;
+}
+
+.solicitud-admin {
+    grid-template-columns: minmax(0, 1fr) 170px;
+}
+
+.solicitud-cuerpo {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.linea-posventa {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.92rem;
+}
+
+.linea-posventa .pedido-foto {
+    width: 40px;
+    height: 40px;
+    margin-left: 0;
+}
+
+.evidencias {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.evidencia {
+    width: 84px;
+    height: 84px;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--borde-fuerte);
+    border-radius: 10px;
+    background: var(--superficie);
+}
+
+.evidencia:hover {
+    border-color: var(--blanco);
+}
+
+.evidencia img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 760px) {
+    .opciones-posventa,
+    .tipos-posventa {
+        grid-template-columns: 1fr;
+    }
+
+    .linea-devolucion {
+        grid-template-columns: auto auto minmax(0, 1fr);
+    }
+
+    .linea-devolucion .stepper {
+        grid-column: 2 / -1;
+        justify-self: start;
+    }
+
+    .solicitud-admin {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .solicitud-admin .pedido-item-total {
+        align-items: flex-start;
+    }
+}

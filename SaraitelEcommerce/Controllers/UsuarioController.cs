@@ -73,10 +73,7 @@ namespace Saraitel.API.Controllers
                 nombre = usuario.Nombre,
                 correo = usuario.Correo,
                 telefono = usuario.Telefono,
-                rol = usuario.Rol,
-                historialCompras = usuario is Cliente cliente
-                    ? cliente.HistorialCompras
-                    : new List<Pedido>()
+                rol = usuario.Rol
             });
         }
 

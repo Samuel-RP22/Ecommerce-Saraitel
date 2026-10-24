@@ -39,7 +39,9 @@ namespace Saraitel.API.Services
         public Usuario? ObtenerUsuarioPorCorreo(string correo)
         {
             if (string.IsNullOrEmpty(correo)) return null;
-            return ObtenerUsuarios().FirstOrDefault(u => u.Correo.Trim().ToLower() == correo.Trim().ToLower());
+
+            // La base de datos busca el correo sin importar mayúsculas
+            return _usuarioRepository.ObtenerUsuarioPorCorreo(correo);
         }
 
         public string RegistrarUsuario(string rol,string nombre,string correo,string telefono,string contrasena,string direccion = "")
@@ -52,16 +54,15 @@ namespace Saraitel.API.Services
                     "El correo ya está registrado";
             }
 
-            int nuevoId =ObtenerUsuarios().Any()? 
-                ObtenerUsuarios().Max(u =>u.IdUsuario) + 1: 1;
-
+            // El id lo asigna la base de datos al guardar.
+            // La contraseña se guarda cifrada con BCrypt, nunca en texto plano
             Usuario usuario = UsuarioFactory.CrearUsuario(
                     rol,
-                    nuevoId,
+                    0,
                     nombre,
                     correo,
                     telefono,
-                    contrasena,
+                    CifrarContrasena(contrasena),
                     direccion);
             _usuarioRepository.AgregarUsuario(usuario);
 
@@ -76,7 +77,7 @@ namespace Saraitel.API.Services
             {
                 return "Usuario no encontrado";
             }
-            if (usuario.Contrasena != contrasena)
+            if (!ContrasenaCorrecta(contrasena, usuario.Contrasena))
             {
                 _intentosFallidos++;
 
@@ -206,7 +207,7 @@ namespace Saraitel.API.Services
                 return "Código inválido o expirado";
             }
 
-            usuario.Contrasena = nuevaContrasena;
+            usuario.Contrasena = CifrarContrasena(nuevaContrasena);
 
             // El código es de un solo uso
             usuario.TokenRecuperacion = null;
@@ -215,6 +216,30 @@ namespace Saraitel.API.Services
             _usuarioRepository.ActualizarUsuario(usuario);
 
             return "Contraseña restablecida correctamente";
+        }
+
+        /* =========================
+           CONTRASEÑAS (BCrypt)
+        ========================= */
+
+        // BCrypt agrega una "sal" aleatoria: la misma contraseña nunca queda igual dos veces.
+        // Costo 10: seguro y rápido (el 11 por defecto tarda el doble en cada inicio de sesión)
+        private static string CifrarContrasena(string contrasena)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(contrasena ?? "", 10);
+        }
+
+        private static bool ContrasenaCorrecta(string contrasena, string guardada)
+        {
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(contrasena ?? "", guardada);
+            }
+            catch (Exception)
+            {
+                // Lo guardado no es un cifrado BCrypt válido
+                return false;
+            }
         }
 
         private static bool EsCorreoValido(string correo)

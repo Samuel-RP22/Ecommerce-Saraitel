@@ -9,6 +9,10 @@ namespace Saraitel.API.Interfaces
         Pedido? ObtenerPorId(int id);
 
         List<Pedido> ObtenerPedidosDeUsuario(int idUsuario);
+
+        (List<ResumenCompra>? Compras, string Mensaje) ConsultarCompras(
+            int idUsuario, DateTime? fechaInicial, DateTime? fechaFinal,
+            string? numeroFactura, string? tipoDocumento, string? numeroDocumento);
         string AgregarPedido(Pedido pedido);
         string CrearPedidoDesdeCarrito(int idUsuario);
 

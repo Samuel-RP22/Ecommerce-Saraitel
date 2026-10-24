@@ -110,7 +110,7 @@ namespace Saraitel.API.Services
                     {
                         Titulo(c, "INFORMACIÓN DEL CLIENTE");
                         Dato(c, "NOMBRE:", $"{facturacion.Nombre} {facturacion.Apellidos}");
-                        Dato(c, "C.C.:", facturacion.Cedula);
+                        Dato(c, "DOCUMENTO:", $"{DatosEnvio.Abreviatura(facturacion.TipoDocumento)} {facturacion.Cedula}");
                         Dato(c, "TELÉFONO:", facturacion.Telefono);
                         Dato(c, "CORREO:", correoCliente);
                         Dato(c, "DIRECCIÓN:", Direccion(facturacion, false));

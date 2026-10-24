@@ -85,6 +85,22 @@ namespace Saraitel.Entidades
 
         public DateTime? FechaEntrega { get; set; }
 
+        // HU-23: un pedido puede ser una venta o la reposición de un producto
+        // en garantía (se envía sin costo y no tiene factura)
+        public const string TipoVenta = "Venta";
+        public const string TipoReposicion = "Reposición";
+
+        public string TipoPedido { get; set; } = TipoVenta;
+
+        public int? IdPedidoOriginal { get; set; }
+
+        public string NumeroGarantia { get; set; } = string.Empty;
+
+        public bool EsReposicion()
+        {
+            return TipoPedido == TipoReposicion;
+        }
+
         // Un pedido enviado o entregado también está pagado
         public bool EstaPagado()
         {

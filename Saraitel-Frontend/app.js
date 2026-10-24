@@ -39,7 +39,11 @@ const ICONOS = {
     lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
     download: '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/>',
     mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
-    chevronRight: '<path d="m9 6 6 6-6 6"/>'
+    chevronRight: '<path d="m9 6 6 6-6 6"/>',
+    receipt: '<path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+    returns: '<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',
+    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>',
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>'
 };
 
 /* ==========================================
@@ -55,6 +59,47 @@ const FORMATO_COP = new Intl.NumberFormat("es-CO", {
 
 function formatearPrecio(valor) {
     return FORMATO_COP.format(Number(valor) || 0);
+}
+
+/* ==========================================
+   TIPOS DE DOCUMENTO
+   Mismas reglas que DatosEnvio.ValidarNumero en el backend
+========================================== */
+
+const TIPOS_DOCUMENTO = [
+    { valor: "CC", texto: "Cédula de ciudadanía", corto: "C.C.", minimo: 6, maximo: 10, letras: false },
+    { valor: "CE", texto: "Cédula de extranjería", corto: "C.E.", minimo: 5, maximo: 12, letras: false },
+    { valor: "TI", texto: "Tarjeta de identidad", corto: "T.I.", minimo: 8, maximo: 11, letras: false },
+    { valor: "PP", texto: "Pasaporte", corto: "Pasaporte", minimo: 5, maximo: 15, letras: true },
+    { valor: "NIT", texto: "NIT", corto: "NIT", minimo: 9, maximo: 10, letras: false }
+];
+
+// Los pedidos anteriores a este campo no lo tienen: se toman como cédula
+function tipoDocumento(valor) {
+    return TIPOS_DOCUMENTO.find(t => t.valor === valor) || TIPOS_DOCUMENTO[0];
+}
+
+function abreviaturaDocumento(valor) {
+    return tipoDocumento(valor).corto;
+}
+
+// El pasaporte admite letras; los demás documentos, solo números
+function limpiarNumeroDocumento(tipo, texto) {
+    const permiteLetras = !tipo || tipoDocumento(tipo).letras;
+    return permiteLetras
+        ? texto.replace(/[^A-Za-z0-9]/g, "").toUpperCase()
+        : texto.replace(/[^0-9]/g, "");
+}
+
+function validarNumeroDocumento(tipo, numero) {
+    const t = tipoDocumento(tipo);
+    return (numero.length >= t.minimo && numero.length <= t.maximo) ||
+        `Debe tener entre ${t.minimo} y ${t.maximo} ${t.letras ? "letras o números" : "números"}`;
+}
+
+function opcionesTipoDocumento(conTodos = false) {
+    return (conTodos ? `<option value="">Todos los tipos</option>` : "") +
+        TIPOS_DOCUMENTO.map(t => `<option value="${t.valor}">${t.texto}</option>`).join("");
 }
 
 // Para mostrar texto escrito por el usuario sin que se interprete como HTML
@@ -89,7 +134,8 @@ const VISTAS = [
     "vistaAuth", "vistaTienda", "vistaPerfil", "vistaDetalleProducto",
     "vistaCrearProducto", "vistaModificarProducto", "vistaCarrito",
     "vistaCheckout", "vistaConfirmacion", "vistaMisPedidos", "vistaPedido",
-    "vistaGestionPedidos"
+    "vistaGestionPedidos", "vistaConsultaCompras", "vistaDetalleCompra",
+    "vistaSolicitudPosventa", "vistaPosventaAdmin"
 ];
 
 // Muestra una sola vista y oculta todas las demás
@@ -201,6 +247,27 @@ function reiniciarEstadoSesion() {
     misPedidos = [];
     filtroPedidos = "todos";
     paginaPedidos = 1;
+    comprasConsulta = null;
+    paginaCompras = 1;
+    limpiarConsultaCompras();
+    resumenPosventa = null;
+    posventaDeUsuario = null;
+    solicitudEnCurso = null;
+    fotosGarantia = [];
+    avisoPendienteDetalle = null;
+    devolucionesAdmin = [];
+    garantiasAdmin = [];
+    tipoPosventa = "devoluciones";
+    filtroPosventa = "enCurso";
+    paginaPosventa = 1;
+    ["solicitudPosventaContenido", "tiposPosventa", "filtrosPosventa", "listaPosventa", "paginacionPosventa"]
+        .forEach(id => { document.getElementById(id).innerHTML = ""; });
+    document.getElementById("avisoPosventa").classList.add("hidden");
+    document.getElementById("posventaAdminBadge").classList.add("hidden");
+    cerrarVisorFoto();
+    document.getElementById("consultaFechaInicial").value = "";
+    document.getElementById("consultaFechaFinal").value = "";
+    document.getElementById("compraContenido").innerHTML = "";
     document.getElementById("listaMisPedidos").innerHTML = "";
     document.getElementById("filtrosPedidos").innerHTML = "";
     document.getElementById("paginacionPedidos").innerHTML = "";
@@ -279,6 +346,7 @@ function configurarInterfazPorRol() {
     // en lugar del carrito tiene la caja que lleva a la gestión de pedidos
     document.getElementById("opcionMisPedidos").classList.toggle("hidden", esAdministrador);
     document.getElementById("menuPedidosAdminWrap").classList.toggle("hidden", !esAdministrador);
+    document.getElementById("menuPosventaAdminWrap").classList.toggle("hidden", !esAdministrador);
 
     if (esAdministrador) {
         if (componentsCliente) componentsCliente.classList.add("hidden");
@@ -298,7 +366,10 @@ function cargarTodo() {
     cargarProductos();
     cargarCategorias();
     cargarCarrito();
-    if (esAdministrador) cargarPedidosAdmin();
+    if (esAdministrador) {
+        cargarPedidosAdmin();
+        cargarPosventaAdmin();
+    }
 }
 
 /* =========================
@@ -1677,7 +1748,15 @@ function camposDireccion(prefijo) {
         ${campoTexto(prefijo + "Apellidos", "Apellidos", seccion + " family-name")}
     </div>
 
-    ${campoTexto(prefijo + "Cedula", "Cédula", "off", 'inputmode="numeric" maxlength="10" class="solo-numeros"')}
+    <div class="fila-campos fila-documento">
+        <div class="campo campo-select">
+            <select id="${prefijo}TipoDocumento">
+                ${opcionesTipoDocumento()}
+            </select>
+            <label for="${prefijo}TipoDocumento">Tipo de documento</label>
+        </div>
+        ${campoTexto(prefijo + "Cedula", "Número de documento", "off", 'maxlength="15" class="numero-documento"')}
+    </div>
 
     ${campoTexto(prefijo + "Direccion", "Dirección", seccion + " address-line1")}
     <p id="${prefijo}AvisoNumero" class="campo-ayuda hidden">
@@ -1705,7 +1784,7 @@ function camposDireccion(prefijo) {
 const REGLAS_DIRECCION = [
     ["Nombre", v => v.trim() !== "" || "Ingresa un nombre"],
     ["Apellidos", v => v.trim() !== "" || "Ingresa los apellidos"],
-    ["Cedula", v => /^\d{6,10}$/.test(v) || "Ingresa una cédula válida (6 a 10 números)"],
+    ["Cedula", (v, prefijo) => validarNumeroDocumento(document.getElementById(prefijo + "TipoDocumento").value, v)],
     ["Direccion", v => v.trim() !== "" || "Ingresa una dirección"],
     ["Ciudad", v => v.trim() !== "" || "Ingresa una ciudad"],
     ["Departamento", v => v !== "" || "Selecciona un departamento"],
@@ -1732,7 +1811,7 @@ function validarDireccion(prefijo) {
 
     REGLAS_DIRECCION.forEach(([nombre, regla]) => {
         const campo = document.getElementById(prefijo + nombre);
-        const resultado = regla(campo.value);
+        const resultado = regla(campo.value, prefijo);
         if (resultado === true) {
             limpiarErrorCampo(campo);
         } else {
@@ -1750,6 +1829,7 @@ function leerDireccion(prefijo) {
         pais: "Colombia",
         nombre: valor("Nombre"),
         apellidos: valor("Apellidos"),
+        tipoDocumento: valor("TipoDocumento"),
         cedula: valor("Cedula"),
         direccion: valor("Direccion"),
         complemento: valor("Complemento"),
@@ -1783,6 +1863,11 @@ document.getElementById("formCheckout").addEventListener("input", e => {
     const campo = e.target;
     if (campo.classList.contains("solo-numeros")) {
         campo.value = campo.value.replace(/[^0-9]/g, "");
+    }
+    // Número de documento: solo los caracteres que admite el tipo elegido
+    if (campo.classList.contains("numero-documento")) {
+        const prefijo = campo.id.replace("Cedula", "");
+        campo.value = limpiarNumeroDocumento(document.getElementById(prefijo + "TipoDocumento").value, campo.value);
     }
     limpiarErrorCampo(campo);
     if (campo.id.endsWith("Direccion")) actualizarAvisoNumero(campo.id.replace("Direccion", ""));
@@ -2110,7 +2195,7 @@ function abrirWidgetWompi(datos) {
             phoneNumber: campo(envio, "telefono"),
             phoneNumberPrefix: "+57",
             legalId: campo(envio, "cedula"),
-            legalIdType: "CC"
+            legalIdType: campo(envio, "tipoDocumento") || "CC"
         };
     }
 
@@ -2278,8 +2363,8 @@ function confirmarPago(idPedido, idTransaccion, intento = 1) {
 
 /* ---------- HU-17: descargar la factura en PDF ---------- */
 
-function descargarFactura(idPedido) {
-    const boton = document.getElementById("btnDescargarFactura");
+// boton: el botón que se pulsó (la factura se descarga desde varias páginas)
+function descargarFactura(idPedido, boton = document.getElementById("btnDescargarFactura")) {
     const textoOriginal = boton ? boton.innerHTML : "";
     if (boton) {
         boton.disabled = true;
@@ -2302,7 +2387,11 @@ function descargarFactura(idPedido) {
             enlace.remove();
             setTimeout(() => URL.revokeObjectURL(enlace.href), 10000);
         })
-        .catch(err => mostrarAvisoPago("error", "No se pudo descargar la factura: " + err.message))
+        .catch(err => {
+            const mensaje = "No se pudo descargar la factura: " + err.message;
+            if (boton && boton.closest("#compraContenido")) mostrarAvisoEn("avisoCompra", "error", mensaje);
+            else mostrarAvisoPago("error", mensaje);
+        })
         .finally(() => {
             if (boton) {
                 boton.disabled = false;
@@ -2437,7 +2526,7 @@ function mostrarEstadoPedido(pedido, conservarAviso = false, correoFactura = "")
 
     const direccionHTML = d => `
         ${t(d, "nombre")} ${t(d, "apellidos")}<br>
-        C.C. ${t(d, "cedula")}<br>
+        ${abreviaturaDocumento(v(d, "tipoDocumento"))} ${t(d, "cedula")}<br>
         ${t(d, "direccion")}${v(d, "complemento") ? ", " + t(d, "complemento") : ""}<br>
         ${t(d, "ciudad")}, ${t(d, "departamento")}${v(d, "codigoPostal") ? " · " + t(d, "codigoPostal") : ""}<br>
         Tel. ${t(d, "telefono")}`;
@@ -2575,6 +2664,16 @@ function abrirMisPedidos(reiniciar = true) {
         `<p class="pedidos-mensaje">Cargando tus pedidos...</p>`;
     mostrarVista("vistaMisPedidos");
 
+    // Devoluciones y garantías del cliente, para marcar los pedidos que tienen una en curso
+    fetch(`${API}/posventa/usuario/${usuarioId}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(datos => {
+            if (!datos || sesion !== sesionActual) return;
+            posventaDeUsuario = datos;
+            if (misPedidos.length) renderizarMisPedidos();
+        })
+        .catch(() => {});
+
     fetch(`${API}/pedido/usuario/${usuarioId}`)
         .then(async r => {
             if (!r.ok) throw new Error((await r.text()) || `Error ${r.status}`);
@@ -2711,6 +2810,7 @@ function tarjetaPedidoHTML(p) {
             <div class="pedido-item-titulo">
                 <b>Pedido #${id}</b>
                 <span class="estado-chip ${claseEstado(estado)}">${escaparHTML(estado)}</span>
+                ${marcasPosventaHTML(p)}
             </div>
             <span class="pedido-item-fecha">${fechaPedidoTexto(campo(p, "fecha"))}</span>
             ${nota ? `<span class="pedido-item-nota">${nota}</span>` : ""}
@@ -2808,7 +2908,7 @@ function mostrarDetallePedido(pedido) {
 
     const direccionHTML = d => `
         ${t(d, "nombre")} ${t(d, "apellidos")}<br>
-        C.C. ${t(d, "cedula")}<br>
+        ${abreviaturaDocumento(v(d, "tipoDocumento"))} ${t(d, "cedula")}<br>
         ${t(d, "direccion")}${v(d, "complemento") ? ", " + t(d, "complemento") : ""}<br>
         ${t(d, "ciudad")}, ${t(d, "departamento")}${v(d, "codigoPostal") ? " · " + t(d, "codigoPostal") : ""}<br>
         Tel. ${t(d, "telefono")}`;
@@ -2820,9 +2920,14 @@ function mostrarDetallePedido(pedido) {
         cantidad: v(d, "cantidad")
     }));
 
+    const esReposicion = v(pedido, "tipoPedido") === "Reposición";
+
     // Datos del pago según el estado
     let pagoHTML;
-    if (estaPagado(estado)) {
+    if (esReposicion) {
+        pagoHTML = `<p>Sin costo · reposición por la garantía ${t(pedido, "numeroGarantia")}<br>
+                    Reemplaza un producto del pedido #${t(pedido, "idPedidoOriginal")}</p>`;
+    } else if (estaPagado(estado)) {
         pagoHTML = `
             <dl class="datos-lista">
                 <dt>Medio</dt><dd>${t(pedido, "medioPago")} (Wompi)</dd>
@@ -2848,7 +2953,7 @@ function mostrarDetallePedido(pedido) {
         acciones = `
             <button class="btn-danger" onclick="confirmarCancelacion(${id})">Cancelar compra</button>
             <button class="btn-success" onclick="pagarDesdeDetalle(${id})">${icono("lock")} Pagar ahora</button>`;
-    } else if (estaPagado(estado) && (v(pedido, "detalles") || []).length > 0) {
+    } else if (estaPagado(estado) && !esReposicion && (v(pedido, "detalles") || []).length > 0) {
         acciones = `
             <button class="btn-dark-blue" id="btnDescargarFactura" onclick="descargarFactura(${id})">${icono("download")} Descargar factura</button>`;
     }
@@ -2911,14 +3016,26 @@ function mostrarDetallePedido(pedido) {
         </div>
     </div>
 
-    ${acciones ? `<div class="confirmacion-acciones">${acciones}</div>` : ""}`;
+    ${acciones ? `<div class="confirmacion-acciones">${acciones}</div>` : ""}
+
+    <div id="posventaPedido" class="posventa-pedido"></div>`;
 
     if (estado === "Pendiente de pago") {
         iniciarCuentaRegresiva(id, v(pedido, "fechaLimitePago"));
     }
 
+    // HU-19 y HU-22: devoluciones y garantías del pedido
+    resumenPosventa = null;
+    if (estaPagado(estado)) cargarPosventaPedido(id);
+
     if (document.getElementById("vistaPedido").classList.contains("hidden")) {
         mostrarVista("vistaPedido");
+    }
+
+    // Mensaje que dejó una acción anterior (por ejemplo, "Solicitud enviada")
+    if (avisoPendienteDetalle) {
+        mostrarAvisoEn("avisoPago", "exito", avisoPendienteDetalle);
+        avisoPendienteDetalle = null;
     }
 }
 
@@ -2926,6 +3043,1229 @@ function mostrarDetallePedido(pedido) {
 function pagarDesdeDetalle(idPedido) {
     mostrarEstadoPedido(pedidoEnPantalla);
     iniciarPago(idPedido);
+}
+
+/* ==========================================
+   CONSULTA DE COMPRAS POR CRITERIOS
+   1. Se muestran los criterios (el administrador ve además el documento).
+   2-3. El usuario los llena y presiona Consultar.
+   4. Se validan las fechas (4.1: inicial mayor que final).
+   5. El backend busca según el rol (5.1: sin resultados).
+   6. Se listan factura, fecha, cliente (admin), total y medio de pago.
+   7-8. Al elegir una compra se ve su detalle y su factura.
+========================================== */
+
+const MENSAJE_FECHAS_INVALIDAS = "La fecha inicial no puede ser mayor a la fecha final.";
+const MENSAJE_SIN_COMPRAS = "No se encontraron compras con los criterios ingresados.";
+const COMPRAS_POR_PAGINA = 10;
+
+let comprasConsulta = null; // null = todavía no se ha consultado
+let paginaCompras = 1;
+
+// Fecha local en formato yyyy-mm-dd (el que usan los campos de fecha)
+function fechaISO(fecha) {
+    const dos = n => String(n).padStart(2, "0");
+    return `${fecha.getFullYear()}-${dos(fecha.getMonth() + 1)}-${dos(fecha.getDate())}`;
+}
+
+function mostrarAvisoEn(idCaja, tipo, mensaje) {
+    const caja = document.getElementById(idCaja);
+    if (!caja) return;
+    const iconos = { error: "xCircle", exito: "check", info: "info" };
+    caja.className = `aviso-pago aviso-${tipo}`;
+    caja.innerHTML = `${icono(iconos[tipo] || "info")} <span>${escaparHTML(mensaje)}</span>`;
+}
+
+// Paso 1: pantalla con los criterios según el rol
+function abrirConsultaCompras() {
+    if (!usuarioId) return;
+
+    document.getElementById("consultaCamposAdmin").classList.toggle("hidden", !esAdministrador);
+
+    const selector = document.getElementById("consultaTipoDocumento");
+    if (!selector.options.length) selector.innerHTML = opcionesTipoDocumento(true);
+
+    // Fechas sugeridas la primera vez: los últimos 30 días
+    const inicial = document.getElementById("consultaFechaInicial");
+    const final = document.getElementById("consultaFechaFinal");
+    if (!inicial.value && !final.value) {
+        const hace30 = new Date();
+        hace30.setDate(hace30.getDate() - 30);
+        inicial.value = fechaISO(hace30);
+        final.value = fechaISO(new Date());
+    }
+
+    if (comprasConsulta === null) renderizarCompras();
+    mostrarVista("vistaConsultaCompras");
+}
+
+function limpiarConsultaCompras() {
+    ["consultaFactura", "consultaNumeroDocumento"].forEach(id => {
+        document.getElementById(id).value = "";
+    });
+    document.getElementById("consultaTipoDocumento").value = "";
+    document.querySelectorAll("#formConsultaCompras .campo").forEach(c => {
+        c.classList.remove("campo-error");
+        const mensaje = c.querySelector(".campo-mensaje");
+        if (mensaje) mensaje.innerText = "";
+    });
+    document.getElementById("consultaError").classList.add("hidden");
+
+    comprasConsulta = null;
+    paginaCompras = 1;
+    renderizarCompras();
+}
+
+// El número de documento solo admite lo que permite el tipo elegido
+document.getElementById("consultaNumeroDocumento").addEventListener("input", e => {
+    e.target.value = limpiarNumeroDocumento(document.getElementById("consultaTipoDocumento").value, e.target.value);
+});
+document.getElementById("consultaTipoDocumento").addEventListener("change", () => {
+    const numero = document.getElementById("consultaNumeroDocumento");
+    numero.value = limpiarNumeroDocumento(document.getElementById("consultaTipoDocumento").value, numero.value);
+});
+document.getElementById("formConsultaCompras").addEventListener("input", e => {
+    limpiarErrorCampo(e.target);
+    document.getElementById("consultaError").classList.add("hidden");
+});
+
+// Pasos 2 a 6
+function consultarCompras(evento) {
+    evento.preventDefault();
+
+    const campoInicial = document.getElementById("consultaFechaInicial");
+    const campoFinal = document.getElementById("consultaFechaFinal");
+    const fechaInicial = campoInicial.value;
+    const fechaFinal = campoFinal.value;
+
+    document.getElementById("consultaError").classList.add("hidden");
+    limpiarErrorCampo(campoInicial);
+    limpiarErrorCampo(campoFinal);
+
+    // Paso 4: las fechas son obligatorias y deben ser válidas
+    let faltante = null;
+    if (!fechaInicial) {
+        marcarError(campoInicial, "Selecciona la fecha inicial");
+        faltante = campoInicial;
+    }
+    if (!fechaFinal) {
+        marcarError(campoFinal, "Selecciona la fecha final");
+        faltante = faltante || campoFinal;
+    }
+    if (faltante) {
+        faltante.focus();
+        return;
+    }
+
+    // 4.1: la fecha inicial es mayor a la fecha final -> se vuelve al paso 2
+    if (fechaInicial > fechaFinal) {
+        mostrarAvisoEn("consultaError", "error", MENSAJE_FECHAS_INVALIDAS);
+        campoInicial.focus();
+        return;
+    }
+
+    const parametros = new URLSearchParams({ idUsuario: usuarioId, fechaInicial, fechaFinal });
+
+    const factura = document.getElementById("consultaFactura").value.trim();
+    if (factura) parametros.set("numeroFactura", factura);
+
+    if (esAdministrador) {
+        const tipo = document.getElementById("consultaTipoDocumento").value;
+        const numero = document.getElementById("consultaNumeroDocumento").value.trim();
+        if (tipo) parametros.set("tipoDocumento", tipo);
+        if (numero) parametros.set("numeroDocumento", numero);
+    }
+
+    const boton = document.getElementById("btnConsultarCompras");
+    const textoBoton = boton.innerHTML;
+    boton.disabled = true;
+    boton.innerText = "Consultando...";
+    const sesion = sesionActual;
+
+    fetch(`${API}/pedido/compras?${parametros}`)
+        .then(async r => {
+            if (!r.ok) throw new Error((await r.text()) || `Error ${r.status}`);
+            return r.json();
+        })
+        .then(lista => {
+            if (sesion !== sesionActual) return;
+            comprasConsulta = lista;
+            paginaCompras = 1;
+            renderizarCompras();
+        })
+        .catch(err => {
+            if (sesion === sesionActual) mostrarAvisoEn("consultaError", "error", err.message);
+        })
+        .finally(() => {
+            boton.disabled = false;
+            boton.innerHTML = textoBoton;
+        });
+}
+
+function irAPaginaCompras(numero) {
+    paginaCompras = numero;
+    renderizarCompras();
+    document.getElementById("resultadosCompras").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// Paso 6: listado de compras
+function renderizarCompras() {
+    const contenedor = document.getElementById("resultadosCompras");
+    const paginacion = document.getElementById("paginacionCompras");
+    paginacion.innerHTML = "";
+
+    if (comprasConsulta === null) {
+        contenedor.innerHTML = `<p class="pedidos-mensaje">Ingresa los criterios y presiona <b>Consultar</b>.</p>`;
+        return;
+    }
+
+    // 5.1: no hay compras -> mensaje, y los criterios siguen disponibles para cambiarlos
+    if (comprasConsulta.length === 0) {
+        contenedor.innerHTML = `
+            <div class="consulta-vacia" role="status">
+                ${icono("info")}
+                <p>${MENSAJE_SIN_COMPRAS}</p>
+                <span>Modifica los criterios y vuelve a consultar.</span>
+            </div>`;
+        return;
+    }
+
+    const conCliente = esAdministrador;
+    const total = comprasConsulta.reduce((suma, c) => suma + Number(campo(c, "totalPedido") || 0), 0);
+    const totalPaginas = Math.ceil(comprasConsulta.length / COMPRAS_POR_PAGINA);
+    if (paginaCompras > totalPaginas) paginaCompras = totalPaginas;
+    const inicio = (paginaCompras - 1) * COMPRAS_POR_PAGINA;
+
+    const filas = comprasConsulta.slice(inicio, inicio + COMPRAS_POR_PAGINA).map(c => {
+        const numero = campo(c, "numeroFactura") || "—";
+        const cliente = conCliente ? `
+            <span class="compra-dato compra-cliente" data-label="Cliente">
+                ${escaparHTML(campo(c, "cliente"))}
+                <small>${abreviaturaDocumento(campo(c, "tipoDocumento"))} ${escaparHTML(campo(c, "numeroDocumento"))}</small>
+            </span>` : "";
+
+        return `
+        <button class="compra-fila${conCliente ? " con-cliente" : ""}" onclick="abrirDetalleCompra(${campo(c, "idPedido")})">
+            <span class="compra-dato compra-factura" data-label="Factura">${escaparHTML(numero)}</span>
+            <span class="compra-dato" data-label="Fecha de la compra">${fechaPedidoTexto(campo(c, "fechaCompra"))}</span>
+            ${cliente}
+            <span class="compra-dato" data-label="Medio de pago">${escaparHTML(campo(c, "medioPago") || "—")}</span>
+            <b class="compra-dato compra-total" data-label="Valor total">${formatearPrecio(campo(c, "totalPedido"))}</b>
+            <span class="pedido-item-flecha">${icono("chevronRight")}</span>
+        </button>`;
+    }).join("");
+
+    const cantidad = comprasConsulta.length;
+
+    contenedor.innerHTML = `
+        <p class="consulta-resumen">
+            ${cantidad} ${cantidad === 1 ? "compra encontrada" : "compras encontradas"} · Total ${formatearPrecio(total)}
+        </p>
+        <div class="compras-tabla">
+            <div class="compra-fila compra-fila-titulos${conCliente ? " con-cliente" : ""}" aria-hidden="true">
+                <span>Factura</span>
+                <span>Fecha de la compra</span>
+                ${conCliente ? "<span>Cliente</span>" : ""}
+                <span>Medio de pago</span>
+                <span class="compra-total">Valor total</span>
+                <span></span>
+            </div>
+            ${filas}
+        </div>`;
+
+    paginacion.innerHTML = paginacionHTML(totalPaginas, paginaCompras, "irAPaginaCompras");
+}
+
+// Pasos 7 y 8: detalle de la compra y su factura
+function abrirDetalleCompra(idPedido) {
+    const sesion = sesionActual;
+
+    fetch(`${API}/pedido/${idPedido}`)
+        .then(async r => {
+            if (!r.ok) throw new Error((await r.text()) || `Error ${r.status}`);
+            return r.json();
+        })
+        .then(pedido => {
+            if (sesion !== sesionActual) return;
+            // El cliente solo puede ver sus propias compras
+            if (!esAdministrador && campo(pedido, "idUsuario") !== usuarioId) throw new Error("Compra no encontrada");
+            mostrarDetalleCompra(pedido);
+        })
+        .catch(err => {
+            if (sesion === sesionActual) mostrarAvisoEn("consultaError", "error", "No se pudo abrir la compra: " + err.message);
+        });
+}
+
+function volverAConsulta() {
+    mostrarVista("vistaConsultaCompras");
+}
+
+function mostrarDetalleCompra(pedido) {
+    // Para que la descarga use el número de factura correcto
+    pedidoEnPantalla = pedido;
+
+    const v = campo;
+    const t = (obj, nombre) => escaparHTML(v(obj, nombre));
+
+    const id = v(pedido, "idPedido");
+    const estado = v(pedido, "estadoPedido");
+    const envio = v(pedido, "envio") || {};
+    const cliente = v(pedido, "facturacion") || envio;
+    const detalles = v(pedido, "detalles") || [];
+
+    const subtotal = Number(v(pedido, "subtotal")) || 0;
+    const impuestos = Number(v(pedido, "impuestos")) || 0;
+    const articulos = detalles.reduce((suma, d) => suma + (v(d, "cantidad") || 0), 0);
+
+    const direccion = d => `${t(d, "direccion")}${v(d, "complemento") ? ", " + t(d, "complemento") : ""}<br>
+        ${t(d, "ciudad")}, ${t(d, "departamento")}`;
+
+    const productos = detalles.map(d => `
+        <div class="factura-fila">
+            <div class="factura-producto">
+                <span class="pedido-foto"><img src="${t(d, "imagen") || IMAGEN_POR_DEFECTO}" alt="${t(d, "nombre")}"></span>
+                <span>${t(d, "nombre")}<small>Código SRT-${String(v(d, "idProducto")).padStart(4, "0")}</small></span>
+            </div>
+            <span class="factura-dato" data-label="Cantidad">${v(d, "cantidad")}</span>
+            <span class="factura-dato" data-label="Valor unitario">${formatearPrecio(v(d, "precioUnitario"))}</span>
+            <b class="factura-dato" data-label="Subtotal">${formatearPrecio(v(d, "subtotal"))}</b>
+        </div>`).join("");
+
+    document.getElementById("compraContenido").innerHTML = `
+    <div class="detalle-pedido-cabecera">
+        <button class="btn-secondary" onclick="volverAConsulta()">${icono("arrowLeft")} Resultados de la consulta</button>
+    </div>
+
+    <div class="detalle-pedido-titulo">
+        <div>
+            <span class="confirmacion-numero">Compra del ${fechaPedidoTexto(v(pedido, "fechaPago") || v(pedido, "fecha"), false)} · Pedido #${id}</span>
+            <h2>Factura ${t(pedido, "numeroFactura") || "—"}</h2>
+        </div>
+        <span class="estado-chip ${claseEstado(estado)}">${escaparHTML(estado)}</span>
+    </div>
+
+    <div id="avisoCompra" class="aviso-pago hidden" role="status"></div>
+
+    <div class="compra-bloques">
+        <div class="confirmacion-bloque">
+            <h3>Cliente</h3>
+            <dl class="datos-lista">
+                <dt>Nombre</dt><dd>${t(cliente, "nombre")} ${t(cliente, "apellidos")}</dd>
+                <dt>Documento</dt><dd>${abreviaturaDocumento(v(cliente, "tipoDocumento"))} ${t(cliente, "cedula")}</dd>
+                <dt>Teléfono</dt><dd>${t(cliente, "telefono")}</dd>
+                <dt>Dirección</dt><dd>${direccion(cliente)}</dd>
+            </dl>
+        </div>
+        <div class="confirmacion-bloque">
+            <h3>Pago</h3>
+            <dl class="datos-lista">
+                <dt>Medio</dt><dd>${t(pedido, "medioPago")} (Wompi)</dd>
+                <dt>Transacción</dt><dd>${t(pedido, "idTransaccion")}</dd>
+                <dt>Referencia</dt><dd>${t(pedido, "referenciaPago")}</dd>
+                <dt>Pagado el</dt><dd>${fechaPedidoTexto(v(pedido, "fechaPago"))}</dd>
+            </dl>
+        </div>
+        <div class="confirmacion-bloque">
+            <h3>Envío</h3>
+            <dl class="datos-lista">
+                <dt>Método</dt><dd>${t(pedido, "metodoEnvio") || "Estándar"}</dd>
+                <dt>Entrega en</dt><dd>${direccion(envio)}</dd>
+                ${v(pedido, "numeroGuia") ? `<dt>Guía</dt><dd>${t(pedido, "transportadora")} · ${t(pedido, "numeroGuia")}</dd>` : ""}
+            </dl>
+        </div>
+    </div>
+
+    <h3 class="compra-subtitulo">Productos</h3>
+    <div class="factura-tabla">
+        <div class="factura-fila factura-fila-titulos" aria-hidden="true">
+            <span>Producto</span>
+            <span>Cantidad</span>
+            <span>Valor unitario</span>
+            <span>Subtotal</span>
+        </div>
+        ${productos}
+    </div>
+
+    <div class="factura-totales">
+        <div><span>Subtotal · ${articulos} ${articulos === 1 ? "artículo" : "artículos"}</span><span>${formatearPrecio(subtotal)}</span></div>
+        <div><span>Envío estándar</span><span>${formatearPrecio(v(pedido, "costoEnvio"))}</span></div>
+        <div class="factura-suave"><span>Base sin IVA (productos)</span><span>${formatearPrecio(subtotal - impuestos)}</span></div>
+        <div class="factura-suave"><span>IVA ${Math.round(tasaIva * 100)} % (incluido)</span><span>${formatearPrecio(impuestos)}</span></div>
+        <div class="factura-total"><span>TOTAL</span><span>${formatearPrecio(v(pedido, "totalPedido"))}</span></div>
+    </div>
+
+    <div class="confirmacion-acciones">
+        <button class="btn-dark-blue" onclick="descargarFactura(${id}, this)">${icono("download")} Descargar factura</button>
+    </div>`;
+
+    mostrarVista("vistaDetalleCompra");
+}
+
+/* ==========================================
+   HU-19 A HU-23: DEVOLUCIONES Y GARANTÍAS
+========================================== */
+
+const MOTIVOS_DEVOLUCION = ["Ya no lo quiero", "No es lo que esperaba", "Me equivoqué de producto", "Otro"];
+const MAX_FOTOS_GARANTIA = 3;
+const MAX_BYTES_FOTO = 5 * 1024 * 1024;
+
+const ESTADOS_DEVOLUCION = ["Solicitada", "Aprobada", "Producto recibido", "Reembolsada", "Rechazada"];
+const ESTADOS_GARANTIA = ["Recibido", "En revisión", "Aprobado", "Producto recibido", "Cambio enviado", "Rechazado"];
+const FINALES_POSVENTA = ["Reembolsada", "Rechazada", "Cambio enviado", "Rechazado"];
+
+let resumenPosventa = null;      // resumen del pedido abierto (plazos y unidades disponibles)
+let posventaDeUsuario = null;    // solicitudes del cliente (para las marcas en Mis pedidos)
+let solicitudEnCurso = null;     // formulario abierto: { tipo, idPedido }
+let fotosGarantia = [];          // fotos elegidas en el formulario de garantía
+let avisoPendienteDetalle = null;
+
+function enCursoPosventa(estado) {
+    return !FINALES_POSVENTA.includes(estado);
+}
+
+function clasePosventa(estado) {
+    if (estado === "Reembolsada" || estado === "Cambio enviado") return "estado-entregado";
+    if (estado === "Rechazada" || estado === "Rechazado") return "estado-cancelado";
+    return "estado-enviado";
+}
+
+// Marcas en las tarjetas de pedidos: reposición y solicitudes en curso
+function marcasPosventaHTML(p) {
+    let html = "";
+    if (campo(p, "tipoPedido") === "Reposición") {
+        html += `<span class="marca-posventa">${icono("shield")} Reposición ${escaparHTML(campo(p, "numeroGarantia"))}</span>`;
+    }
+    if (posventaDeUsuario && !esAdministrador) {
+        const id = campo(p, "idPedido");
+        if (posventaDeUsuario.devoluciones.some(d => d.idPedido === id && enCursoPosventa(d.estado))) {
+            html += `<span class="marca-posventa">${icono("returns")} Devolución en curso</span>`;
+        }
+        if (posventaDeUsuario.garantias.some(g => g.idPedido === id && enCursoPosventa(g.estado))) {
+            html += `<span class="marca-posventa">${icono("shield")} Garantía en curso</span>`;
+        }
+    }
+    return html;
+}
+
+/* ---------- Cliente: sección en el detalle del pedido ---------- */
+
+function cargarPosventaPedido(idPedido) {
+    const sesion = sesionActual;
+
+    fetch(`${API}/posventa/pedido/${idPedido}?idUsuario=${usuarioId}`)
+        .then(async r => {
+            if (!r.ok) throw new Error((await r.text()) || `Error ${r.status}`);
+            return r.json();
+        })
+        .then(resumen => {
+            if (sesion !== sesionActual) return;
+            resumenPosventa = resumen;
+            renderizarPosventaPedido(idPedido);
+        })
+        .catch(err => console.error("No se pudo cargar la posventa del pedido:", err));
+}
+
+function renderizarPosventaPedido(idPedido) {
+    const contenedor = document.getElementById("posventaPedido");
+    if (!contenedor || !resumenPosventa) return;
+
+    const r = resumenPosventa;
+    const haySolicitudes = r.devoluciones.length > 0 || r.garantias.length > 0;
+    const entregado = campo(pedidoEnPantalla, "estadoPedido") === "Entregado";
+
+    // Antes de la entrega solo se muestra la sección si ya hay solicitudes
+    if (!entregado && !haySolicitudes) {
+        contenedor.innerHTML = "";
+        return;
+    }
+
+    const opcion = (tipo, puede, limite, mensaje, titulo, texto, boton, accion) => `
+        <div class="opcion-posventa${puede ? "" : " deshabilitada"}">
+            <span class="opcion-posventa-icono">${icono(tipo === "devolucion" ? "returns" : "shield")}</span>
+            <div>
+                <h4>${titulo}</h4>
+                <p>${puede ? `${texto} Tienes plazo hasta el <b>${fechaPedidoTexto(limite, false)}</b>.` : escaparHTML(mensaje)}</p>
+            </div>
+            <button class="btn-secondary" ${puede ? `onclick="${accion}(${idPedido})"` : "disabled"}>${boton}</button>
+        </div>`;
+
+    const opciones = entregado ? `
+        <div class="opciones-posventa">
+            ${opcion("devolucion", r.puedeDevolver, r.fechaLimiteDevolucion, r.mensajeDevolucion,
+                "Devolución", "¿Te arrepentiste? Devuelve productos en buen estado y te reembolsamos.",
+                "Solicitar devolución", "abrirFormularioDevolucion")}
+            ${opcion("garantia", r.puedeReportarGarantia, r.fechaLimiteGarantia, r.mensajeGarantia,
+                "Garantía", "¿Un producto salió defectuoso? Repórtalo y te enviamos uno nuevo.",
+                "Reportar garantía", "abrirFormularioGarantia")}
+        </div>` : "";
+
+    const solicitudes = [
+        ...r.devoluciones.map(d => solicitudClienteHTML("devolucion", d)),
+        ...r.garantias.map(g => solicitudClienteHTML("garantia", g))
+    ].join("");
+
+    contenedor.innerHTML = `
+        <h3 class="compra-subtitulo">Devoluciones y garantías</h3>
+        ${opciones}
+        ${solicitudes ? `<div class="solicitudes-posventa">${solicitudes}</div>` : ""}`;
+}
+
+// Tarjeta de una solicitud con su historial de estados
+function solicitudClienteHTML(tipo, s) {
+    const esDevolucion = tipo === "devolucion";
+    const lineas = esDevolucion ? s.lineas : [s.linea];
+
+    const productos = lineas.map(l => `${escaparHTML(l.nombre)} × ${l.cantidad}`).join(" · ");
+
+    const historial = (s.historial || []).map(h => `
+        <li>
+            <b>${escaparHTML(h.estado)}</b>
+            <span>${fechaPedidoTexto(h.fecha)}${h.nota ? ` · ${escaparHTML(h.nota)}` : ""}</span>
+        </li>`).join("");
+
+    let detalle = "";
+    if (esDevolucion) {
+        detalle = `Reembolso: <b>${formatearPrecio(s.valorReembolso)}</b>${s.incluyeEnvio ? " (incluye el envío)" : ""}`;
+        if (s.estado === "Aprobada") detalle += `<br>Envía los productos en buen estado a nuestra dirección; el envío de regreso corre por tu cuenta.`;
+        if (s.referenciaReembolso) detalle += `<br>Referencia del reembolso: ${escaparHTML(s.referenciaReembolso)}`;
+    } else {
+        detalle = `Falla: ${escaparHTML(s.descripcionFalla)}`;
+        if (s.estado === "Aprobado") detalle += `<br>Envíanos el producto defectuoso; el envío corre por nuestra cuenta.`;
+        if (s.idPedidoReposicion) detalle += `<br>Te enviamos <b>${escaparHTML(s.productoReposicion)}</b> en el
+            <a href="#" onclick="abrirDetallePedido(${s.idPedidoReposicion}); return false;">pedido #${s.idPedidoReposicion}</a>.`;
+    }
+    if (s.motivoRechazo) detalle += `<br>Motivo del rechazo: ${escaparHTML(s.motivoRechazo)}`;
+
+    return `
+    <div class="solicitud-posventa-item">
+        <div class="solicitud-cabecera">
+            <span>${icono(esDevolucion ? "returns" : "shield")} <b>${esDevolucion ? "Devolución" : "Garantía"} ${escaparHTML(s.numero)}</b></span>
+            <span class="estado-chip ${clasePosventa(s.estado)}">${escaparHTML(s.estado)}</span>
+        </div>
+        <p class="solicitud-productos">${productos}</p>
+        <p class="solicitud-detalle">${detalle}</p>
+        <ol class="historial-posventa">${historial}</ol>
+    </div>`;
+}
+
+function volverAlPedidoDesdeSolicitud() {
+    if (solicitudEnCurso) abrirDetallePedido(solicitudEnCurso.idPedido);
+    else abrirMisPedidos(false);
+}
+
+/* ---------- HU-19: formulario de devolución ---------- */
+
+function abrirFormularioDevolucion(idPedido) {
+    if (!resumenPosventa || !resumenPosventa.puedeDevolver) return;
+    solicitudEnCurso = { tipo: "devolucion", idPedido };
+
+    const lineas = resumenPosventa.lineas.filter(l => l.disponible > 0);
+
+    document.getElementById("solicitudPosventaContenido").innerHTML = `
+    <div class="detalle-pedido-cabecera">
+        <button class="btn-secondary" onclick="volverAlPedidoDesdeSolicitud()">${icono("arrowLeft")} Volver al pedido #${idPedido}</button>
+    </div>
+    <h2 class="solicitud-titulo">${icono("returns")} Solicitar devolución</h2>
+    <p class="text-muted">Elige qué productos y cuántas unidades quieres devolver. Tienes plazo hasta el
+        <b>${fechaPedidoTexto(resumenPosventa.fechaLimiteDevolucion, false)}</b>.</p>
+
+    <div id="errorSolicitud" class="aviso-pago aviso-error hidden" role="alert"></div>
+
+    <h3 class="compra-subtitulo">Productos</h3>
+    <div class="lineas-devolucion">
+        ${lineas.map(l => `
+        <label class="linea-devolucion">
+            <input type="checkbox" data-producto="${l.idProducto}" onchange="actualizarResumenDevolucion()">
+            <span class="pedido-foto"><img src="${escaparHTML(l.imagen || IMAGEN_POR_DEFECTO)}" alt="${escaparHTML(l.nombre)}"></span>
+            <span class="linea-devolucion-info">
+                <b>${escaparHTML(l.nombre)}</b>
+                <small>${formatearPrecio(l.precioUnitario)} c/u · puedes devolver ${l.disponible} de ${l.comprada}</small>
+            </span>
+            <span class="stepper stepper-carrito">
+                <button type="button" class="stepper-btn" onclick="cambiarCantidadDevolucion(${l.idProducto}, -1, event)" aria-label="Menos">−</button>
+                <input class="stepper-input" id="devCantidad-${l.idProducto}" value="${l.disponible}" readonly
+                       data-maximo="${l.disponible}" data-precio="${l.precioUnitario}" aria-label="Cantidad">
+                <button type="button" class="stepper-btn" onclick="cambiarCantidadDevolucion(${l.idProducto}, 1, event)" aria-label="Más">+</button>
+            </span>
+        </label>`).join("")}
+    </div>
+
+    <div class="fila-campos">
+        <div class="campo campo-select">
+            <select id="devMotivo" onchange="limpiarErrorCampo(this); limpiarErrorCampo(document.getElementById('devComentario'))">
+                <option value="">Selecciona el motivo</option>
+                ${MOTIVOS_DEVOLUCION.map(m => `<option>${m}</option>`).join("")}
+            </select>
+            <label for="devMotivo">Motivo</label>
+            <span class="campo-mensaje"></span>
+        </div>
+    </div>
+    <div class="campo campo-textarea">
+        <textarea id="devComentario" placeholder=" " maxlength="500" rows="3"></textarea>
+        <label for="devComentario">Comentario (opcional; obligatorio si el motivo es "Otro")</label>
+        <span class="campo-mensaje"></span>
+    </div>
+
+    <div class="factura-totales" id="resumenDevolucion"></div>
+
+    <p class="nota-legal">Los productos deben estar en buen estado y con sus accesorios. El envío de regreso corre por tu cuenta.
+        El reembolso se hace al medio de pago de tu compra en máximo 30 días calendario. El costo del envío se reembolsa
+        solo si devuelves el pedido completo.</p>
+
+    <div class="confirmacion-acciones">
+        <button class="btn-secondary" onclick="volverAlPedidoDesdeSolicitud()">Cancelar</button>
+        <button class="btn-success" id="btnEnviarSolicitud" onclick="enviarDevolucion()">Solicitar devolución</button>
+    </div>`;
+
+    actualizarResumenDevolucion();
+    mostrarVista("vistaSolicitudPosventa");
+}
+
+function cambiarCantidadDevolucion(idProducto, delta, evento) {
+    evento.preventDefault();
+    const campoCantidad = document.getElementById(`devCantidad-${idProducto}`);
+    const maximo = Number(campoCantidad.dataset.maximo);
+    campoCantidad.value = Math.min(maximo, Math.max(1, Number(campoCantidad.value) + delta));
+
+    // Cambiar la cantidad selecciona el producto
+    document.querySelector(`.linea-devolucion input[data-producto="${idProducto}"]`).checked = true;
+    actualizarResumenDevolucion();
+}
+
+function lineasDevolucionElegidas() {
+    return [...document.querySelectorAll(".linea-devolucion input[type=checkbox]:checked")].map(c => {
+        const cantidad = document.getElementById(`devCantidad-${c.dataset.producto}`);
+        return {
+            idProducto: Number(c.dataset.producto),
+            cantidad: Number(cantidad.value),
+            precio: Number(cantidad.dataset.precio)
+        };
+    });
+}
+
+// Muestra cuánto se reembolsaría (el envío solo si se devuelve el pedido completo)
+function actualizarResumenDevolucion() {
+    const elegidas = lineasDevolucionElegidas();
+    const unidades = elegidas.reduce((suma, l) => suma + l.cantidad, 0);
+    const productos = elegidas.reduce((suma, l) => suma + l.precio * l.cantidad, 0);
+    const completo = unidades > 0 &&
+        resumenPosventa.unidadesEnDevolucion + unidades === resumenPosventa.totalUnidades;
+    const envio = completo ? resumenPosventa.costoEnvio : 0;
+
+    document.querySelectorAll(".linea-devolucion").forEach(fila => {
+        fila.classList.toggle("elegida", fila.querySelector("input[type=checkbox]").checked);
+    });
+
+    document.getElementById("resumenDevolucion").innerHTML = `
+        <div><span>Productos · ${unidades} ${unidades === 1 ? "unidad" : "unidades"}</span><span>${formatearPrecio(productos)}</span></div>
+        <div class="factura-suave"><span>Envío ${completo ? "(devuelves el pedido completo)" : "(solo si devuelves todo)"}</span><span>${formatearPrecio(envio)}</span></div>
+        <div class="factura-total"><span>REEMBOLSO</span><span>${formatearPrecio(productos + envio)}</span></div>`;
+}
+
+function enviarDevolucion() {
+    const lineas = lineasDevolucionElegidas();
+    const motivo = document.getElementById("devMotivo");
+    const comentario = document.getElementById("devComentario");
+
+    document.getElementById("errorSolicitud").classList.add("hidden");
+    limpiarErrorCampo(motivo);
+    limpiarErrorCampo(comentario);
+
+    if (lineas.length === 0) {
+        mostrarAvisoEn("errorSolicitud", "error", "Selecciona al menos un producto para devolver.");
+        return;
+    }
+    if (!motivo.value) {
+        marcarError(motivo, "Selecciona el motivo");
+        motivo.focus();
+        return;
+    }
+    if (motivo.value === "Otro" && comentario.value.trim().length < 5) {
+        marcarError(comentario, "Cuéntanos el motivo (mínimo 5 caracteres)");
+        comentario.focus();
+        return;
+    }
+
+    const idPedido = solicitudEnCurso.idPedido;
+    const cuerpo = {
+        idPedido,
+        lineas: lineas.map(l => ({ idProducto: l.idProducto, cantidad: l.cantidad })),
+        motivo: motivo.value,
+        comentario: comentario.value.trim()
+    };
+
+    enviarSolicitudPosventa(
+        fetch(`${API}/posventa/devoluciones?idUsuario=${usuarioId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(cuerpo)
+        }),
+        idPedido,
+        s => `Recibimos tu solicitud de devolución ${s.numero}. Te avisaremos por correo cuando la revisemos.`
+    );
+}
+
+// Envía la solicitud, y si sale bien vuelve al pedido con un aviso de éxito
+function enviarSolicitudPosventa(peticion, idPedido, mensajeExito) {
+    const boton = document.getElementById("btnEnviarSolicitud");
+    const texto = boton.innerText;
+    boton.disabled = true;
+    boton.innerText = "Enviando...";
+    const sesion = sesionActual;
+
+    peticion
+        .then(async r => {
+            if (!r.ok) throw new Error((await r.text()) || `Error ${r.status}`);
+            return r.json();
+        })
+        .then(solicitud => {
+            if (sesion !== sesionActual) return;
+            avisoPendienteDetalle = mensajeExito(solicitud);
+            abrirDetallePedido(idPedido);
+        })
+        .catch(err => {
+            if (sesion !== sesionActual) return;
+            mostrarAvisoEn("errorSolicitud", "error", err.message);
+            document.getElementById("errorSolicitud").scrollIntoView({ behavior: "smooth", block: "center" });
+        })
+        .finally(() => {
+            boton.disabled = false;
+            boton.innerText = texto;
+        });
+}
+
+/* ---------- HU-22: formulario de garantía ---------- */
+
+function abrirFormularioGarantia(idPedido) {
+    if (!resumenPosventa || !resumenPosventa.puedeReportarGarantia) return;
+    solicitudEnCurso = { tipo: "garantia", idPedido };
+    fotosGarantia = [];
+
+    const lineas = resumenPosventa.lineas.filter(l => l.disponible > 0);
+
+    document.getElementById("solicitudPosventaContenido").innerHTML = `
+    <div class="detalle-pedido-cabecera">
+        <button class="btn-secondary" onclick="volverAlPedidoDesdeSolicitud()">${icono("arrowLeft")} Volver al pedido #${idPedido}</button>
+    </div>
+    <h2 class="solicitud-titulo">${icono("shield")} Reportar garantía</h2>
+    <p class="text-muted">Cuéntanos qué producto falló. Si aprobamos la garantía, te enviamos uno nuevo sin costo.
+        La garantía cubre hasta el <b>${fechaPedidoTexto(resumenPosventa.fechaLimiteGarantia, false)}</b>.</p>
+
+    <div id="errorSolicitud" class="aviso-pago aviso-error hidden" role="alert"></div>
+
+    <h3 class="compra-subtitulo">Producto con falla</h3>
+    <div class="lineas-devolucion">
+        ${lineas.map((l, i) => `
+        <label class="linea-devolucion${i === 0 ? " elegida" : ""}">
+            <input type="radio" name="garProducto" value="${l.idProducto}" data-maximo="${l.disponible}" ${i === 0 ? "checked" : ""}
+                   onchange="elegirProductoGarantia()">
+            <span class="pedido-foto"><img src="${escaparHTML(l.imagen || IMAGEN_POR_DEFECTO)}" alt="${escaparHTML(l.nombre)}"></span>
+            <span class="linea-devolucion-info">
+                <b>${escaparHTML(l.nombre)}</b>
+                <small>Puedes reportar hasta ${l.disponible} ${l.disponible === 1 ? "unidad" : "unidades"}</small>
+            </span>
+        </label>`).join("")}
+    </div>
+
+    <div class="fila-campos">
+        <div class="campo campo-select">
+            <select id="garCantidad"></select>
+            <label for="garCantidad">Unidades con falla</label>
+        </div>
+    </div>
+
+    <div class="campo campo-textarea">
+        <textarea id="garDescripcion" placeholder=" " maxlength="1000" rows="4" oninput="contarCaracteres(this, 'garContador')"></textarea>
+        <label for="garDescripcion">Describe la falla (qué pasa, desde cuándo, cómo se usó)</label>
+        <span class="campo-mensaje"></span>
+    </div>
+    <p class="contador-caracteres"><span id="garContador">0</span> / 1000 (mínimo 10)</p>
+
+    <h3 class="compra-subtitulo">Fotos de evidencia (opcional)</h3>
+    <div class="fotos-garantia">
+        <div id="fotosElegidas" class="fotos-elegidas"></div>
+        <label class="btn-secondary btn-agregar-foto" id="btnAgregarFoto">
+            ${icono("image")} Agregar fotos
+            <input type="file" id="garFotos" accept="image/jpeg,image/png" multiple hidden onchange="agregarFotosGarantia(this)">
+        </label>
+        <small class="text-muted">Hasta ${MAX_FOTOS_GARANTIA} fotos JPG o PNG de máximo 5 MB cada una.</small>
+    </div>
+
+    <div class="confirmacion-acciones">
+        <button class="btn-secondary" onclick="volverAlPedidoDesdeSolicitud()">Cancelar</button>
+        <button class="btn-success" id="btnEnviarSolicitud" onclick="enviarGarantia()">Reportar garantía</button>
+    </div>`;
+
+    elegirProductoGarantia();
+    renderizarFotosGarantia();
+    mostrarVista("vistaSolicitudPosventa");
+}
+
+function elegirProductoGarantia() {
+    const elegido = document.querySelector('input[name="garProducto"]:checked');
+    document.querySelectorAll(".linea-devolucion").forEach(fila => {
+        fila.classList.toggle("elegida", fila.querySelector("input").checked);
+    });
+    const maximo = Number(elegido.dataset.maximo);
+    document.getElementById("garCantidad").innerHTML =
+        Array.from({ length: maximo }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join("");
+}
+
+function contarCaracteres(campoTexto, idContador) {
+    document.getElementById(idContador).innerText = campoTexto.value.length;
+    limpiarErrorCampo(campoTexto);
+}
+
+function agregarFotosGarantia(selector) {
+    const errores = [];
+
+    [...selector.files].forEach(archivo => {
+        if (fotosGarantia.length >= MAX_FOTOS_GARANTIA) {
+            errores.push(`Solo puedes adjuntar ${MAX_FOTOS_GARANTIA} fotos.`);
+        } else if (!["image/jpeg", "image/png"].includes(archivo.type)) {
+            errores.push(`"${archivo.name}" no es JPG ni PNG.`);
+        } else if (archivo.size > MAX_BYTES_FOTO) {
+            errores.push(`"${archivo.name}" pesa más de 5 MB.`);
+        } else {
+            fotosGarantia.push({ archivo, url: URL.createObjectURL(archivo) });
+        }
+    });
+
+    selector.value = ""; // permite volver a elegir el mismo archivo
+    renderizarFotosGarantia();
+
+    if (errores.length) mostrarAvisoEn("errorSolicitud", "error", [...new Set(errores)].join(" "));
+    else document.getElementById("errorSolicitud").classList.add("hidden");
+}
+
+function quitarFotoGarantia(indice) {
+    URL.revokeObjectURL(fotosGarantia[indice].url);
+    fotosGarantia.splice(indice, 1);
+    renderizarFotosGarantia();
+}
+
+function renderizarFotosGarantia() {
+    document.getElementById("fotosElegidas").innerHTML = fotosGarantia.map((f, i) => `
+        <div class="foto-elegida">
+            <img src="${f.url}" alt="Foto ${i + 1}">
+            <button type="button" onclick="quitarFotoGarantia(${i})" aria-label="Quitar foto">${icono("x")}</button>
+        </div>`).join("");
+    document.getElementById("btnAgregarFoto").classList.toggle("hidden", fotosGarantia.length >= MAX_FOTOS_GARANTIA);
+}
+
+function enviarGarantia() {
+    const producto = document.querySelector('input[name="garProducto"]:checked');
+    const descripcion = document.getElementById("garDescripcion");
+
+    document.getElementById("errorSolicitud").classList.add("hidden");
+    limpiarErrorCampo(descripcion);
+
+    if (descripcion.value.trim().length < 10) {
+        marcarError(descripcion, "Describe la falla con al menos 10 caracteres");
+        descripcion.focus();
+        return;
+    }
+
+    const idPedido = solicitudEnCurso.idPedido;
+    const datos = new FormData();
+    datos.append("idUsuario", usuarioId);
+    datos.append("idPedido", idPedido);
+    datos.append("idProducto", producto.value);
+    datos.append("cantidad", document.getElementById("garCantidad").value);
+    datos.append("descripcion", descripcion.value.trim());
+    fotosGarantia.forEach(f => datos.append("fotos", f.archivo));
+
+    enviarSolicitudPosventa(
+        fetch(`${API}/posventa/garantias`, { method: "POST", body: datos }),
+        idPedido,
+        s => `Recibimos tu reporte de garantía ${s.numero}. Te avisaremos por correo cuando lo revisemos.`
+    );
+}
+
+/* ---------- Fotos de evidencia (cliente y administrador) ---------- */
+
+function urlEvidencia(idTicket, archivo) {
+    return `${API}/posventa/garantias/${idTicket}/evidencias/${encodeURIComponent(archivo)}?idUsuario=${usuarioId}`;
+}
+
+let fotoEnVisor = null;
+
+function abrirVisorFoto(idTicket, archivo) {
+    fotoEnVisor = { idTicket, archivo };
+    document.getElementById("visorImagen").src = urlEvidencia(idTicket, archivo);
+    document.getElementById("visorFoto").classList.remove("hidden");
+}
+
+function cerrarVisorFoto(evento) {
+    // Se cierra con el fondo o con "Cerrar"; no al hacer clic en la foto
+    if (evento && evento.target.id !== "visorFoto") return;
+    document.getElementById("visorFoto").classList.add("hidden");
+    document.getElementById("visorImagen").removeAttribute("src");
+}
+
+function descargarFotoVisor() {
+    if (!fotoEnVisor) return;
+    fetch(urlEvidencia(fotoEnVisor.idTicket, fotoEnVisor.archivo))
+        .then(r => r.ok ? r.blob() : Promise.reject(new Error(`Error ${r.status}`)))
+        .then(foto => {
+            const enlace = document.createElement("a");
+            enlace.href = URL.createObjectURL(foto);
+            enlace.download = fotoEnVisor.archivo;
+            document.body.appendChild(enlace);
+            enlace.click();
+            enlace.remove();
+            setTimeout(() => URL.revokeObjectURL(enlace.href), 10000);
+        })
+        .catch(err => alert("No se pudo descargar la foto: " + err.message));
+}
+
+/* ==========================================
+   ADMINISTRADOR: DEVOLUCIONES Y GARANTÍAS
+========================================== */
+
+let devolucionesAdmin = [];
+let garantiasAdmin = [];
+let tipoPosventa = "devoluciones";
+let filtroPosventa = "enCurso";
+let paginaPosventa = 1;
+const SOLICITUDES_POR_PAGINA = 10;
+
+function abrirPosventaAdmin() {
+    if (!esAdministrador) return;
+    filtroPosventa = "enCurso";
+    paginaPosventa = 1;
+    document.getElementById("avisoPosventa").classList.add("hidden");
+    mostrarVista("vistaPosventaAdmin");
+    renderizarPosventaAdmin();
+    cargarPosventaAdmin();
+}
+
+function cargarPosventaAdmin() {
+    const sesion = sesionActual;
+    const pedir = tipo => fetch(`${API}/posventa/${tipo}?idAdministrador=${usuarioId}`)
+        .then(async r => {
+            if (!r.ok) throw new Error((await r.text()) || `Error ${r.status}`);
+            return r.json();
+        });
+
+    Promise.all([pedir("devoluciones"), pedir("garantias")])
+        .then(([devoluciones, garantias]) => {
+            if (sesion !== sesionActual) return;
+            devolucionesAdmin = devoluciones;
+            garantiasAdmin = garantias;
+            actualizarContadorPosventa();
+            if (!document.getElementById("vistaPosventaAdmin").classList.contains("hidden")) renderizarPosventaAdmin();
+        })
+        .catch(err => {
+            if (sesion === sesionActual) mostrarAvisoEn("avisoPosventa", "error", "No se pudieron cargar las solicitudes: " + err.message);
+        });
+}
+
+// Contador del ícono: solicitudes que todavía requieren alguna acción
+function actualizarContadorPosventa() {
+    const pendientes = devolucionesAdmin.filter(d => enCursoPosventa(d.estado)).length +
+                       garantiasAdmin.filter(g => enCursoPosventa(g.estado)).length;
+    const badge = document.getElementById("posventaAdminBadge");
+    badge.innerText = pendientes > 99 ? "99+" : pendientes;
+    badge.classList.toggle("hidden", pendientes === 0);
+    document.getElementById("btnPosventaAdmin").title = pendientes
+        ? `${pendientes} ${pendientes === 1 ? "solicitud en curso" : "solicitudes en curso"}`
+        : "Devoluciones y garantías";
+}
+
+function cambiarTipoPosventa(tipo) {
+    tipoPosventa = tipo;
+    filtroPosventa = "enCurso";
+    paginaPosventa = 1;
+    renderizarPosventaAdmin();
+}
+
+function cambiarFiltroPosventa(filtro) {
+    filtroPosventa = filtro;
+    paginaPosventa = 1;
+    renderizarPosventaAdmin();
+}
+
+function irAPaginaPosventa(numero) {
+    paginaPosventa = numero;
+    renderizarPosventaAdmin();
+    document.querySelector(".posventa-admin").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderizarPosventaAdmin() {
+    const esDevolucion = tipoPosventa === "devoluciones";
+    const todas = esDevolucion ? devolucionesAdmin : garantiasAdmin;
+    const estados = esDevolucion ? ESTADOS_DEVOLUCION : ESTADOS_GARANTIA;
+    const enCurso = lista => lista.filter(x => enCursoPosventa(x.estado)).length;
+
+    document.getElementById("tiposPosventa").innerHTML = [
+        ["devoluciones", "Devoluciones", "returns", devolucionesAdmin],
+        ["garantias", "Garantías", "shield", garantiasAdmin]
+    ].map(([clave, texto, ico, lista]) => `
+        <button class="tipo-posventa${clave === tipoPosventa ? " activo" : ""}" role="tab" aria-selected="${clave === tipoPosventa}"
+                onclick="cambiarTipoPosventa('${clave}')">
+            ${icono(ico)} ${texto} <span>${enCurso(lista)} en curso</span>
+        </button>`).join("");
+
+    const filtros = [["enCurso", "En curso", enCurso(todas)],
+        ...estados.map(e => [e, e, todas.filter(x => x.estado === e).length]),
+        ["todos", "Todos", todas.length]];
+
+    document.getElementById("filtrosPosventa").innerHTML = filtros.map(([clave, texto, cantidad]) => `
+        <button class="filtro-pedido${clave === filtroPosventa ? " activo" : ""}" role="tab" aria-selected="${clave === filtroPosventa}"
+                onclick="cambiarFiltroPosventa('${escaparHTML(clave)}')">${texto} <span>${cantidad}</span></button>`).join("");
+
+    const lista = filtroPosventa === "todos" ? todas
+        : filtroPosventa === "enCurso" ? todas.filter(x => enCursoPosventa(x.estado))
+        : todas.filter(x => x.estado === filtroPosventa);
+
+    const contenedor = document.getElementById("listaPosventa");
+    const paginacion = document.getElementById("paginacionPosventa");
+
+    if (lista.length === 0) {
+        contenedor.innerHTML = `<p class="pedidos-mensaje">No hay ${esDevolucion ? "devoluciones" : "garantías"} en este estado.</p>`;
+        paginacion.innerHTML = "";
+        return;
+    }
+
+    const totalPaginas = Math.ceil(lista.length / SOLICITUDES_POR_PAGINA);
+    if (paginaPosventa > totalPaginas) paginaPosventa = totalPaginas;
+    const inicio = (paginaPosventa - 1) * SOLICITUDES_POR_PAGINA;
+
+    contenedor.innerHTML = lista.slice(inicio, inicio + SOLICITUDES_POR_PAGINA)
+        .map(x => esDevolucion ? tarjetaDevolucionAdminHTML(x) : tarjetaGarantiaAdminHTML(x)).join("");
+    paginacion.innerHTML = paginacionHTML(totalPaginas, paginaPosventa, "irAPaginaPosventa");
+}
+
+function lineaPosventaHTML(l, mostrarSubtotal) {
+    return `
+        <div class="linea-posventa">
+            <span class="pedido-foto"><img src="${escaparHTML(l.imagen || IMAGEN_POR_DEFECTO)}" alt="${escaparHTML(l.nombre)}"></span>
+            <span>${escaparHTML(l.nombre)} × ${l.cantidad}</span>
+            ${mostrarSubtotal ? `<b>${formatearPrecio(l.subtotal)}</b>` : ""}
+        </div>`;
+}
+
+function cabeceraSolicitudAdminHTML(s, tipo) {
+    return `
+        <div class="pedido-item-info">
+            <div class="pedido-item-titulo">
+                <b>${escaparHTML(s.numero)}</b>
+                <span class="estado-chip ${clasePosventa(s.estado)}">${escaparHTML(s.estado)}</span>
+            </div>
+            <span class="pedido-item-fecha">${tipo} del pedido #${s.idPedido} · ${fechaPedidoTexto(s.fecha)}</span>
+            <span class="pedido-admin-cliente">${escaparHTML(s.nombreCliente)} · ${escaparHTML(s.documentoCliente)}</span>
+        </div>`;
+}
+
+function tarjetaDevolucionAdminHTML(d) {
+    let accion = "";
+    if (d.estado === "Solicitada") {
+        accion = `
+            <button class="btn-danger" onclick="rechazarPosventa('devoluciones', ${d.idDevolucion}, '${d.numero}')">${icono("xCircle")} Rechazar</button>
+            <button class="btn-success" onclick="confirmarAccionPosventa('devoluciones', ${d.idDevolucion}, 'aprobar',
+                '¿Aprobar la devolución ${d.numero}?', 'El cliente deberá enviar los productos en buen estado.', 'Sí, aprobar')">${icono("check")} Aprobar</button>`;
+    } else if (d.estado === "Aprobada") {
+        accion = `<button class="btn-success" onclick="confirmarAccionPosventa('devoluciones', ${d.idDevolucion}, 'recibir',
+                '¿Recibiste los productos de ${d.numero}?', 'Confírmalo solo si llegaron en buen estado: las unidades volverán al stock.', 'Sí, recibí los productos')">${icono("package")} Marcar producto recibido</button>`;
+    } else if (d.estado === "Producto recibido") {
+        accion = `<button class="btn-success" onclick="registrarReembolso(${d.idDevolucion}, '${d.numero}', ${d.valorReembolso})">${icono("check")} Registrar reembolso</button>`;
+    }
+
+    let nota = `Motivo: ${escaparHTML(d.motivo)}${d.comentario ? ` — “${escaparHTML(d.comentario)}”` : ""}`;
+    if (d.motivoRechazo) nota += `<br>Rechazo: ${escaparHTML(d.motivoRechazo)}`;
+    if (d.referenciaReembolso) nota += `<br>Reembolsado el ${fechaPedidoTexto(d.fechaReembolso)} · Ref. ${escaparHTML(d.referenciaReembolso)}`;
+
+    return `
+    <div class="pedido-admin solicitud-admin">
+        ${cabeceraSolicitudAdminHTML(d, "Devolución")}
+        <div class="pedido-item-total">
+            <b>${formatearPrecio(d.valorReembolso)}</b>
+            <span>a reembolsar${d.incluyeEnvio ? " (con envío)" : ""}</span>
+        </div>
+        <div class="solicitud-cuerpo">
+            ${d.lineas.map(l => lineaPosventaHTML(l, true)).join("")}
+            <p class="solicitud-detalle">${nota}</p>
+        </div>
+        ${accion ? `<div class="pedido-admin-acciones">${accion}</div>` : ""}
+    </div>`;
+}
+
+function tarjetaGarantiaAdminHTML(g) {
+    const enRevision = g.estado === "Recibido" || g.estado === "En revisión";
+    let accion = "";
+    if (enRevision) {
+        accion = `
+            <button class="btn-danger" onclick="rechazarPosventa('garantias', ${g.idTicket}, '${g.numero}')">${icono("xCircle")} Rechazar</button>
+            ${g.estado === "Recibido" ? `<button class="btn-dark-blue" onclick="ejecutarAccionPosventa('garantias', ${g.idTicket}, 'revisar', {}, 'Ticket ${g.numero} en revisión.')">Iniciar revisión</button>` : ""}
+            <button class="btn-success" onclick="aprobarGarantia(${g.idTicket}, '${g.numero}')">${icono("check")} Aprobar</button>`;
+    } else if (g.estado === "Aprobado") {
+        accion = `<button class="btn-success" onclick="confirmarAccionPosventa('garantias', ${g.idTicket}, 'recibir',
+                '¿Recibiste el producto defectuoso de ${g.numero}?', 'La unidad defectuosa no vuelve al stock.', 'Sí, lo recibí')">${icono("package")} Marcar producto recibido</button>`;
+    } else if (g.estado === "Producto recibido") {
+        accion = `<button class="btn-success" onclick="enviarCambioGarantia(${g.idTicket})">${icono("package")} Enviar cambio</button>`;
+    }
+
+    const fotos = g.evidencias.length
+        ? `<div class="evidencias">${g.evidencias.map(a => `
+            <button class="evidencia" onclick="abrirVisorFoto(${g.idTicket}, '${escaparHTML(a)}')" aria-label="Ver foto">
+                <img src="${urlEvidencia(g.idTicket, a)}" alt="Evidencia" loading="lazy">
+            </button>`).join("")}</div>`
+        : `<p class="solicitud-detalle">Sin fotos de evidencia.</p>`;
+
+    let nota = `Falla: ${escaparHTML(g.descripcionFalla)}`;
+    if (g.cubiertoPor) nota += `<br>Cubre el daño: <b>${escaparHTML(g.cubiertoPor)}</b>`;
+    if (g.motivoRechazo) nota += `<br>Rechazo: ${escaparHTML(g.motivoRechazo)}`;
+    if (g.idPedidoReposicion) nota += `<br>Cambio: ${escaparHTML(g.productoReposicion)} en el pedido de reposición #${g.idPedidoReposicion}`;
+
+    return `
+    <div class="pedido-admin solicitud-admin">
+        ${cabeceraSolicitudAdminHTML(g, "Garantía")}
+        <div class="pedido-item-total">
+            <b>${g.linea.cantidad} ${g.linea.cantidad === 1 ? "unidad" : "unidades"}</b>
+            <span>${formatearPrecio(g.linea.precioUnitario)} c/u</span>
+        </div>
+        <div class="solicitud-cuerpo">
+            ${lineaPosventaHTML(g.linea, false)}
+            <p class="solicitud-detalle">${nota}</p>
+            ${fotos}
+        </div>
+        ${accion ? `<div class="pedido-admin-acciones">${accion}</div>` : ""}
+    </div>`;
+}
+
+/* ---------- Acciones del administrador ---------- */
+
+// Llama al backend y refresca la lista; los errores se muestran arriba de la lista
+function ejecutarAccionPosventa(tipo, id, accion, parametros, mensajeExito) {
+    const consulta = new URLSearchParams({ idAdministrador: usuarioId, ...parametros });
+
+    fetch(`${API}/posventa/${tipo}/${id}/${accion}?${consulta}`, { method: "POST" })
+        .then(async r => {
+            if (!r.ok) throw new Error((await r.text()) || `Error ${r.status}`);
+        })
+        .then(() => {
+            mostrarAvisoEn("avisoPosventa", "exito", mensajeExito + " Le avisamos al cliente por correo.");
+            cargarPosventaAdmin();
+            cargarProductos();     // el stock pudo cambiar
+            cargarPedidosAdmin();  // un cambio por garantía crea un pedido por enviar
+        })
+        .catch(err => mostrarAvisoEn("avisoPosventa", "error", err.message));
+}
+
+function confirmarAccionPosventa(tipo, id, accion, titulo, mensaje, textoBoton) {
+    mostrarModal(titulo, mensaje, [
+        { texto: "Cancelar", clase: "btn-secondary", accion: null },
+        { texto: textoBoton, clase: "btn-success", accion: () => ejecutarAccionPosventa(tipo, id, accion, {}, "Solicitud actualizada.") }
+    ]);
+}
+
+// Lee un campo del formulario de la ventana y muestra su error si no es válido
+function campoModalValido(id, minimo, mensaje) {
+    const campoModal = document.getElementById(id);
+    limpiarErrorCampo(campoModal);
+    if (campoModal.value.trim().length < minimo) {
+        marcarError(campoModal, mensaje);
+        campoModal.focus();
+        return null;
+    }
+    return campoModal.value.trim();
+}
+
+function rechazarPosventa(tipo, id, numero) {
+    mostrarModal(`Rechazar ${numero}`, "Explica el motivo; el cliente lo recibirá por correo.", [
+        { texto: "Cancelar", clase: "btn-secondary", accion: null },
+        { texto: "Rechazar", clase: "btn-danger", accion: () => {
+            const motivo = campoModalValido("modalMotivo", 5, "Escribe el motivo (mínimo 5 caracteres)");
+            if (motivo === null) return false;
+            ejecutarAccionPosventa(tipo, id, "rechazar", { motivo }, `${numero} rechazada.`);
+        } }
+    ], `
+        <div class="campo campo-textarea">
+            <textarea id="modalMotivo" placeholder=" " maxlength="300" rows="3"></textarea>
+            <label for="modalMotivo">Motivo del rechazo</label>
+            <span class="campo-mensaje"></span>
+        </div>`);
+}
+
+function registrarReembolso(id, numero, valor) {
+    mostrarModal(`Reembolso de ${numero}`, `Registra la referencia del reembolso de ${formatearPrecio(valor)} al medio de pago del cliente.`, [
+        { texto: "Cancelar", clase: "btn-secondary", accion: null },
+        { texto: "Registrar reembolso", clase: "btn-success", accion: () => {
+            const referencia = campoModalValido("modalReferencia", 3, "Escribe la referencia (mínimo 3 caracteres)");
+            if (referencia === null) return false;
+            ejecutarAccionPosventa("devoluciones", id, "reembolsar", { referencia }, `${numero} reembolsada.`);
+        } }
+    ], `
+        <div class="campo">
+            <input id="modalReferencia" placeholder=" " maxlength="60" autocomplete="off">
+            <label for="modalReferencia">Referencia (transacción o comprobante)</label>
+            <span class="campo-mensaje"></span>
+        </div>`);
+}
+
+function aprobarGarantia(id, numero) {
+    mostrarModal(`Aprobar ${numero}`, "Indica quién cubre el daño. El cliente recibirá un producto nuevo sin costo.", [
+        { texto: "Cancelar", clase: "btn-secondary", accion: null },
+        { texto: "Aprobar garantía", clase: "btn-success", accion: () => {
+            const cubre = document.querySelector('input[name="modalCubre"]:checked').value;
+            ejecutarAccionPosventa("garantias", id, "aprobar", { cubiertoPor: cubre }, `${numero} aprobada.`);
+        } }
+    ], `
+        <div class="opciones-grupo">
+            <label class="opcion-caja"><input type="radio" name="modalCubre" value="Tienda" checked> <span class="opcion-texto">Lo cubre la tienda</span></label>
+            <label class="opcion-caja"><input type="radio" name="modalCubre" value="Fabricante"> <span class="opcion-texto">Lo cubre el fabricante</span></label>
+        </div>`);
+}
+
+// Cambio por el mismo producto o, si no hay stock, por otro de igual o menor precio
+function enviarCambioGarantia(id) {
+    const ticket = garantiasAdmin.find(g => g.idTicket === id);
+    const cantidad = ticket.linea.cantidad;
+
+    const datosProducto = p => ({
+        id: p.idProducto ?? p.IdProducto,
+        nombre: p.nombre || p.Nombre,
+        precio: Number(p.precio ?? p.Precio),
+        stock: Number(p.stock ?? p.Stock)
+    });
+
+    const catalogo = productosCatalogo.map(datosProducto);
+    const mismo = catalogo.find(p => p.id === ticket.linea.idProducto);
+    const precioReferencia = ticket.linea.precioUnitario || (mismo ? mismo.precio : 0);
+
+    const alternativas = catalogo
+        .filter(p => p.id !== ticket.linea.idProducto && p.precio <= precioReferencia && p.stock >= cantidad)
+        .sort((a, b) => b.precio - a.precio);
+
+    const mismoDisponible = mismo && mismo.stock >= cantidad;
+
+    const opciones = [
+        mismoDisponible
+            ? `<option value="${mismo.id}" selected>El mismo: ${escaparHTML(mismo.nombre)} (stock ${mismo.stock})</option>`
+            : `<option value="" selected>El mismo producto no tiene stock suficiente — elige otro</option>`,
+        ...alternativas.map(p => `<option value="${p.id}">${escaparHTML(p.nombre)} · ${formatearPrecio(p.precio)} (stock ${p.stock})</option>`)
+    ].join("");
+
+    mostrarModal(`Enviar cambio de ${ticket.numero}`,
+        `Se creará un pedido por $0 con ${cantidad} ${cantidad === 1 ? "unidad" : "unidades"} y aparecerá en Gestión de pedidos para despacharlo.`, [
+        { texto: "Cancelar", clase: "btn-secondary", accion: null },
+        { texto: "Crear pedido de reposición", clase: "btn-success", accion: () => {
+            const selector = document.getElementById("modalReemplazo");
+            limpiarErrorCampo(selector);
+            if (!selector.value) {
+                marcarError(selector, "Elige un producto con stock");
+                return false;
+            }
+            ejecutarAccionPosventa("garantias", id, "enviar-cambio", { idProductoReemplazo: selector.value },
+                `Pedido de reposición creado para ${ticket.numero}.`);
+        } }
+    ], `
+        <div class="campo campo-select">
+            <select id="modalReemplazo">${opciones}</select>
+            <label for="modalReemplazo">Producto que se enviará (máximo ${formatearPrecio(precioReferencia)})</label>
+            <span class="campo-mensaje"></span>
+        </div>`);
 }
 
 /* ==========================================
@@ -3040,6 +4380,9 @@ function abrirGestionPedidos() {
     filtroPedidosAdmin = "porEnviar";
     paginaPedidosAdmin = 1;
     elegirPestanaInicial = true;
+    filtroAntesDeBuscar = null;
+    document.getElementById("buscarPedidoAdmin").value = "";
+    document.getElementById("limpiarBusquedaAdmin").classList.add("hidden");
     document.getElementById("avisoAdminPedidos").classList.add("hidden");
     mostrarVista("vistaGestionPedidos");
     cargarPedidosAdmin();
@@ -3128,24 +4471,98 @@ function irAPaginaPedidosAdmin(numero) {
     document.querySelector(".admin-pedidos").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+// Al empezar a buscar se pasa a "Todos" (para encontrar pedidos de cualquier
+// estado); al borrar la búsqueda se vuelve a la pestaña que estaba abierta
+let filtroAntesDeBuscar = null;
+
 function buscarPedidosAdmin() {
+    const hayTexto = document.getElementById("buscarPedidoAdmin").value.trim() !== "";
+
+    if (hayTexto && filtroAntesDeBuscar === null) {
+        filtroAntesDeBuscar = filtroPedidosAdmin;
+        filtroPedidosAdmin = "todos";
+    } else if (!hayTexto && filtroAntesDeBuscar !== null) {
+        filtroPedidosAdmin = filtroAntesDeBuscar;
+        filtroAntesDeBuscar = null;
+    }
+
+    document.getElementById("limpiarBusquedaAdmin").classList.toggle("hidden", !hayTexto);
     paginaPedidosAdmin = 1;
     renderizarPedidosAdmin();
+}
+
+function limpiarBusquedaAdmin() {
+    const campoBusqueda = document.getElementById("buscarPedidoAdmin");
+    campoBusqueda.value = "";
+    buscarPedidosAdmin();
+    campoBusqueda.focus();
+}
+
+document.getElementById("buscarPedidoAdmin").addEventListener("keydown", e => {
+    if (e.key === "Escape" && e.target.value) {
+        e.stopPropagation();
+        limpiarBusquedaAdmin();
+    }
+});
+
+// Todo el texto en el que se puede buscar un pedido (sin tildes ni mayúsculas)
+function textoBusquedaPedido(p) {
+    const envio = campo(p, "envio") || {};
+    const facturacion = campo(p, "facturacion") || {};
+    const persona = d => `${campo(d, "nombre") || ""} ${campo(d, "apellidos") || ""}`;
+
+    return normalizarTexto([
+        `#${campo(p, "idPedido")}`,
+        campo(p, "numeroFactura"),
+        persona(envio), persona(facturacion),
+        campo(envio, "cedula"), campo(facturacion, "cedula"),
+        campo(envio, "telefono"), campo(facturacion, "telefono"),
+        campo(envio, "direccion"), campo(envio, "ciudad"), campo(envio, "departamento"),
+        campo(p, "estadoPedido"), campo(p, "medioPago"),
+        campo(p, "transportadora"), campo(p, "numeroGuia"),
+        ...(campo(p, "detalles") || []).map(d => campo(d, "nombre"))
+    ].filter(Boolean).join(" "));
+}
+
+// Cada palabra escrita debe aparecer en el pedido (en cualquier orden):
+// "alejandra patiño" encuentra a "Alejandra Jhanet Patiño Salazar"
+function pedidoCoincide(p, palabras) {
+    const texto = textoBusquedaPedido(p);
+    const id = String(campo(p, "idPedido"));
+    const numeroFactura = String(parseInt((campo(p, "numeroFactura") || "").replace(/\D/g, ""), 10));
+
+    return palabras.every(palabra => {
+        // "#14" → solo el pedido 14
+        if (palabra.startsWith("#")) return palabra.slice(1) === id;
+
+        // "fv14", "fv-14" o "fv-00014" → esa factura
+        const factura = palabra.match(/^fv-?0*(\d+)$/);
+        if (factura) return factura[1] === numeroFactura;
+
+        // Números: "14" solo → pedido o factura 14.
+        // Dentro de una frase ("15 pro max") también vale como palabra del producto.
+        // Números largos ("3210", "311389...") → también documento, teléfono o guía.
+        if (/^\d+$/.test(palabra)) {
+            const numero = String(parseInt(palabra, 10));
+            if (numero === id || numero === numeroFactura) return true;
+            if (palabra.length >= 4) return texto.includes(palabra);
+            return palabras.length > 1 && new RegExp(`(^|\\D)${palabra}(\\D|$)`).test(texto);
+        }
+
+        return texto.includes(palabra);
+    });
 }
 
 function renderizarPedidosAdmin() {
     const estadoDe = p => campo(p, "estadoPedido");
 
-    // Búsqueda por número de pedido, nombre del cliente o cédula
-    const texto = normalizarTexto(document.getElementById("buscarPedidoAdmin").value).replace(/^#/, "");
-    const coincide = p => {
-        if (!texto) return true;
-        const envio = campo(p, "envio") || {};
-        return String(campo(p, "idPedido")) === texto
-            || normalizarTexto(`${campo(envio, "nombre") || ""} ${campo(envio, "apellidos") || ""}`).includes(texto)
-            || (campo(envio, "cedula") || "").includes(texto);
-    };
-    const encontrados = pedidosAdmin.filter(coincide);
+    // Búsqueda: cada palabra debe aparecer en el pedido
+    const busqueda = document.getElementById("buscarPedidoAdmin").value;
+    const texto = normalizarTexto(busqueda);
+    const palabras = texto.split(/\s+/).filter(Boolean);
+    const encontrados = palabras.length
+        ? pedidosAdmin.filter(p => pedidoCoincide(p, palabras))
+        : pedidosAdmin;
 
     document.getElementById("filtrosPedidosAdmin").innerHTML = FILTROS_ADMIN.map(f => {
         const cantidad = f.estados ? encontrados.filter(p => f.estados.includes(estadoDe(p))).length : encontrados.length;
@@ -3161,9 +4578,25 @@ function renderizarPedidosAdmin() {
     const paginacion = document.getElementById("paginacionPedidosAdmin");
 
     if (lista.length === 0) {
-        contenedor.innerHTML = `<p class="pedidos-mensaje">${texto
-            ? "Ningún pedido coincide con la búsqueda."
-            : `No hay pedidos ${filtro.texto.toLowerCase()}.`}</p>`;
+        if (!texto) {
+            contenedor.innerHTML = `<p class="pedidos-mensaje">No hay pedidos ${filtro.texto.toLowerCase()}.</p>`;
+        } else if (encontrados.length > 0) {
+            // Hay coincidencias, pero en otras pestañas
+            contenedor.innerHTML = `
+                <div class="busqueda-vacia">
+                    <p>No hay pedidos ${filtro.texto.toLowerCase()} que coincidan con «${escaparHTML(busqueda.trim())}».</p>
+                    <button class="btn-secondary" onclick="cambiarFiltroAdmin('todos')">${encontrados.length === 1
+                        ? "Ver la coincidencia en Todos"
+                        : `Ver las ${encontrados.length} coincidencias en Todos`}</button>
+                </div>`;
+        } else {
+            contenedor.innerHTML = `
+                <div class="busqueda-vacia">
+                    <p>Ningún pedido coincide con «${escaparHTML(busqueda.trim())}».</p>
+                    <span>Prueba con otra palabra: número de pedido o factura, nombre, documento, teléfono, ciudad, guía o producto.</span>
+                    <button class="btn-secondary" onclick="limpiarBusquedaAdmin()">Limpiar búsqueda</button>
+                </div>`;
+        }
         paginacion.innerHTML = "";
         return;
     }
@@ -3214,10 +4647,11 @@ function tarjetaPedidoAdminHTML(p) {
             <div class="pedido-item-titulo">
                 <b>Pedido #${id}</b>
                 <span class="estado-chip ${claseEstado(estado)}">${escaparHTML(estado)}</span>
+                ${marcasPosventaHTML(p)}
             </div>
             <span class="pedido-item-fecha">${fechaPedidoTexto(campo(p, "fecha"))}</span>
             <span class="pedido-admin-cliente">
-                ${t(envio, "nombre")} ${t(envio, "apellidos")} · C.C. ${t(envio, "cedula")} · Tel. ${t(envio, "telefono")}
+                ${t(envio, "nombre")} ${t(envio, "apellidos")} · ${abreviaturaDocumento(campo(envio, "tipoDocumento"))} ${t(envio, "cedula")} · Tel. ${t(envio, "telefono")}
             </span>
             <span class="pedido-item-nota">
                 ${t(envio, "direccion")}${campo(envio, "complemento") ? ", " + t(envio, "complemento") : ""} — ${t(envio, "ciudad")}, ${t(envio, "departamento")}

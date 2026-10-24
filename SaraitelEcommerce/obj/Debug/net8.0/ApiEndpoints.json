@@ -405,6 +405,47 @@
   },
   {
     "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "ConsultarCompras",
+    "RelativePath": "api/Pedido/compras",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "fechaInicial",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "fechaFinal",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "numeroFactura",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "tipoDocumento",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "numeroDocumento",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
     "Method": "Tarifas",
     "RelativePath": "api/Pedido/tarifas",
     "HttpMethod": "GET",
@@ -427,6 +468,240 @@
     "ContainingType": "Saraitel.API.Controllers.PedidoController",
     "Method": "PedidosDeUsuario",
     "RelativePath": "api/Pedido/usuario/{idUsuario}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PosventaController",
+    "Method": "SolicitarDevolucion",
+    "RelativePath": "api/Posventa/devoluciones",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "solicitud",
+        "Type": "Saraitel.API.Models.SolicitudDevolucion",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PosventaController",
+    "Method": "Devoluciones",
+    "RelativePath": "api/Posventa/devoluciones",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idAdministrador",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PosventaController",
+    "Method": "CambiarEstadoDevolucion",
+    "RelativePath": "api/Posventa/devoluciones/{idDevolucion}/{accion}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idDevolucion",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "accion",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "idAdministrador",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "motivo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "referencia",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PosventaController",
+    "Method": "ReportarGarantia",
+    "RelativePath": "api/Posventa/garantias",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "IdUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "IdPedido",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "IdProducto",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Cantidad",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Descripcion",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Fotos",
+        "Type": "System.Collections.Generic.List\u00601[[Microsoft.AspNetCore.Http.IFormFile, Microsoft.AspNetCore.Http.Features, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PosventaController",
+    "Method": "Garantias",
+    "RelativePath": "api/Posventa/garantias",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idAdministrador",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PosventaController",
+    "Method": "CambiarEstadoGarantia",
+    "RelativePath": "api/Posventa/garantias/{idTicket}/{accion}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idTicket",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "accion",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "idAdministrador",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "motivo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "cubiertoPor",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "idProductoReemplazo",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PosventaController",
+    "Method": "Evidencia",
+    "RelativePath": "api/Posventa/garantias/{idTicket}/evidencias/{archivo}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idTicket",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "archivo",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PosventaController",
+    "Method": "ResumenPedido",
+    "RelativePath": "api/Posventa/pedido/{idPedido}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPedido",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PosventaController",
+    "Method": "DeUsuario",
+    "RelativePath": "api/Posventa/usuario/{idUsuario}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

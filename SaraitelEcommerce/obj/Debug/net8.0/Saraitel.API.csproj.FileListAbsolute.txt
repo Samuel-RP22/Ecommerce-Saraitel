@@ -315,3 +315,5 @@ C:\Users\samue\Documents\Archives\Non-important things\Archivos UCO\Codigos UCO\
 C:\Users\samue\Documents\Archives\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\SaraitelEcommerce\bin\Debug\net8.0\runtimes\win-x64\native\qpdf.dll
 C:\Users\samue\Documents\Archives\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\SaraitelEcommerce\bin\Debug\net8.0\runtimes\win-x86\native\QuestPdfSkia.dll
 C:\Users\samue\Documents\Archives\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\SaraitelEcommerce\bin\Debug\net8.0\runtimes\win-x86\native\qpdf.dll
+C:\Users\samue\Documents\Archives\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\SaraitelEcommerce\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\samue\Documents\Archives\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\SaraitelEcommerce\bin\Debug\net8.0\Npgsql.dll

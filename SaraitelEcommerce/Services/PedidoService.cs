@@ -13,18 +13,18 @@ namespace Saraitel.API.Services
         private readonly ProductoRepository _productoRepo;
         private readonly IWompiService _wompi;
         private readonly IFacturaService _factura;
-        private readonly IEmailService _email;
+        private readonly IColaTareas _cola;
 
         private const string MotivoVencido = "Se agotó el tiempo para pagar";
 
-        public PedidoService(IWompiService wompi, IFacturaService factura, IEmailService email)
+        public PedidoService(IWompiService wompi, IFacturaService factura, IColaTareas cola)
         {
             _pedidoRepo = new PedidoRepository();
             _usuarioRepo = new UsuarioRepository();
             _productoRepo = new ProductoRepository();
             _wompi = wompi;
             _factura = factura;
-            _email = email;
+            _cola = cola;
         }
 
         public List<Pedido> ObtenerPedidos()
@@ -35,8 +35,7 @@ namespace Saraitel.API.Services
         // HU-18: pedidos de un cliente, del más nuevo al más viejo
         public List<Pedido> ObtenerPedidosDeUsuario(int idUsuario)
         {
-            return _pedidoRepo.ObtenerPedidos()
-                .Where(p => p.IdUsuario == idUsuario)
+            return _pedidoRepo.ObtenerPedidosDeUsuario(idUsuario)
                 .OrderByDescending(p => p.Fecha)
                 .ToList();
         }
@@ -55,10 +54,7 @@ namespace Saraitel.API.Services
 
         public string CrearPedidoDesdeCarrito(int idUsuario)
         {
-            var usuarios = _usuarioRepo.ObtenerUsuarios();
-
-            var usuario = usuarios
-                .FirstOrDefault(u => u.IdUsuario == idUsuario) as Cliente;
+            var usuario = _usuarioRepo.ObtenerUsuarioPorId(idUsuario) as Cliente;
 
             if (usuario == null)
                 return "Usuario no encontrado";
@@ -89,13 +85,23 @@ namespace Saraitel.API.Services
                            $"Disponible: {productoActual.Stock}, en tu carrito: {item.Value}";
             }
 
+            // El id lo asigna la base de datos al guardar
             Pedido pedido = new Pedido
             {
-                IdPedido = ObtenerPedidos().Any()
-                    ? ObtenerPedidos().Max(p => p.IdPedido) + 1
-                    : 1,
-
+                IdUsuario = usuario.IdUsuario,
                 Productos = usuario.Carrito.ListaProductos.ToList(),
+                Detalles = usuario.Carrito.ListaProductos
+                    .GroupBy(p => p.IdProducto)
+                    .Select(g => new DetallePedido
+                    {
+                        IdProducto = g.Key,
+                        Nombre = g.First().Nombre,
+                        Imagen = g.First().Imagen,
+                        PrecioUnitario = g.First().Precio,
+                        Cantidad = g.Count(),
+                        Subtotal = g.Sum(p => p.Precio)
+                    })
+                    .ToList(),
 
                 TotalPedido = usuario.Carrito.ListaProductos.Sum(p => p.Precio),
 
@@ -103,18 +109,9 @@ namespace Saraitel.API.Services
                 Fecha = DateTime.Now
             };
 
-            _pedidoRepo.AgregarPedido(pedido);
-
-            // HU-13: se descuenta el stock de lo vendido
-            _productoRepo.DescontarStock(cantidades);
-
-            usuario.HistorialCompras.Add(pedido);
-
-            usuario.Carrito.ListaProductos.Clear();
-            usuario.Carrito.CantidadProductos = 0;
-            usuario.Carrito.TotalCompra = 0;
-
-            _usuarioRepo.GuardarCambios(usuarios);
+            // HU-13: guarda el pedido, descuenta el stock y vacía el carrito (todo o nada)
+            if (!_pedidoRepo.RegistrarPedido(pedido, cantidades))
+                return "Otro cliente acaba de comprar unidades de un producto de tu carrito. Revisa el stock e intenta de nuevo.";
 
             return $"Compra realizada correctamente. Pedido #{pedido.IdPedido}";
         }
@@ -127,10 +124,7 @@ namespace Saraitel.API.Services
             int idUsuario,
             SolicitudCheckout solicitud)
         {
-            var usuarios = _usuarioRepo.ObtenerUsuarios();
-
-            var usuario = usuarios
-                .FirstOrDefault(u => u.IdUsuario == idUsuario) as Cliente;
+            var usuario = _usuarioRepo.ObtenerUsuarioPorId(idUsuario) as Cliente;
 
             if (usuario == null)
                 return (null, "Usuario no encontrado");
@@ -178,7 +172,10 @@ namespace Saraitel.API.Services
 
             foreach (var linea in lineas)
             {
-                var producto = _productoRepo.ObtenerProductoPorId(linea.IdProducto);
+                // El carrito ya viene de la base de datos con el precio y el stock
+                // actuales de cada producto: no hace falta consultarlos otra vez
+                var producto = usuario.Carrito.ListaProductos
+                    .FirstOrDefault(p => p.IdProducto == linea.IdProducto);
 
                 if (producto == null)
                 {
@@ -206,11 +203,10 @@ namespace Saraitel.API.Services
             }
 
             decimal subtotal = detalles.Sum(d => d.Subtotal);
-            var pedidos = ObtenerPedidos();
 
+            // El id lo asigna la base de datos al guardar
             Pedido pedido = new Pedido
             {
-                IdPedido = pedidos.Any() ? pedidos.Max(p => p.IdPedido) + 1 : 1,
                 IdUsuario = usuario.IdUsuario,
                 Fecha = DateTime.Now,
                 EstadoPedido = Pedido.EstadoPendientePago,
@@ -226,18 +222,15 @@ namespace Saraitel.API.Services
                 TotalPedido = subtotal + Pedido.CostoEnvioEstandar
             };
 
-            _pedidoRepo.AgregarPedido(pedido);
+            // Se guarda el pedido, el stock queda reservado mientras se paga y el
+            // carrito se vacía, todo en una sola transacción. Si otro cliente compró
+            // las últimas unidades un instante antes, no se guarda nada.
+            bool registrado = _pedidoRepo.RegistrarPedido(
+                pedido, lineas.ToDictionary(l => l.IdProducto, l => l.Cantidad));
 
-            // El stock queda reservado para este pedido mientras se paga
-            _productoRepo.DescontarStock(
-                lineas.ToDictionary(l => l.IdProducto, l => l.Cantidad));
-
-            usuario.HistorialCompras.Add(pedido);
-            usuario.Carrito.ListaProductos.Clear();
-            usuario.Carrito.CantidadProductos = 0;
-            usuario.Carrito.TotalCompra = 0;
-
-            _usuarioRepo.GuardarCambios(usuarios);
+            if (!registrado)
+                return (null, "Otro cliente acaba de comprar unidades de un producto de tu carrito. " +
+                              "Revisa el stock e intenta de nuevo.");
 
             return (pedido, $"Pedido #{pedido.IdPedido} creado");
         }
@@ -399,17 +392,18 @@ namespace Saraitel.API.Services
         // Devuelve cuántos pedidos se cancelaron.
         public int CancelarPedidosVencidos()
         {
-            var vencidos = ObtenerPedidos()
-                .Where(p => p.EstadoPedido == Pedido.EstadoPendientePago
-                         && DateTime.Now >= FechaLimiteDe(p))
-                .ToList();
+            // La base de datos devuelve solo los pendientes cuyo tiempo ya pasó
+            var vencidos = _pedidoRepo.ObtenerPedidosVencidos(DateTime.Now);
+
+            int cancelados = 0;
 
             foreach (var pedido in vencidos)
             {
-                _pedidoRepo.CancelarPedido(pedido, MotivoVencido);
+                if (_pedidoRepo.CancelarPedido(pedido, MotivoVencido))
+                    cancelados++;
             }
 
-            return vencidos.Count;
+            return cancelados;
         }
 
         /* =========================
@@ -421,11 +415,15 @@ namespace Saraitel.API.Services
         {
             var pedido = _pedidoRepo.ObtenerPedidoPorId(idPedido);
 
-            if (pedido == null || pedido.IdUsuario != idUsuario)
+            // El cliente descarga sus facturas; el administrador, las de todos
+            if (pedido == null || (pedido.IdUsuario != idUsuario && !EsAdministrador(idUsuario)))
                 return (null, "", "Pedido no encontrado");
 
             if (!pedido.EstaPagado())
                 return (null, "", "Solo los pedidos pagados tienen factura");
+
+            if (pedido.EsReposicion())
+                return (null, "", "Los pedidos de reposición por garantía no tienen factura");
 
             // Los pedidos de antes del checkout (HU-15) no guardan el detalle necesario
             if (pedido.Detalles.Count == 0)
@@ -435,8 +433,7 @@ namespace Saraitel.API.Services
             if (string.IsNullOrEmpty(pedido.NumeroFactura))
                 _pedidoRepo.AsignarFactura(pedido);
 
-            var cliente = _usuarioRepo.ObtenerUsuarios()
-                .FirstOrDefault(u => u.IdUsuario == pedido.IdUsuario);
+            var cliente = _usuarioRepo.ObtenerUsuarioPorId(pedido.IdUsuario);
 
             try
             {
@@ -451,34 +448,32 @@ namespace Saraitel.API.Services
             }
         }
 
-        // Envía la factura al correo del cliente. Si el correo falla, el pago
-        // igual queda aprobado: solo se registra el error y se devuelve "".
+        // Envía la factura al correo del cliente. El PDF y el correo se hacen en
+        // segundo plano para que el pago se confirme de inmediato; si el correo
+        // falla, el pago igual queda aprobado (solo se registra el error).
         private string EnviarFacturaPorCorreo(Pedido pedido)
         {
-            try
+            var cliente = _usuarioRepo.ObtenerUsuarioPorId(pedido.IdUsuario);
+
+            if (cliente == null || string.IsNullOrWhiteSpace(cliente.Correo))
+                return "";
+
+            string correo = cliente.Correo;
+            string cuerpo = CuerpoCorreoFactura(pedido);
+
+            _cola.Encolar($"Factura {pedido.NumeroFactura}", servicios =>
             {
-                var cliente = _usuarioRepo.ObtenerUsuarios()
-                    .FirstOrDefault(u => u.IdUsuario == pedido.IdUsuario);
+                byte[] pdf = servicios.GetRequiredService<IFacturaService>().GenerarPdf(pedido, correo);
 
-                if (cliente == null || string.IsNullOrWhiteSpace(cliente.Correo))
-                    return "";
-
-                byte[] pdf = _factura.GenerarPdf(pedido, cliente.Correo);
-
-                _email.EnviarCorreoConAdjunto(
-                    cliente.Correo,
+                servicios.GetRequiredService<IEmailService>().EnviarCorreoConAdjunto(
+                    correo,
                     $"Tu factura {pedido.NumeroFactura} - Saraitel",
-                    CuerpoCorreoFactura(pedido),
+                    cuerpo,
                     $"Factura-{pedido.NumeroFactura}.pdf",
                     pdf);
+            });
 
-                return cliente.Correo;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"ERROR AL ENVIAR LA FACTURA: {ex.Message}");
-                return "";
-            }
+            return correo;
         }
 
         private static string CuerpoCorreoFactura(Pedido pedido)
@@ -584,7 +579,9 @@ namespace Saraitel.API.Services
             if (pedido.EstadoPedido != Pedido.EstadoPendientePago)
                 return "Solo se pueden cancelar pedidos pendientes de pago";
 
-            _pedidoRepo.CancelarPedido(pedido, "Cancelado por el administrador");
+            // Si justo en ese momento el cliente pagó, el pedido ya no está pendiente
+            if (!_pedidoRepo.CancelarPedido(pedido, "Cancelado por el administrador"))
+                return "El pedido cambió de estado. Actualiza la página.";
 
             NotificarCliente(pedido,
                 $"Tu pedido #{pedido.IdPedido} fue cancelado",
@@ -595,20 +592,135 @@ namespace Saraitel.API.Services
             return "Pedido cancelado";
         }
 
-        private bool EsAdministrador(int idUsuario)
+        /* =========================
+           CONSULTA DE COMPRAS (por criterios)
+        ========================= */
+
+        public const string MensajeFechasInvalidas = "La fecha inicial no puede ser mayor a la fecha final.";
+
+        // Compras = pedidos pagados (también enviados o entregados), que son los que tienen factura.
+        // El cliente ve solo las suyas; el administrador, las de todos los clientes.
+        public (List<ResumenCompra>? Compras, string Mensaje) ConsultarCompras(
+            int idUsuario,
+            DateTime? fechaInicial,
+            DateTime? fechaFinal,
+            string? numeroFactura,
+            string? tipoDocumento,
+            string? numeroDocumento)
         {
-            return _usuarioRepo.ObtenerUsuarios()
-                .Any(u => u.IdUsuario == idUsuario && u is Administrador);
+            var usuario = _usuarioRepo.ObtenerUsuarioPorId(idUsuario);
+
+            if (usuario == null)
+                return (null, "Usuario no encontrado");
+
+            // Paso 4: las fechas deben ser válidas
+            if (fechaInicial == null || fechaFinal == null)
+                return (null, "Ingresa la fecha inicial y la fecha final.");
+
+            if (fechaInicial.Value.Date > fechaFinal.Value.Date)
+                return (null, MensajeFechasInvalidas);
+
+            bool esAdministrador = usuario is Administrador;
+
+            // Paso 5: compras según el rol
+            // El cliente solo trae de la base de datos sus propios pedidos
+            var pedidosBase = esAdministrador
+                ? _pedidoRepo.ObtenerPedidos()
+                : _pedidoRepo.ObtenerPedidosDeUsuario(idUsuario);
+
+            var compras = pedidosBase
+                .Where(p => p.EstaPagado() && p.Detalles.Count > 0 && !p.EsReposicion())
+                .Where(p => esAdministrador || p.IdUsuario == idUsuario);
+
+            // Fecha de la compra = cuando se aprobó el pago
+            compras = compras.Where(p =>
+            {
+                DateTime fecha = (p.FechaPago ?? p.Fecha).Date;
+                return fecha >= fechaInicial.Value.Date && fecha <= fechaFinal.Value.Date;
+            });
+
+            // Número de factura (opcional): acepta "FV-00007", "fv-7" o solo "7"
+            string factura = NormalizarNumeroFactura(numeroFactura);
+            if (factura != "")
+                compras = compras.Where(p => p.NumeroFactura.Equals(factura, StringComparison.OrdinalIgnoreCase));
+
+            // Documento del cliente: solo lo usa el administrador
+            if (esAdministrador)
+            {
+                string tipo = (tipoDocumento ?? "").Trim().ToUpperInvariant();
+                string numero = DatosEnvio.NormalizarNumero(tipo, numeroDocumento);
+
+                if (tipo != "")
+                    compras = compras.Where(p => DatosCliente(p).TipoDocumento == tipo);
+
+                if (numero != "")
+                    compras = compras.Where(p => DatosCliente(p).Cedula == numero);
+            }
+
+            var resultado = compras
+                .OrderByDescending(p => p.FechaPago ?? p.Fecha)
+                .Select(p =>
+                {
+                    var cliente = DatosCliente(p);
+
+                    return new ResumenCompra
+                    {
+                        IdPedido = p.IdPedido,
+                        NumeroFactura = p.NumeroFactura,
+                        FechaCompra = p.FechaPago ?? p.Fecha,
+                        // El nombre del cliente solo se envía al administrador
+                        Cliente = esAdministrador ? $"{cliente.Nombre} {cliente.Apellidos}".Trim() : "",
+                        TipoDocumento = esAdministrador ? cliente.TipoDocumento : "",
+                        NumeroDocumento = esAdministrador ? cliente.Cedula : "",
+                        TotalPedido = p.TotalPedido,
+                        MedioPago = p.MedioPago,
+                        EstadoPedido = p.EstadoPedido
+                    };
+                })
+                .ToList();
+
+            // Paso 5.1: si no hay compras, la lista va vacía y la pantalla muestra el mensaje
+            return (resultado, resultado.Count == 0
+                ? "No se encontraron compras con los criterios ingresados."
+                : $"{resultado.Count} compras encontradas");
         }
 
-        // Correo al cliente con cada cambio de estado. Si falla, el cambio
-        // igual queda guardado: solo se registra el error.
+        // El cliente de una compra es quien aparece en la factura
+        private static DatosEnvio DatosCliente(Pedido pedido)
+        {
+            return pedido.Facturacion ?? pedido.Envio ?? new DatosEnvio();
+        }
+
+        private static string NormalizarNumeroFactura(string? texto)
+        {
+            string valor = (texto ?? "").Trim().ToUpperInvariant();
+
+            if (valor == "")
+                return "";
+
+            string digitos = SoloDigitos(valor);
+
+            // "7", "FV7" o "FV-7" -> "FV-00007"
+            if (digitos != "" && int.TryParse(digitos, out int numero))
+                return $"FV-{numero:D5}";
+
+            return valor;
+        }
+
+        private bool EsAdministrador(int idUsuario)
+        {
+            // El tipo de cada cuenta se recuerda en memoria: casi nunca va a la base de datos
+            return _usuarioRepo.EsAdministrador(idUsuario);
+        }
+
+        // Correo al cliente con cada cambio de estado. Todo (buscar su correo, armar
+        // el mensaje y enviarlo) se hace en segundo plano, así el administrador no
+        // espera; si falla, el cambio igual queda guardado: solo se registra el error.
         private void NotificarCliente(Pedido pedido, string asunto, string mensajeHtml)
         {
-            try
+            _cola.Encolar(asunto, servicios =>
             {
-                var cliente = _usuarioRepo.ObtenerUsuarios()
-                    .FirstOrDefault(u => u.IdUsuario == pedido.IdUsuario);
+                var cliente = new UsuarioRepository().ObtenerUsuarioPorId(pedido.IdUsuario);
 
                 if (cliente == null || string.IsNullOrWhiteSpace(cliente.Correo))
                     return;
@@ -626,12 +738,8 @@ namespace Saraitel.API.Services
                         </p>
                     </div>";
 
-                _email.EnviarCorreo(cliente.Correo, $"{asunto} - Saraitel", cuerpo);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"ERROR AL NOTIFICAR AL CLIENTE: {ex.Message}");
-            }
+                servicios.GetRequiredService<IEmailService>().EnviarCorreo(cliente.Correo, $"{asunto} - Saraitel", cuerpo);
+            });
         }
 
         // Los pedidos creados antes de la HU-16 no tienen fecha límite guardada
@@ -671,15 +779,18 @@ namespace Saraitel.API.Services
             return Math.Round(valorConIva - baseSinIva, 2);
         }
 
-        // Quita espacios sobrantes y deja solo números en cédula y teléfono
+        // Quita espacios sobrantes y deja solo los caracteres válidos en documento y teléfono
         private static DatosEnvio LimpiarDatos(DatosEnvio datos)
         {
+            string tipoDocumento = (datos.TipoDocumento ?? "CC").Trim().ToUpperInvariant();
+
             return new DatosEnvio
             {
                 Pais = "Colombia",
                 Nombre = (datos.Nombre ?? "").Trim(),
                 Apellidos = (datos.Apellidos ?? "").Trim(),
-                Cedula = SoloDigitos(datos.Cedula),
+                TipoDocumento = tipoDocumento,
+                Cedula = DatosEnvio.NormalizarNumero(tipoDocumento, datos.Cedula),
                 Direccion = (datos.Direccion ?? "").Trim(),
                 Complemento = (datos.Complemento ?? "").Trim(),
                 Ciudad = (datos.Ciudad ?? "").Trim(),
@@ -703,8 +814,12 @@ namespace Saraitel.API.Services
             if (datos.Apellidos == "")
                 return $"Datos {tipo}: escribe los apellidos.";
 
-            if (datos.Cedula.Length < 6 || datos.Cedula.Length > 10)
-                return $"Datos {tipo}: la cédula debe tener entre 6 y 10 números.";
+            if (!DatosEnvio.TiposDocumento.Contains(datos.TipoDocumento))
+                return $"Datos {tipo}: selecciona el tipo de documento.";
+
+            string? errorDocumento = DatosEnvio.ValidarNumero(datos.TipoDocumento, datos.Cedula);
+            if (errorDocumento != null)
+                return $"Datos {tipo}: {errorDocumento}.";
 
             if (datos.Direccion == "")
                 return $"Datos {tipo}: escribe la dirección.";

@@ -17,11 +17,8 @@ namespace Saraitel.API.Services
 
         public CarritoCompra ObtenerCarrito(int idUsuario)
         {
-            var usuarios = _usuarioRepo.ObtenerUsuarios();
-
-            var usuario = usuarios
-                .FirstOrDefault(u => u.IdUsuario == idUsuario)
-                as Cliente;
+            // El cliente llega con su carrito desde la base de datos
+            var usuario = _usuarioRepo.ObtenerUsuarioPorId(idUsuario) as Cliente;
 
             if (usuario == null)
                 return null;
@@ -34,11 +31,8 @@ namespace Saraitel.API.Services
             int idProducto,
             int cantidad)
         {
-            var usuarios = _usuarioRepo.ObtenerUsuarios();
-
-            var usuario = usuarios
-                .FirstOrDefault(u => u.IdUsuario == idUsuario)
-                as Cliente;
+            // El cliente llega con su carrito desde la base de datos
+            var usuario = _usuarioRepo.ObtenerUsuarioPorId(idUsuario) as Cliente;
 
             if (usuario == null)
                 return "Usuario no encontrado";
@@ -76,7 +70,7 @@ namespace Saraitel.API.Services
             usuario.Carrito.TotalCompra =
                 usuario.Carrito.ListaProductos.Sum(p => p.Precio);
 
-            _usuarioRepo.GuardarCambios(usuarios);
+            _usuarioRepo.GuardarCarrito(usuario);
 
             return "Producto agregado al carrito";
         }
@@ -85,11 +79,8 @@ namespace Saraitel.API.Services
             int idUsuario,
             int idProducto)
         {
-            var usuarios = _usuarioRepo.ObtenerUsuarios();
-
-            var usuario = usuarios
-                .FirstOrDefault(u => u.IdUsuario == idUsuario)
-                as Cliente;
+            // El cliente llega con su carrito desde la base de datos
+            var usuario = _usuarioRepo.ObtenerUsuarioPorId(idUsuario) as Cliente;
 
             if (usuario == null)
                 return "Usuario no encontrado";
@@ -109,7 +100,7 @@ namespace Saraitel.API.Services
             usuario.Carrito.TotalCompra =
                 usuario.Carrito.ListaProductos.Sum(p => p.Precio);
 
-            _usuarioRepo.GuardarCambios(usuarios);
+            _usuarioRepo.GuardarCarrito(usuario);
 
             return "Producto eliminado del carrito";
         }
@@ -119,11 +110,8 @@ namespace Saraitel.API.Services
             int idProducto,
             int cantidad)
         {
-            var usuarios = _usuarioRepo.ObtenerUsuarios();
-
-            var usuario = usuarios
-                .FirstOrDefault(u => u.IdUsuario == idUsuario)
-                as Cliente;
+            // El cliente llega con su carrito desde la base de datos
+            var usuario = _usuarioRepo.ObtenerUsuarioPorId(idUsuario) as Cliente;
 
             if (usuario == null)
                 return "Usuario no encontrado";
@@ -164,18 +152,15 @@ namespace Saraitel.API.Services
             usuario.Carrito.TotalCompra =
                 usuario.Carrito.ListaProductos.Sum(p => p.Precio);
 
-            _usuarioRepo.GuardarCambios(usuarios);
+            _usuarioRepo.GuardarCarrito(usuario);
 
             return "Cantidad actualizada";
         }
 
         public string VaciarCarrito(int idUsuario)
         {
-            var usuarios = _usuarioRepo.ObtenerUsuarios();
-
-            var usuario = usuarios
-                .FirstOrDefault(u => u.IdUsuario == idUsuario)
-                as Cliente;
+            // El cliente llega con su carrito desde la base de datos
+            var usuario = _usuarioRepo.ObtenerUsuarioPorId(idUsuario) as Cliente;
 
             if (usuario == null)
                 return "Usuario no encontrado";
@@ -184,18 +169,15 @@ namespace Saraitel.API.Services
             usuario.Carrito.CantidadProductos = 0;
             usuario.Carrito.TotalCompra = 0;
 
-            _usuarioRepo.GuardarCambios(usuarios);
+            _usuarioRepo.GuardarCarrito(usuario);
 
             return "Carrito vaciado";
         }
 
         public decimal CalcularTotal(int idUsuario)
         {
-            var usuarios = _usuarioRepo.ObtenerUsuarios();
-
-            var usuario = usuarios
-                .FirstOrDefault(u => u.IdUsuario == idUsuario)
-                as Cliente;
+            // El cliente llega con su carrito desde la base de datos
+            var usuario = _usuarioRepo.ObtenerUsuarioPorId(idUsuario) as Cliente;
 
             if (usuario == null)
                 return 0;
