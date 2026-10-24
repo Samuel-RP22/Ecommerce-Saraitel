@@ -1,15 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "Q1QB2hMvVQw=",
+  "dgSpecHash": "cQf9xTDsy+w=",
   "success": true,
-  "projectFilePath": "C:\\Users\\samue\\Desktop\\Non-important things\\Archivos UCO\\Codigos UCO\\POO\\C#\\Archivos POO\\E-Commerce-Saraitel\\Codigo_Saraitel\\SaraitelEcommerce\\Saraitel.API.csproj",
+  "projectFilePath": "C:\\Users\\samue\\Desktop\\Non-important things\\Archivos UCO\\Codigos UCO\\POO\\C#\\GitHub\\Ecommerce-Saraitel\\SaraitelEcommerce\\Saraitel.API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\samue\\.nuget\\packages\\bouncycastle.cryptography\\2.7.0\\bouncycastle.cryptography.2.7.0.nupkg.sha512",
+    "C:\\Users\\samue\\.nuget\\packages\\mailkit\\4.18.1\\mailkit.4.18.1.nupkg.sha512",
+    "C:\\Users\\samue\\.nuget\\packages\\microsoft.bcl.cryptography\\10.0.0\\microsoft.bcl.cryptography.10.0.0.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
+    "C:\\Users\\samue\\.nuget\\packages\\mimekit\\4.18.1\\mimekit.4.18.1.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.6.2\\swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.6.2\\swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",
-    "C:\\Users\\samue\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.6.2\\swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512"
+    "C:\\Users\\samue\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.6.2\\swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512",
+    "C:\\Users\\samue\\.nuget\\packages\\system.formats.asn1\\10.0.0\\system.formats.asn1.10.0.0.nupkg.sha512",
+    "C:\\Users\\samue\\.nuget\\packages\\system.security.cryptography.pkcs\\10.0.0\\system.security.cryptography.pkcs.10.0.0.nupkg.sha512"
   ],
   "logs": []
 }

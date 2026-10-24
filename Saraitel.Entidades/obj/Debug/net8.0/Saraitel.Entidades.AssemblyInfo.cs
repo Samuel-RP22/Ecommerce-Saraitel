@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Saraitel.Entidades")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a3a9a0d14deaae451ea1c1a7eed4284114e0af8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Saraitel.Entidades")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Saraitel.Entidades")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

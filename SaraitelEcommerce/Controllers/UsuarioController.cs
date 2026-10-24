@@ -66,13 +66,33 @@ namespace Saraitel.API.Controllers
             if (usuario == null)
                 return NotFound("Usuario no encontrado");
 
-            return Ok(usuario);
+            // Sin contraseña ni código de recuperación
+            return Ok(new
+            {
+                idUsuario = usuario.IdUsuario,
+                nombre = usuario.Nombre,
+                correo = usuario.Correo,
+                telefono = usuario.Telefono,
+                rol = usuario.Rol,
+                historialCompras = usuario is Cliente cliente
+                    ? cliente.HistorialCompras
+                    : new List<Pedido>()
+            });
         }
 
         [HttpGet]
         public IActionResult ObtenerUsuarios()
         {
-            var usuarios = _usuarioService.ObtenerUsuarios();
+            var usuarios = _usuarioService.ObtenerUsuarios()
+                .Select(u => new
+                {
+                    idUsuario = u.IdUsuario,
+                    nombre = u.Nombre,
+                    correo = u.Correo,
+                    telefono = u.Telefono,
+                    rol = u.Rol
+                });
+
             return Ok(usuarios);
         }
 
@@ -84,7 +104,14 @@ namespace Saraitel.API.Controllers
             if (usuario == null)
                 return NotFound("Usuario no encontrado");
 
-            return Ok(usuario);
+            return Ok(new
+            {
+                idUsuario = usuario.IdUsuario,
+                nombre = usuario.Nombre,
+                correo = usuario.Correo,
+                telefono = usuario.Telefono,
+                rol = usuario.Rol
+            });
         }
 
         /* =========================
@@ -149,15 +176,15 @@ namespace Saraitel.API.Controllers
             if (string.IsNullOrWhiteSpace(correo))
                 return BadRequest("Debes ingresar el correo");
 
-            var codigo = _usuarioService.SolicitarRecuperacion(correo);
+            var enviado = _usuarioService.SolicitarRecuperacion(correo);
 
-            // Siempre se responde lo mismo para no revelar si el correo existe.
-            // NOTA: como aún no hay envío de correos, el código se devuelve
-            // en la respuesta (solo para desarrollo). Si el correo no existe, viene null.
+            if (!enviado)
+                return StatusCode(500, "No se pudo enviar el correo de recuperación. Intenta de nuevo más tarde.");
+
+            // Siempre se responde lo mismo para no revelar si el correo existe
             return Ok(new
             {
-                mensaje = "Si el correo está registrado, se generó un código de recuperación.",
-                codigo = codigo
+                mensaje = "Si el correo está registrado, te enviamos un código de recuperación."
             });
         }
 

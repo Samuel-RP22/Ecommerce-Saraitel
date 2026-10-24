@@ -8,11 +8,13 @@ namespace Saraitel.API.Services
     {
         private readonly PedidoRepository _pedidoRepo;
         private readonly UsuarioRepository _usuarioRepo;
+        private readonly ProductoRepository _productoRepo;
 
         public PedidoService()
         {
             _pedidoRepo = new PedidoRepository();
             _usuarioRepo = new UsuarioRepository();
+            _productoRepo = new ProductoRepository();
         }
 
         public List<Pedido> ObtenerPedidos()
@@ -45,6 +47,29 @@ namespace Saraitel.API.Services
             if (usuario.Carrito.ListaProductos.Count == 0)
                 return "El carrito está vacío";
 
+            // HU-13: unidades pedidas de cada producto (idProducto -> cantidad)
+            var cantidades = usuario.Carrito.ListaProductos
+                .GroupBy(p => p.IdProducto)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            // Se valida el stock ANTES de crear el pedido
+            foreach (var item in cantidades)
+            {
+                var productoActual = _productoRepo.ObtenerProductoPorId(item.Key);
+
+                if (productoActual == null)
+                {
+                    string nombre = usuario.Carrito.ListaProductos
+                        .First(p => p.IdProducto == item.Key).Nombre;
+
+                    return $"El producto \"{nombre}\" ya no está disponible";
+                }
+
+                if (productoActual.Stock < item.Value)
+                    return $"Stock insuficiente para \"{productoActual.Nombre}\". " +
+                           $"Disponible: {productoActual.Stock}, en tu carrito: {item.Value}";
+            }
+
             Pedido pedido = new Pedido
             {
                 IdPedido = ObtenerPedidos().Any()
@@ -60,6 +85,9 @@ namespace Saraitel.API.Services
             };
 
             _pedidoRepo.AgregarPedido(pedido);
+
+            // HU-13: se descuenta el stock de lo vendido
+            _productoRepo.DescontarStock(cantidades);
 
             usuario.HistorialCompras.Add(pedido);
 

@@ -54,3 +54,16 @@ C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Arch
 C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.Entidades.pdb
 C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Entidades\obj\Debug\net8.0\ref\Saraitel.Entidades.dll
 C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\Archivos POO\E-Commerce-Saraitel\Codigo_Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.677BE86C.Up2Date
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\bin\Debug\net8.0\Saraitel.Entidades.deps.json
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\bin\Debug\net8.0\Saraitel.Entidades.dll
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\bin\Debug\net8.0\Saraitel.Entidades.pdb
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.Entidades.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.Entidades.AssemblyInfoInputs.cache
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.Entidades.AssemblyInfo.cs
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.Entidades.csproj.CoreCompileInputs.cache
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.Entidades.sourcelink.json
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.Entidades.dll
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\refint\Saraitel.Entidades.dll
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.Entidades.pdb
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\ref\Saraitel.Entidades.dll
+C:\Users\samue\Desktop\Non-important things\Archivos UCO\Codigos UCO\POO\C#\GitHub\Ecommerce-Saraitel\Saraitel.Entidades\obj\Debug\net8.0\Saraitel.677BE86C.Up2Date

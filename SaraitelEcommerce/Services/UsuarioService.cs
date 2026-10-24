@@ -2,6 +2,7 @@
 using Saraitel.Datos.Repositories;
 using Saraitel.Entidades;
 using Saraitel.Entidades.Factories;
+using System.Net;
 using System.Net.Mail;
 using System.Security.Cryptography;
 
@@ -15,9 +16,12 @@ namespace Saraitel.API.Services
         private static int
             _intentosFallidos = 0;
 
-        public UsuarioService()
+        private readonly IEmailService _emailService;
+
+        public UsuarioService(IEmailService emailService)
         {
             _usuarioRepository = new UsuarioRepository();
+            _emailService = emailService;
         }
 
         public List<Usuario>
@@ -130,12 +134,14 @@ namespace Saraitel.API.Services
            HU-06 SOLICITAR RECUPERACIÓN DE ACCESO
         ========================================== */
 
-        public string? SolicitarRecuperacion(string correo)
+        public bool SolicitarRecuperacion(string correo)
         {
             var usuario = _usuarioRepository.ObtenerUsuarioPorCorreo(correo);
 
+            // Si el correo no existe no se hace nada, pero se responde igual
+            // para no revelar qué correos están registrados
             if (usuario == null)
-                return null;
+                return true;
 
             // Código numérico de 6 dígitos, válido por 15 minutos
             string codigo = RandomNumberGenerator
@@ -147,7 +153,37 @@ namespace Saraitel.API.Services
 
             _usuarioRepository.ActualizarUsuario(usuario);
 
-            return codigo;
+            string cuerpo = $@"
+                <div style='font-family:Arial,sans-serif;max-width:480px;margin:auto;'>
+                    <h2>Recuperación de contraseña</h2>
+                    <p>Hola {WebUtility.HtmlEncode(usuario.Nombre)},</p>
+                    <p>Usa este código para restablecer tu contraseña en Saraitel:</p>
+                    <p style='font-size:32px;font-weight:bold;letter-spacing:6px;'>{codigo}</p>
+                    <p>El código vence en 15 minutos y solo se puede usar una vez.</p>
+                    <p style='color:#666;font-size:13px;'>Si no fuiste tú, ignora este mensaje.</p>
+                </div>";
+
+            try
+            {
+                _emailService.EnviarCorreo(
+                    usuario.Correo,
+                    "Código de recuperación - Saraitel",
+                    cuerpo);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Si no se pudo enviar, el código no sirve: lo borramos
+                Console.WriteLine($"Error enviando correo de recuperación: {ex}");
+                System.Diagnostics.Debug.WriteLine($"Error enviando correo de recuperación: {ex}");
+
+                usuario.TokenRecuperacion = null;
+                usuario.FechaExpiracionToken = null;
+                _usuarioRepository.ActualizarUsuario(usuario);
+
+                return false;
+            }
         }
 
         /* =========================

@@ -178,6 +178,8 @@ function logout() {
 
     document.getElementById("vistaTienda").classList.add("hidden");
     document.getElementById("vistaPerfil").classList.add("hidden");
+    document.getElementById("vistaDetalleProducto").classList.add("hidden");
+    productoDetalleId = null;
     document.getElementById("vistaAuth").classList.remove("hidden");
     
     // Devolvemos la interfaz al estado de cliente y refrescamos el catálogo
@@ -293,6 +295,10 @@ function solicitarRecuperacion() {
 
     if (!correo) return alert("Escribe el correo de tu cuenta.");
 
+    const boton = document.getElementById("btnEnviarCodigo");
+    boton.disabled = true;
+    boton.innerText = "Enviando...";
+
     fetch(`${API}/usuario/recuperar?correo=${encodeURIComponent(correo)}`, {
         method: "POST"
     })
@@ -307,18 +313,15 @@ function solicitarRecuperacion() {
 
         const aviso = document.getElementById("avisoCodigo");
         aviso.classList.remove("hidden");
-
-        // Todavía no hay envío de correos: el backend devuelve el código
-        // y lo mostramos aquí (solo para desarrollo).
-        if (data.codigo) {
-            aviso.innerText = `${data.mensaje} Código (simula el correo): ${data.codigo}. Vence en 15 minutos.`;
-        } else {
-            aviso.innerText = data.mensaje;
-        }
+        aviso.innerText = `${data.mensaje} Revisa tu bandeja de entrada y la carpeta de spam. El código vence en 15 minutos.`;
 
         mostrarFormulario('restablecer');
     })
-    .catch(err => alert("No se pudo solicitar la recuperación: " + err.message));
+    .catch(err => alert("No se pudo solicitar la recuperación: " + err.message))
+    .finally(() => {
+        boton.disabled = false;
+        boton.innerText = "Enviar código";
+    });
 }
 
 function ejecutarRestablecer() {
@@ -370,44 +373,303 @@ function ejecutarRestablecer() {
    PRODUCTOS (GESTIÓN DEL CATÁLOGO, CREACIÓN Y MODIFICACIÓN)
 ======================================================= */
 
+let productosCatalogo = [];
+let productoDetalleId = null;   // producto que se está viendo en la página de detalle
+let unidadesCarrito = {};      // idProducto -> unidades que el cliente ya tiene en su carrito
+let cantidadSeleccionada = {}; // idProducto -> cantidad elegida en el selector - 1 +
+
 function cargarProductos() {
     fetch(`${API}/producto`)
         .then(r => r.json())
         .then(data => {
-            let html = "";
-            data.forEach(p => {
-                const urlImagen = p.imagen || p.Imagen || "";
-                const urlFinal = urlImagen.trim() !== "" 
-                    ? urlImagen 
-                    : "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&q=80";
-
-                const idProductoActual = p.idProducto !== undefined ? p.idProducto : p.IdProducto;
-
-                const botonAccion = esAdministrador
-                    ? `<div style="display: flex; gap: 8px; width: 100%; margin-top: 10px;">
-                        <button class="btn-dark-blue" style="flex: 1;" onclick="modificarProducto(${idProductoActual})">📝 Modificar</button>
-                        <button class="btn-danger" style="flex: 1;" onclick="eliminarProducto(${idProductoActual})">🗑 Eliminar</button>
-                       </div>`
-                    : `<button class="btn-add" style="width:100%" onclick="agregarCarrito(${idProductoActual})">Agregar al Carrito</button>`;
-
-                const nombreProd = p.nombre || p.Nombre || "Producto sin nombre";
-                const descProd = p.descripcion || p.Descripcion || "";
-                const precioProd = p.precio !== undefined ? p.precio : p.Precio;
-
-                html += `
-                <div class="card-item">
-                    <div class="producto-img-container">
-                        <img src="${urlFinal}" alt="${nombreProd}" class="producto-img">
-                    </div>
-                    <h3>${nombreProd}</h3>
-                    <p>${descProd}</p>
-                    <b class="precio">$${precioProd}</b>
-                    ${botonAccion}
-                </div>`;
-            });
-            document.getElementById("productos").innerHTML = html;
+            productosCatalogo = data;
+            filtrarProductos(); // respeta lo que haya escrito en la barra de búsqueda
         })
         .catch(err => console.error("Error cargando catálogo de productos:", err));
+}
+
+/* ---------- Búsqueda de productos (HU-09) ---------- */
+
+// Quita mayúsculas, tildes y espacios de los extremos para comparar
+function normalizarTexto(texto) {
+    return (texto || "")
+        .toString()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+}
+
+function toggleBusquedaProductos() {
+    const barra = document.getElementById("barraBusqueda");
+
+    if (barra.classList.contains("hidden")) {
+        barra.classList.remove("hidden");
+        document.getElementById("inputBusquedaProducto").focus();
+    } else {
+        cerrarBusquedaProductos();
+    }
+}
+
+function cerrarBusquedaProductos() {
+    document.getElementById("inputBusquedaProducto").value = "";
+    document.getElementById("barraBusqueda").classList.add("hidden");
+    filtrarProductos();
+}
+
+function filtrarProductos() {
+    const input = document.getElementById("inputBusquedaProducto");
+    const texto = normalizarTexto(input ? input.value : "");
+
+    const lista = texto === ""
+        ? productosCatalogo
+        : productosCatalogo.filter(p =>
+            normalizarTexto(p.nombre || p.Nombre).includes(texto));
+
+    renderizarProductos(lista, texto !== "");
+
+    // Si hay un detalle abierto, se actualiza con el stock más reciente
+    if (productoDetalleId !== null) renderizarDetalleProducto();
+}
+
+/* ---------- Dibujar la grilla ---------- */
+
+// Stock real del producto menos lo que el cliente ya tiene en su carrito
+function disponibleDe(idProducto) {
+    const p = productosCatalogo.find(x =>
+        (x.idProducto !== undefined ? x.idProducto : x.IdProducto) === idProducto);
+
+    if (!p) return 0;
+
+    const stock = p.stock !== undefined ? p.stock : (p.Stock !== undefined ? p.Stock : 0);
+
+    return esAdministrador
+        ? stock
+        : Math.max(0, stock - (unidadesCarrito[idProducto] || 0));
+}
+
+function renderizarProductos(lista, hayBusqueda) {
+    let html = "";
+
+    lista.forEach(p => {
+        const urlImagen = p.imagen || p.Imagen || "";
+        const urlFinal = urlImagen.trim() !== ""
+            ? urlImagen
+            : "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&q=80";
+
+        const idProductoActual = p.idProducto !== undefined ? p.idProducto : p.IdProducto;
+        const nombreProd = p.nombre || p.Nombre || "Producto sin nombre";
+        const precioProd = p.precio !== undefined ? p.precio : p.Precio;
+
+        // La grilla solo muestra imagen, nombre y precio; el resto está en el detalle
+        html += `
+        <div class="card-item card-clickable" onclick="verDetalleProducto(${idProductoActual})">
+            <div class="producto-img-container">
+                <img src="${urlFinal}" alt="${nombreProd}" class="producto-img">
+            </div>
+            <h3>${nombreProd}</h3>
+            <b class="precio">$${precioProd}</b>
+        </div>`;
+    });
+
+    if (html === "" && hayBusqueda) {
+        html = `<p class="sin-resultados">No se encontraron productos con ese nombre.</p>`;
+    }
+
+    document.getElementById("productos").innerHTML = html;
+}
+
+/* ---------- Página de detalle del producto (HU-12) ---------- */
+
+function verDetalleProducto(idProducto) {
+    productoDetalleId = idProducto;
+    renderizarDetalleProducto();
+
+    document.getElementById("vistaTienda").classList.add("hidden");
+    document.getElementById("vistaDetalleProducto").classList.remove("hidden");
+    window.scrollTo(0, 0);
+}
+
+function cerrarDetalleProducto() {
+    productoDetalleId = null;
+    document.getElementById("vistaDetalleProducto").classList.add("hidden");
+    document.getElementById("vistaTienda").classList.remove("hidden");
+}
+
+function renderizarDetalleProducto() {
+    const p = productosCatalogo.find(x =>
+        (x.idProducto !== undefined ? x.idProducto : x.IdProducto) === productoDetalleId);
+
+    // Si el producto ya no existe (por ejemplo, lo eliminaron), se vuelve a la tienda
+    if (!p) {
+        cerrarDetalleProducto();
+        return;
+    }
+
+    const id = productoDetalleId;
+
+    const urlImagen = p.imagen || p.Imagen || "";
+    const urlFinal = urlImagen.trim() !== ""
+        ? urlImagen
+        : "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&q=80";
+
+    const nombreProd = p.nombre || p.Nombre || "Producto sin nombre";
+    const descProd = p.descripcion || p.Descripcion || "Este producto no tiene descripción.";
+    const precioProd = p.precio !== undefined ? p.precio : p.Precio;
+
+    const categoria = p.categoria || p.Categoria;
+    const nombreCategoria = categoria
+        ? (categoria.nombreCategoria || categoria.NombreCategoria || "Sin categoría")
+        : "Sin categoría";
+
+    const stockReal = p.stock !== undefined ? p.stock : (p.Stock !== undefined ? p.Stock : 0);
+    const disponible = disponibleDe(id);
+    const claseStock = disponible <= 3 ? "detalle-stock stock-bajo" : "detalle-stock";
+
+    let acciones;
+    if (esAdministrador) {
+        acciones = `
+        <div class="detalle-acciones-admin">
+            <button class="btn-dark-blue" style="flex: 1;" onclick="modificarProducto(${id})">📝 Modificar</button>
+            <button class="btn-danger" style="flex: 1;" onclick="eliminarProducto(${id})">🗑 Eliminar</button>
+        </div>`;
+    } else {
+        let boton;
+        if (disponible <= 0) {
+            // Sin stock: "Agotado", o el botón normal en gris si todo el stock ya está en el carrito
+            const texto = stockReal <= 0 ? "Agotado" : "Agregar al Carrito";
+            boton = `<button class="btn-add" style="width:100%" disabled>${texto}</button>`;
+        } else {
+            boton = `<button class="btn-add" style="width:100%" onclick="agregarCarrito(${id})">Agregar al Carrito</button>`;
+        }
+
+        acciones = `
+        <div class="detalle-acciones">
+            ${generarSelectorCantidad(id, disponible)}
+            ${boton}
+        </div>`;
+    }
+
+    document.getElementById("detalleProducto").innerHTML = `
+    <section class="card detalle-producto">
+        <button class="btn-secondary" onclick="cerrarDetalleProducto()">← Volver a la tienda</button>
+
+        <div class="detalle-grid">
+            <div class="detalle-img">
+                <img src="${urlFinal}" alt="${nombreProd}">
+            </div>
+
+            <div class="detalle-info">
+                <span class="detalle-categoria">🏷 ${nombreCategoria}</span>
+                <h2>${nombreProd}</h2>
+                <b class="detalle-precio">$${precioProd}</b>
+                <p class="detalle-descripcion">${descProd}</p>
+                <span class="${claseStock}">Stock: ${disponible}</span>
+                ${acciones}
+            </div>
+        </div>
+    </section>`;
+}
+
+/* ---------- Selector de cantidad:  -  1  +  ---------- */
+
+function generarSelectorCantidad(idProducto, disponible) {
+    let cantidad = cantidadSeleccionada[idProducto] || 1;
+
+    if (disponible <= 0) cantidad = 0;
+    else if (cantidad > disponible) cantidad = disponible;
+
+    cantidadSeleccionada[idProducto] = cantidad;
+
+    const sinStock = disponible <= 0;
+
+    return `
+    <div class="cantidad-selector">
+        <span class="cantidad-label">Cantidad</span>
+        <div class="stepper">
+            <button class="stepper-btn" id="menos-${idProducto}" onclick="cambiarCantidad(${idProducto}, -1)" ${cantidad <= 1 ? "disabled" : ""}>−</button>
+            <input class="stepper-input" id="qty-${idProducto}" type="text" inputmode="numeric" value="${cantidad}" ${sinStock ? "disabled" : ""}
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                   onchange="confirmarCantidad(${idProducto})"
+                   onkeydown="if (event.key === 'Enter') { this.blur(); }">
+            <button class="stepper-btn" id="mas-${idProducto}" onclick="cambiarCantidad(${idProducto}, 1)" ${cantidad >= disponible ? "disabled" : ""}>+</button>
+        </div>
+    </div>`;
+}
+
+function actualizarStepper(idProducto) {
+    const disponible = disponibleDe(idProducto);
+    const cantidad = disponible <= 0 ? 0 : (cantidadSeleccionada[idProducto] || 1);
+
+    const input = document.getElementById(`qty-${idProducto}`);
+    const menos = document.getElementById(`menos-${idProducto}`);
+    const mas = document.getElementById(`mas-${idProducto}`);
+
+    if (!input || !menos || !mas) return;
+
+    input.value = cantidad;
+    menos.disabled = cantidad <= 1;
+    mas.disabled = cantidad >= disponible;
+}
+
+function cambiarCantidad(idProducto, delta) {
+    const disponible = disponibleDe(idProducto);
+    let cantidad = (cantidadSeleccionada[idProducto] || 1) + delta;
+
+    cantidad = Math.max(1, Math.min(cantidad, disponible));
+
+    cantidadSeleccionada[idProducto] = cantidad;
+    actualizarStepper(idProducto);
+}
+
+// Se ejecuta cuando el cliente escribe la cantidad y da Enter (o sale del campo)
+async function confirmarCantidad(idProducto) {
+    const input = document.getElementById(`qty-${idProducto}`);
+    const cantidad = parseInt(input.value, 10);
+
+    if (isNaN(cantidad) || cantidad < 1) {
+        cantidadSeleccionada[idProducto] = 1;
+        actualizarStepper(idProducto);
+        return;
+    }
+
+    // Se consulta el stock real al servidor para no depender de datos viejos
+    try {
+        const r = await fetch(`${API}/producto/${idProducto}`);
+        if (r.ok) {
+            const actual = await r.json();
+            const idx = productosCatalogo.findIndex(x =>
+                (x.idProducto !== undefined ? x.idProducto : x.IdProducto) === idProducto);
+            if (idx >= 0) productosCatalogo[idx] = actual;
+        }
+    } catch (e) {
+        console.error("No se pudo consultar el stock actual:", e);
+    }
+
+    const p = productosCatalogo.find(x =>
+        (x.idProducto !== undefined ? x.idProducto : x.IdProducto) === idProducto);
+
+    if (!p) return;
+
+    const nombre = p.nombre || p.Nombre || "el producto";
+    const stockReal = p.stock !== undefined ? p.stock : (p.Stock !== undefined ? p.Stock : 0);
+    const enCarrito = unidadesCarrito[idProducto] || 0;
+    const disponible = Math.max(0, stockReal - enCarrito);
+
+    if (cantidad > disponible) {
+        let mensaje = `No se puede: excediste el stock disponible de "${nombre}". Stock disponible: ${stockReal}.`;
+
+        if (enCarrito > 0) {
+            mensaje += ` Ya tienes ${enCarrito} en tu carrito, puedes agregar máximo ${disponible} más.`;
+        }
+
+        alert(mensaje);
+        cantidadSeleccionada[idProducto] = disponible;
+    } else {
+        cantidadSeleccionada[idProducto] = cantidad;
+    }
+
+    filtrarProductos(); // vuelve a dibujar la grilla con el stock actualizado
 }
 
 function crearProducto() {
@@ -494,6 +756,8 @@ function cancelarCrearProducto() {
 }
 
 function modificarProducto(idProducto) {
+    productoDetalleId = null;
+    document.getElementById('vistaDetalleProducto').classList.add('hidden');
     document.getElementById('vistaTienda').classList.add('hidden'); 
     document.getElementById('vistaModificarProducto').classList.remove('hidden'); 
 
@@ -602,6 +866,8 @@ function cargarCarrito() {
             if (r.status === 404) {
                 const mensajeError = await r.text();
                 console.log("Backend responde:", mensajeError);
+                unidadesCarrito = {};
+                filtrarProductos();
                 document.getElementById("carrito").innerHTML = "<p class='text-muted'>El carrito está vacío</p>";
                 return null;
             }
@@ -612,6 +878,14 @@ function cargarCarrito() {
             if (!data) return;
 
             const lista = data.listaProductos || data.ListaProductos || [];
+
+            // Unidades de cada producto que ya están en el carrito (para el stock disponible)
+            unidadesCarrito = {};
+            lista.forEach(item => {
+                const idItem = item.idProducto !== undefined ? item.idProducto : item.IdProducto;
+                unidadesCarrito[idItem] = (unidadesCarrito[idItem] || 0) + 1;
+            });
+            filtrarProductos();
             
             if (lista.length === 0) {
                 document.getElementById("carrito").innerHTML = "<p class='text-muted'>El carrito está vacío</p>";
@@ -646,18 +920,29 @@ function cargarCarrito() {
 
 function agregarCarrito(idProducto) {
     if (!usuarioId) return alert("Por favor, inicia sesión para añadir productos.");
-    
+
+    // Cantidad elegida en el selector - 1 +
+    const input = document.getElementById(`qty-${idProducto}`);
+    let cantidad = input ? parseInt(input.value, 10) : (cantidadSeleccionada[idProducto] || 1);
+    if (isNaN(cantidad) || cantidad < 1) cantidad = 1;
+
     // Pasamos parámetros por QueryString como los espera CarritoController en C#
-    fetch(`${API}/carrito/agregar?idUsuario=${usuarioId}&idProducto=${idProducto}&cantidad=1`, { 
-        method: "POST" 
+    fetch(`${API}/carrito/agregar?idUsuario=${usuarioId}&idProducto=${idProducto}&cantidad=${cantidad}`, {
+        method: "POST"
     })
     .then(async res => {
-        const txt = await res.text(); 
+        const txt = await res.text();
         if (!res.ok) throw new Error(txt);
         alert(txt); // Imprime: "Producto agregado al carrito"
-        cargarCarrito();
+        cantidadSeleccionada[idProducto] = 1;
+        cargarCarrito(); // actualiza el carrito y el stock disponible de la grilla
     })
-    .catch(err => alert("Error: " + err.message));
+    .catch(err => {
+        alert("Error: " + err.message);
+        // Se vuelve a sincronizar con el stock real del servidor
+        cargarProductos();
+        cargarCarrito();
+    });
 }
 
 function eliminarDelCarrito(idProducto) {
@@ -704,6 +989,7 @@ function comprar() {
     })
     .then(msg => {
         alert(msg); // Imprime: "Compra realizada correctamente. Pedido #X"
+        cargarProductos(); // refresca el stock en la grilla
         cargarCarrito(); 
     })
     .catch(err => alert("Error al procesar compra: " + err.message));
@@ -791,6 +1077,7 @@ function eliminarProducto(idProducto) {
     fetch(`${API}/producto/${idProducto}`, { method: "DELETE" })
     .then(() => {
         alert("Producto eliminado del catálogo");
+        cerrarDetalleProducto(); // si estabas en el detalle, vuelve a la tienda
         cargarProductos();
     });
 }

@@ -36,6 +36,10 @@ namespace Saraitel.API.Controllers
         public IActionResult Comprar(int idUsuario)
         {
             var resultado = _service.CrearPedidoDesdeCarrito(idUsuario);
+
+            if (!resultado.Contains("correctamente"))
+                return BadRequest(resultado);
+
             return Ok(resultado);
         }
     }

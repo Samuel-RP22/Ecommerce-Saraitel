@@ -3,7 +3,7 @@
     {
       "tipo": "Administrador",
       "IdUsuario": 1,
-      "Nombre": "Samuel Ria\u00F1o",
+      "Nombre": "Samuel Ria\u00F1o Pati\u00F1o",
       "Correo": "samuelriapati222008@gmail.com",
       "Telefono": "3158185857",
       "Contrasena": "3158185857s",
@@ -13,7 +13,7 @@
     },
     {
       "tipo": "Cliente",
-      "Direccion": "Cra 46 Nro 30 40",
+      "Direccion": "Cra 46 # 30-40",
       "HistorialCompras": [
         {
           "IdPedido": 1,
@@ -78,6 +78,590 @@
               }
             }
           ]
+        },
+        {
+          "IdPedido": 3,
+          "Fecha": "2026-10-16T20:27:48.4648464-05:00",
+          "EstadoPedido": "Pagado",
+          "TotalPedido": 95000,
+          "Productos": [
+            {
+              "IdProducto": 58,
+              "Nombre": "Holder Carro Magnetico",
+              "Descripcion": "Holder Magn\u00E9tico C4",
+              "Precio": 45000,
+              "Stock": 10,
+              "Imagen": "https://http2.mlstatic.com/D_NQ_NP_992197-MCO82481347732_022025-O.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            }
+          ]
+        },
+        {
+          "IdPedido": 4,
+          "Fecha": "2026-10-23T20:58:53.7848423-05:00",
+          "EstadoPedido": "Pagado",
+          "TotalPedido": 140000,
+          "Productos": [
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 11,
+              "Nombre": "A16",
+              "Descripcion": "Smart Clear Magn\u00E9tico",
+              "Precio": 90000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/147557379_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 4,
+                "NombreCategoria": "Estuches Ipad"
+              }
+            }
+          ]
+        },
+        {
+          "IdPedido": 5,
+          "Fecha": "2026-10-23T21:25:40.3012506-05:00",
+          "EstadoPedido": "Pagado",
+          "TotalPedido": 215000,
+          "Productos": [
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 55,
+              "Nombre": "Airpods Pro 2da Gen",
+              "Descripcion": "Audifonos Replica iPhone",
+              "Precio": 120000,
+              "Stock": 10,
+              "Imagen": "https://mac-center.com/cdn/shop/files/AirPods_Pro_en_su_estuche_con_MagSafe.jpg?v=1742255727\u0026width=1445",
+              "Categoria": {
+                "IdCategoria": 15,
+                "NombreCategoria": "Aud\u00EDfonos"
+              }
+            },
+            {
+              "IdProducto": 58,
+              "Nombre": "Holder Carro Magnetico",
+              "Descripcion": "Holder Magn\u00E9tico C4",
+              "Precio": 45000,
+              "Stock": 10,
+              "Imagen": "https://http2.mlstatic.com/D_NQ_NP_992197-MCO82481347732_022025-O.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            }
+          ]
+        },
+        {
+          "IdPedido": 6,
+          "Fecha": "2026-10-23T23:05:15.6773494-05:00",
+          "EstadoPedido": "Pagado",
+          "TotalPedido": 140000,
+          "Productos": [
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 60,
+              "Nombre": "Holder Moto",
+              "Descripcion": "Holder Moto Batri C1",
+              "Precio": 40000,
+              "Stock": 10,
+              "Imagen": "https://luegopagocdn.azureedge.net/content-process/products-images/prod/2144/285334fb-39d4-429a-a511-1f9dc2400f36.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            }
+          ]
+        },
+        {
+          "IdPedido": 7,
+          "Fecha": "2026-10-23T23:06:02.5992722-05:00",
+          "EstadoPedido": "Pagado",
+          "TotalPedido": 300000,
+          "Productos": [
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            }
+          ]
+        },
+        {
+          "IdPedido": 8,
+          "Fecha": "2026-10-23T23:30:26.0745399-05:00",
+          "EstadoPedido": "Pagado",
+          "TotalPedido": 1000000,
+          "Productos": [
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 3,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 59,
+              "Nombre": "Holder Carro",
+              "Descripcion": "Holder de Chupa Batri",
+              "Precio": 50000,
+              "Stock": 9,
+              "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+              "Categoria": {
+                "IdCategoria": 16,
+                "NombreCategoria": "Holders"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 3,
+              "Nombre": "15 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 10,
+              "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+              "Categoria": {
+                "IdCategoria": 1,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            }
+          ]
+        },
+        {
+          "IdPedido": 9,
+          "Fecha": "2026-10-23T23:36:07.513467-05:00",
+          "EstadoPedido": "Pagado",
+          "TotalPedido": 400000,
+          "Productos": [
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 8,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 8,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 8,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 8,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 8,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 8,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 8,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            },
+            {
+              "IdProducto": 2,
+              "Nombre": "16 Pro Max",
+              "Descripcion": "Space",
+              "Precio": 50000,
+              "Stock": 8,
+              "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+              "Categoria": {
+                "IdCategoria": 0,
+                "NombreCategoria": "Estuches iPhone"
+              }
+            }
+          ]
         }
       ],
       "Carrito": {
@@ -87,13 +671,13 @@
         "TotalCompra": 0
       },
       "IdUsuario": 2,
-      "Nombre": "Alejandra Pati\u00F1o",
+      "Nombre": "Alejandra Jhanet Pati\u00F1o Salazar",
       "Correo": "alepatisaraitel@gmail.com",
       "Telefono": "3113898080",
       "Contrasena": "3113898080",
       "Rol": "Cliente",
-      "TokenRecuperacion": null,
-      "FechaExpiracionToken": null
+      "TokenRecuperacion": "991220",
+      "FechaExpiracionToken": "2026-10-17T01:32:36.3991998Z"
     }
   ],
   "Productos": [
@@ -114,7 +698,7 @@
       "Nombre": "16 Pro Max",
       "Descripcion": "Space",
       "Precio": 50000,
-      "Stock": 10,
+      "Stock": 0,
       "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
       "Categoria": {
         "IdCategoria": 0,
@@ -129,7 +713,7 @@
       "Stock": 10,
       "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
       "Categoria": {
-        "IdCategoria": 1,
+        "IdCategoria": 0,
         "NombreCategoria": "Estuches iPhone"
       }
     },
@@ -657,7 +1241,7 @@
       "Stock": 10,
       "Imagen": "https://http2.mlstatic.com/D_NQ_NP_814359-MCO93724739264_102025-O.webp",
       "Categoria": {
-        "IdCategoria": 14,
+        "IdCategoria": 0,
         "NombreCategoria": "Cargadores"
       }
     },
@@ -801,7 +1385,7 @@
       "Stock": 10,
       "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
       "Categoria": {
-        "IdCategoria": 16,
+        "IdCategoria": 0,
         "NombreCategoria": "Holders"
       }
     },
@@ -810,7 +1394,7 @@
       "Nombre": "Holder Moto",
       "Descripcion": "Holder Moto Batri C1",
       "Precio": 40000,
-      "Stock": 10,
+      "Stock": 9,
       "Imagen": "https://luegopagocdn.azureedge.net/content-process/products-images/prod/2144/285334fb-39d4-429a-a511-1f9dc2400f36.webp",
       "Categoria": {
         "IdCategoria": 16,
@@ -952,6 +1536,590 @@
           }
         }
       ]
+    },
+    {
+      "IdPedido": 3,
+      "Fecha": "2026-10-16T20:27:48.4648464-05:00",
+      "EstadoPedido": "Pagado",
+      "TotalPedido": 95000,
+      "Productos": [
+        {
+          "IdProducto": 58,
+          "Nombre": "Holder Carro Magnetico",
+          "Descripcion": "Holder Magn\u00E9tico C4",
+          "Precio": 45000,
+          "Stock": 10,
+          "Imagen": "https://http2.mlstatic.com/D_NQ_NP_992197-MCO82481347732_022025-O.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        }
+      ]
+    },
+    {
+      "IdPedido": 4,
+      "Fecha": "2026-10-23T20:58:53.7848423-05:00",
+      "EstadoPedido": "Pagado",
+      "TotalPedido": 140000,
+      "Productos": [
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 11,
+          "Nombre": "A16",
+          "Descripcion": "Smart Clear Magn\u00E9tico",
+          "Precio": 90000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/147557379_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 4,
+            "NombreCategoria": "Estuches Ipad"
+          }
+        }
+      ]
+    },
+    {
+      "IdPedido": 5,
+      "Fecha": "2026-10-23T21:25:40.3012506-05:00",
+      "EstadoPedido": "Pagado",
+      "TotalPedido": 215000,
+      "Productos": [
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 55,
+          "Nombre": "Airpods Pro 2da Gen",
+          "Descripcion": "Audifonos Replica iPhone",
+          "Precio": 120000,
+          "Stock": 10,
+          "Imagen": "https://mac-center.com/cdn/shop/files/AirPods_Pro_en_su_estuche_con_MagSafe.jpg?v=1742255727\u0026width=1445",
+          "Categoria": {
+            "IdCategoria": 15,
+            "NombreCategoria": "Aud\u00EDfonos"
+          }
+        },
+        {
+          "IdProducto": 58,
+          "Nombre": "Holder Carro Magnetico",
+          "Descripcion": "Holder Magn\u00E9tico C4",
+          "Precio": 45000,
+          "Stock": 10,
+          "Imagen": "https://http2.mlstatic.com/D_NQ_NP_992197-MCO82481347732_022025-O.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        }
+      ]
+    },
+    {
+      "IdPedido": 6,
+      "Fecha": "2026-10-23T23:05:15.6773494-05:00",
+      "EstadoPedido": "Pagado",
+      "TotalPedido": 140000,
+      "Productos": [
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 60,
+          "Nombre": "Holder Moto",
+          "Descripcion": "Holder Moto Batri C1",
+          "Precio": 40000,
+          "Stock": 10,
+          "Imagen": "https://luegopagocdn.azureedge.net/content-process/products-images/prod/2144/285334fb-39d4-429a-a511-1f9dc2400f36.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        }
+      ]
+    },
+    {
+      "IdPedido": 7,
+      "Fecha": "2026-10-23T23:06:02.5992722-05:00",
+      "EstadoPedido": "Pagado",
+      "TotalPedido": 300000,
+      "Productos": [
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        }
+      ]
+    },
+    {
+      "IdPedido": 8,
+      "Fecha": "2026-10-23T23:30:26.0745399-05:00",
+      "EstadoPedido": "Pagado",
+      "TotalPedido": 1000000,
+      "Productos": [
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 3,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 59,
+          "Nombre": "Holder Carro",
+          "Descripcion": "Holder de Chupa Batri",
+          "Precio": 50000,
+          "Stock": 9,
+          "Imagen": "https://confiatechnology.com/wp-content/uploads/2026/03/BATRI-C1-HOLDER-CARRO-2.webp",
+          "Categoria": {
+            "IdCategoria": 16,
+            "NombreCategoria": "Holders"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 3,
+          "Nombre": "15 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 10,
+          "Imagen": "https://media.falabella.com/falabellaCO/124530428_01/w=1500,h=1500,fit=cover",
+          "Categoria": {
+            "IdCategoria": 1,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        }
+      ]
+    },
+    {
+      "IdPedido": 9,
+      "Fecha": "2026-10-23T23:36:07.513467-05:00",
+      "EstadoPedido": "Pagado",
+      "TotalPedido": 400000,
+      "Productos": [
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 8,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 8,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 8,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 8,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 8,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 8,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 8,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        },
+        {
+          "IdProducto": 2,
+          "Nombre": "16 Pro Max",
+          "Descripcion": "Space",
+          "Precio": 50000,
+          "Stock": 8,
+          "Imagen": "https://co.tiendasishop.com/cdn/shop/files/702315045_1.webp?v=1726866772\u0026width=823",
+          "Categoria": {
+            "IdCategoria": 0,
+            "NombreCategoria": "Estuches iPhone"
+          }
+        }
+      ]
     }
   ],
   "Soportes": [
@@ -965,6 +2133,12 @@
       "IdSoporte": 2,
       "Mensaje": "HIJUEPUTA",
       "FechaSolicitud": "2026-07-24T18:39:00.3799581-05:00",
+      "EstadoSolicitud": "Resuelto"
+    },
+    {
+      "IdSoporte": 3,
+      "Mensaje": "asdea",
+      "FechaSolicitud": "2026-10-16T20:27:56.0476622-05:00",
       "EstadoSolicitud": "Resuelto"
     }
   ]

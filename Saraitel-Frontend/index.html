@@ -44,10 +44,10 @@
 
         <section id="formRecuperar" class="card auth-card hidden">
             <h2>Recuperar acceso</h2>
-            <p class="text-muted">Escribe el correo de tu cuenta y te generaremos un código para restablecer tu contraseña.</p>
+            <p class="text-muted">Escribe el correo de tu cuenta y te enviaremos un código por correo para restablecer tu contraseña.</p>
             <input id="recCorreo" placeholder="Correo registrado">
             <div class="form-actions">
-                <button class="btn-success" onclick="solicitarRecuperacion()">Enviar código</button>
+                <button id="btnEnviarCodigo" class="btn-success" onclick="solicitarRecuperacion()">Enviar código</button>
                 <button class="btn-secondary" onclick="mostrarFormulario('login')">Volver</button>
             </div>
             <p class="link-olvido">
@@ -163,6 +163,10 @@
         </section>
     </div>
 
+    <div id="vistaDetalleProducto" class="hidden">
+        <div id="detalleProducto"></div>
+    </div>
+
     <div id="vistaTienda" class="hidden">
         <header>
     <div class="header-wrap">
@@ -181,7 +185,14 @@
                 <section class="card">
                     <div class="card-header-admin">
                         <h2>Productos Disponibles</h2>
-                        <button id="btnCrearProductoAdmin" class="btn-success hidden" onclick="crearProducto()">➕ Nuevo Producto</button>
+                        <div class="header-acciones">
+                            <button id="btnBuscarProducto" class="btn-dark-blue" onclick="toggleBusquedaProductos()">🔍 Buscar producto</button>
+                            <button id="btnCrearProductoAdmin" class="btn-success hidden" onclick="crearProducto()">➕ Nuevo Producto</button>
+                        </div>
+                    </div>
+                    <div id="barraBusqueda" class="barra-busqueda hidden">
+                        <input id="inputBusquedaProducto" type="text" placeholder="Escribe el nombre del producto..." oninput="filtrarProductos()" autocomplete="off">
+                        <button class="btn-danger" onclick="cerrarBusquedaProductos()">✖</button>
                     </div>
                     <div id="productos" class="productos-grid"></div>
                 </section>

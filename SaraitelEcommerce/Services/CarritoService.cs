@@ -49,6 +49,22 @@ namespace Saraitel.API.Services
             if (producto == null)
                 return "Producto no encontrado";
 
+            if (cantidad <= 0)
+                return "La cantidad debe ser mayor a 0";
+
+            // Se valida el stock ANTES de agregar al carrito
+            int enCarrito = usuario.Carrito.ListaProductos
+                .Count(p => p.IdProducto == idProducto);
+
+            if (enCarrito + cantidad > producto.Stock)
+            {
+                int maximoAgregable = Math.Max(0, producto.Stock - enCarrito);
+
+                return $"No se puede agregar: excediste el stock disponible de \"{producto.Nombre}\". " +
+                       $"Stock disponible: {producto.Stock}. " +
+                       $"Ya tienes {enCarrito} en tu carrito, puedes agregar máximo {maximoAgregable} más.";
+            }
+
             for (int i = 0; i < cantidad; i++)
             {
                 usuario.Carrito.ListaProductos.Add(producto);

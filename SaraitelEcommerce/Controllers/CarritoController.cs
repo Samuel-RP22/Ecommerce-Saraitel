@@ -30,7 +30,12 @@ namespace Saraitel.API.Controllers
         [HttpPost("agregar")]
         public IActionResult Agregar(int idUsuario, int idProducto, int cantidad)
         {
-            return Ok(_service.AgregarProducto(idUsuario, idProducto, cantidad));
+            var resultado = _service.AgregarProducto(idUsuario, idProducto, cantidad);
+
+            if (resultado != "Producto agregado al carrito")
+                return BadRequest(resultado);
+
+            return Ok(resultado);
         }
 
 

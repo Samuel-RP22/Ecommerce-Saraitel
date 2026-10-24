@@ -30,8 +30,9 @@ namespace Saraitel.API.Interfaces
             string telefono,
             string direccion = "");
 
-        // HU-06: devuelve el código generado, o null si el correo no existe
-        string? SolicitarRecuperacion(string correo);
+        // HU-06: genera el código y lo envía por correo.
+        // Devuelve false solo si falló el envío del correo.
+        bool SolicitarRecuperacion(string correo);
 
         // HU-07
         string RestablecerContrasena(

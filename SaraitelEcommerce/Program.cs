@@ -16,6 +16,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<ICarritoService, CarritoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();

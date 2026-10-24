@@ -62,6 +62,22 @@ namespace Saraitel.Datos.Repositories
             }
         }
 
+        // HU-13: descuenta del stock las unidades vendidas (idProducto -> cantidad)
+        public void DescontarStock(Dictionary<int, int> cantidadesPorProducto)
+        {
+            var data = _jsonManager.LeerDatos();
+
+            foreach (var item in cantidadesPorProducto)
+            {
+                var producto = data.Productos.FirstOrDefault(p => p.IdProducto == item.Key);
+
+                if (producto != null)
+                    producto.Stock = Math.Max(0, producto.Stock - item.Value);
+            }
+
+            _jsonManager.GuardarDatos(data);
+        }
+
         public Producto? ObtenerProductoPorId(int id)
         {
             return ObtenerProductos().FirstOrDefault(p => p.IdProducto == id);

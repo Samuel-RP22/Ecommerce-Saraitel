@@ -11,10 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("94abbd2f-073f-46ea-aa17-ad28940be538")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Saraitel.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a3a9a0d14deaae451ea1c1a7eed4284114e0af8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Saraitel.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Saraitel.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
