@@ -16,6 +16,24 @@ namespace Saraitel.API.Services
 
         public void EnviarCorreo(string destino, string asunto, string cuerpoHtml)
         {
+            var cuerpo = new BodyBuilder { HtmlBody = cuerpoHtml };
+
+            Enviar(destino, asunto, cuerpo);
+        }
+
+        // HU-17: mismo correo, pero con un archivo adjunto (la factura en PDF)
+        public void EnviarCorreoConAdjunto(string destino, string asunto, string cuerpoHtml,
+                                           string nombreArchivo, byte[] contenidoArchivo)
+        {
+            var cuerpo = new BodyBuilder { HtmlBody = cuerpoHtml };
+
+            cuerpo.Attachments.Add(nombreArchivo, contenidoArchivo, ContentType.Parse("application/pdf"));
+
+            Enviar(destino, asunto, cuerpo);
+        }
+
+        private void Enviar(string destino, string asunto, BodyBuilder cuerpo)
+        {
             string? host = _configuracion["Email:Host"];
             string puertoTexto = _configuracion["Email:Puerto"] ?? "587";
             string? remitente = _configuracion["Email:Remitente"];
@@ -34,7 +52,7 @@ namespace Saraitel.API.Services
             mensaje.From.Add(new MailboxAddress(nombreRemitente, remitente));
             mensaje.To.Add(MailboxAddress.Parse(destino));
             mensaje.Subject = asunto;
-            mensaje.Body = new TextPart("html") { Text = cuerpoHtml };
+            mensaje.Body = cuerpo.ToMessageBody();
 
             using var cliente = new SmtpClient();
 

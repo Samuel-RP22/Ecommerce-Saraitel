@@ -43,6 +43,32 @@
   },
   {
     "ContainingType": "Saraitel.API.Controllers.CarritoController",
+    "Method": "ActualizarCantidad",
+    "RelativePath": "api/Carrito/cantidad",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "idProducto",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "cantidad",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.CarritoController",
     "Method": "Eliminar",
     "RelativePath": "api/Carrito/eliminar",
     "HttpMethod": "DELETE",
@@ -180,9 +206,228 @@
   },
   {
     "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "Cancelar",
+    "RelativePath": "api/Pedido/{idPedido}/cancelar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPedido",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "CancelarPedidoAdmin",
+    "RelativePath": "api/Pedido/{idPedido}/cancelar-admin",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPedido",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idAdministrador",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "ConfirmarPago",
+    "RelativePath": "api/Pedido/{idPedido}/confirmar-pago",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPedido",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "idTransaccion",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "MarcarEntregado",
+    "RelativePath": "api/Pedido/{idPedido}/entregar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPedido",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idAdministrador",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "MarcarEnviado",
+    "RelativePath": "api/Pedido/{idPedido}/enviar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPedido",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idAdministrador",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "transportadora",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "numeroGuia",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "DescargarFactura",
+    "RelativePath": "api/Pedido/{idPedido}/factura",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPedido",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "IniciarPago",
+    "RelativePath": "api/Pedido/{idPedido}/iniciar-pago",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPedido",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "Checkout",
+    "RelativePath": "api/Pedido/checkout/{idUsuario}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "solicitud",
+        "Type": "Saraitel.API.Models.SolicitudCheckout",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
     "Method": "Comprar",
     "RelativePath": "api/Pedido/comprar/{idUsuario}",
     "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "Tarifas",
+    "RelativePath": "api/Pedido/tarifas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "ObtenerTransportadoras",
+    "RelativePath": "api/Pedido/transportadoras",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Saraitel.API.Controllers.PedidoController",
+    "Method": "PedidosDeUsuario",
+    "RelativePath": "api/Pedido/usuario/{idUsuario}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -264,53 +509,6 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Saraitel.API.Controllers.SoporteController",
-    "Method": "Get",
-    "RelativePath": "api/Soporte",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Saraitel.API.Controllers.SoporteController",
-    "Method": "Post",
-    "RelativePath": "api/Soporte",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "soporte",
-        "Type": "Saraitel.Entidades.Soporte",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Saraitel.API.Controllers.SoporteController",
-    "Method": "CambiarEstado",
-    "RelativePath": "api/Soporte/estado/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "estado",
-        "Type": "System.String",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": []

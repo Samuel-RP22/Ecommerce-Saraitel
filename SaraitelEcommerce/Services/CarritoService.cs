@@ -114,6 +114,61 @@ namespace Saraitel.API.Services
             return "Producto eliminado del carrito";
         }
 
+        public string ActualizarCantidad(
+            int idUsuario,
+            int idProducto,
+            int cantidad)
+        {
+            var usuarios = _usuarioRepo.ObtenerUsuarios();
+
+            var usuario = usuarios
+                .FirstOrDefault(u => u.IdUsuario == idUsuario)
+                as Cliente;
+
+            if (usuario == null)
+                return "Usuario no encontrado";
+
+            if (cantidad < 0)
+                return "La cantidad no puede ser negativa";
+
+            var producto = _productoRepo
+                .ObtenerProductoPorId(idProducto);
+
+            if (producto == null)
+                return "Producto no encontrado";
+
+            // Se valida contra el stock real del catálogo
+            if (cantidad > producto.Stock)
+            {
+                return $"No se puede: excediste el stock disponible de \"{producto.Nombre}\". " +
+                       $"Stock disponible: {producto.Stock}.";
+            }
+
+            // El carrito guarda una entrada por unidad: se quitan las
+            // unidades actuales y se ponen las nuevas en la misma posición,
+            // para que el producto no cambie de lugar en el carrito
+            var lista = usuario.Carrito.ListaProductos;
+
+            int posicion = lista.FindIndex(p => p.IdProducto == idProducto);
+
+            lista.RemoveAll(p => p.IdProducto == idProducto);
+
+            if (posicion < 0)
+                posicion = lista.Count;
+
+            lista.InsertRange(posicion, Enumerable.Repeat(producto, cantidad));
+
+            usuario.Carrito.CantidadProductos =
+                usuario.Carrito.ListaProductos.Count;
+
+            usuario.Carrito.TotalCompra =
+                usuario.Carrito.ListaProductos.Sum(p => p.Precio);
+
+            _usuarioRepo.GuardarCambios(usuarios);
+
+            return "Cantidad actualizada";
+        }
+
         public string VaciarCarrito(int idUsuario)
         {
             var usuarios = _usuarioRepo.ObtenerUsuarios();

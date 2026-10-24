@@ -47,6 +47,20 @@ namespace Saraitel.API.Controllers
         }
 
 
+        // Fija la cantidad exacta de un producto en el carrito.
+        // Con cantidad 0 el producto se quita por completo.
+        [HttpPut("cantidad")]
+        public IActionResult ActualizarCantidad(int idUsuario, int idProducto, int cantidad)
+        {
+            var resultado = _service.ActualizarCantidad(idUsuario, idProducto, cantidad);
+
+            if (resultado != "Cantidad actualizada")
+                return BadRequest(resultado);
+
+            return Ok(resultado);
+        }
+
+
         [HttpDelete("vaciar/{idUsuario}")]
         public IActionResult Vaciar(int idUsuario)
         {

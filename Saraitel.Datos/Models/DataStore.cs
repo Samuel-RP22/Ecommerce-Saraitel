@@ -13,7 +13,9 @@ namespace Saraitel.Datos.Models
         public List<Producto> Productos { get; set; }
         public List<Categoria> Categorias { get; set; }
         public List<Pedido> Pedidos { get; set; }
-        public List<Soporte> Soportes { get; set; }
+
+        // HU-17: último número de factura usado (el siguiente será este + 1)
+        public int ConsecutivoFactura { get; set; }
 
         public DataStore()
         {
@@ -21,7 +23,6 @@ namespace Saraitel.Datos.Models
             Productos = new List<Producto>();
             Categorias = new List<Categoria>();
             Pedidos = new List<Pedido>();
-            Soportes = new List<Soporte>();
         }
     }
 }

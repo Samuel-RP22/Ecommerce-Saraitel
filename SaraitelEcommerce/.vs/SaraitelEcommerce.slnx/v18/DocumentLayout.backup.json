@@ -1,12 +1,36 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\samue\\Desktop\\Non-important things\\Archivos UCO\\Codigos UCO\\POO\\C#\\GitHub\\Ecommerce-Saraitel\\SaraitelEcommerce\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\samue\\Documents\\Archives\\Non-important things\\Archivos UCO\\Codigos UCO\\POO\\C#\\GitHub\\Ecommerce-Saraitel\\SaraitelEcommerce\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{24316274-FBE3-E5AA-D574-9E2512E76E17}|Saraitel.API.csproj|c:\\users\\samue\\documents\\archives\\non-important things\\archivos uco\\codigos uco\\poo\\c#\\github\\ecommerce-saraitel\\saraitelecommerce\\saraitel.api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{24316274-FBE3-E5AA-D574-9E2512E76E17}|Saraitel.API.csproj|solutionrelative:saraitel.api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Saraitel.API",
+              "DocumentMoniker": "C:\\Users\\samue\\Documents\\Archives\\Non-important things\\Archivos UCO\\Codigos UCO\\POO\\C#\\GitHub\\Ecommerce-Saraitel\\SaraitelEcommerce\\Saraitel.API.csproj",
+              "RelativeDocumentMoniker": "Saraitel.API.csproj",
+              "ToolTip": "C:\\Users\\samue\\Documents\\Archives\\Non-important things\\Archivos UCO\\Codigos UCO\\POO\\C#\\GitHub\\Ecommerce-Saraitel\\SaraitelEcommerce\\Saraitel.API.csproj",
+              "RelativeToolTip": "Saraitel.API.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-10-24T13:44:55.016Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

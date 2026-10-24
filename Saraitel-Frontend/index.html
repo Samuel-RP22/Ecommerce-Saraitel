@@ -2,14 +2,66 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Saraitel E-Commerce PRO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+    <header id="headerTienda" class="hidden">
+        <div class="header-wrap">
+            <a href="#" class="header-logo-link" onclick="irATienda(); return false;" aria-label="Ir a la tienda">
+                <img src="logo-saraitel.png" alt="Saraitel" class="header-logo">
+            </a>
+
+            <div id="userPanel">
+                <!-- Usuario: al hacer clic se despliega Mi perfil / Cerrar sesión -->
+                <div class="menu-wrap">
+                    <button id="btnUsuario" class="btn-header" onclick="toggleMenu('menuUsuario', event)" aria-haspopup="true" aria-expanded="false">
+                        <span class="ico" data-icon="user"></span>
+                        <span id="userInfo">No logueado</span>
+                        <span class="ico ico-chevron" data-icon="chevron"></span>
+                    </button>
+                    <div id="menuUsuario" class="dropdown dropdown-usuario hidden" role="menu">
+                        <button class="dropdown-opcion" onclick="cerrarMenus(); abrirPerfil()">
+                            <span class="ico" data-icon="user"></span> Mi perfil
+                        </button>
+                        <!-- HU-18: solo para clientes -->
+                        <button id="opcionMisPedidos" class="dropdown-opcion" onclick="cerrarMenus(); abrirMisPedidos()">
+                            <span class="ico" data-icon="package"></span> Mis pedidos
+                        </button>
+                        <button class="dropdown-opcion opcion-peligro" onclick="cerrarMenus(); logout()">
+                            <span class="ico" data-icon="logout"></span> Cerrar sesión
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pedidos: solo para el administrador. Abre la gestión de pedidos -->
+                <div id="menuPedidosAdminWrap" class="hidden">
+                    <button id="btnPedidosAdmin" class="btn-header btn-carrito" onclick="abrirGestionPedidos()" aria-label="Gestión de pedidos" title="Gestión de pedidos">
+                        <span class="ico" data-icon="package"></span>
+                        <span id="pedidosAdminBadge" class="carrito-badge hidden">0</span>
+                    </button>
+                </div>
+
+                <!-- Carrito: solo para clientes. Abre el panel lateral -->
+                <div id="menuCarritoWrap">
+                    <button id="btnCarrito" class="btn-header btn-carrito" onclick="abrirPanelCarrito()" aria-label="Abrir carrito" aria-controls="panelCarrito">
+                        <span class="ico" data-icon="cart"></span>
+                        <span id="carritoBadge" class="carrito-badge hidden">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <div id="vistaAuth" class="auth-container">
-        <h1>¡Bienvenido a Saraitel! 🛒</h1>
-        <p>Tu tienda de confianza de manera fácil y rápida.</p>
+        <img src="logo-saraitel.png" alt="Saraitel" class="auth-logo">
+        <h1 class="auth-bienvenida">¡Bienvenido a Saraitel!</h1>
+        <p class="auth-subtitulo">Tu tienda de confianza de manera fácil y rápida.</p>
         <div class="auth-buttons">
             <button onclick="mostrarFormulario('login')">Iniciar Sesión</button>
             <button onclick="mostrarFormulario('registro')">Crear Cuenta</button>
@@ -45,7 +97,7 @@
         <section id="formRecuperar" class="card auth-card hidden">
             <h2>Recuperar acceso</h2>
             <p class="text-muted">Escribe el correo de tu cuenta y te enviaremos un código por correo para restablecer tu contraseña.</p>
-            <input id="recCorreo" placeholder="Correo registrado">
+            <input id="recCorreo" name="correo" type="email" autocomplete="email" placeholder="Correo registrado">
             <div class="form-actions">
                 <button id="btnEnviarCodigo" class="btn-success" onclick="solicitarRecuperacion()">Enviar código</button>
                 <button class="btn-secondary" onclick="mostrarFormulario('login')">Volver</button>
@@ -71,23 +123,23 @@
 
     <div id="vistaCrearProducto" class="hidden" style="padding: 20px;">
         <section id="formCrearProducto" class="card auth-card" style="max-width: 500px; margin: 40px auto; text-align: left;">
-            <h2>📦 Registrar Nuevo Producto</h2>
-            <p class="text-muted" style="font-size: 0.85rem; margin-top: -8px; color: #64748b;">Añade un nuevo accesorio al catálogo</p>
+            <h2><span class="ico" data-icon="package"></span> Registrar Nuevo Producto</h2>
+            <p class="text-muted form-subtitulo">Añade un nuevo accesorio al catálogo</p>
             
-            <label style="font-weight: 500; font-size: 0.9rem;">Nombre del accesorio:</label>
+            <label>Nombre del accesorio:</label>
             <input id="prodNombre" placeholder="Ej: Estuche iPhone 17 Pro Max">
             
-            <label style="font-weight: 500; font-size: 0.9rem;">Descripción o especificaciones:</label>
+            <label>Descripción o especificaciones:</label>
             <input id="prodDescripcion" placeholder="Ej: Material silicona, anti-impactos">
             
-            <label style="font-weight: 500; font-size: 0.9rem;">Precio de venta ($):</label>
+            <label>Precio de venta ($):</label>
             <input id="prodPrecio" type="number" placeholder="Ej: 45000">
             
-            <label style="font-weight: 500; font-size: 0.9rem;">Enlace URL de la imagen:</label>
+            <label>Enlace URL de la imagen:</label>
             <input id="prodImagen" placeholder="https://ejemplo.com/imagen.jpg">
 
-            <label style="font-weight: 500; font-size: 0.9rem; display: block; margin-top: 10px;">Categoría del producto:</label>
-            <select id="prodCategoria" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-size: 0.9rem;">
+            <label>Categoría del producto:</label>
+            <select id="prodCategoria">
                 <option value="">Cargando categorías...</option>
             </select>
             
@@ -100,28 +152,28 @@
 
     <div id="vistaModificarProducto" class="hidden" style="padding: 20px;">
         <section id="formModificarProducto" class="card auth-card" style="max-width: 500px; margin: 40px auto; text-align: left;">
-            <h2>📝 Modificar Producto</h2>
-            <p class="text-muted" style="font-size: 0.85rem; margin-top: -8px; color: #64748b;">Actualiza los datos del accesorio seleccionado</p>
+            <h2><span class="ico" data-icon="edit"></span> Modificar Producto</h2>
+            <p class="text-muted form-subtitulo">Actualiza los datos del accesorio seleccionado</p>
             
             <input type="hidden" id="modProdId">
 
-            <label style="font-weight: 500; font-size: 0.9rem;">Nombre del accesorio:</label>
+            <label>Nombre del accesorio:</label>
             <input id="modProdNombre" placeholder="Ej: Estuche iPhone 17 Pro Max">
             
-            <label style="font-weight: 500; font-size: 0.9rem;">Descripción o especificaciones:</label>
+            <label>Descripción o especificaciones:</label>
             <input id="modProdDescripcion" placeholder="Ej: Material silicona, anti-impactos">
             
-            <label style="font-weight: 500; font-size: 0.9rem;">Precio de venta ($):</label>
+            <label>Precio de venta ($):</label>
             <input id="modProdPrecio" type="number" placeholder="Ej: 45000">
 
-            <label style="font-weight: 500; font-size: 0.9rem;">Stock disponible (Unidades):</label>
+            <label>Stock disponible (Unidades):</label>
             <input id="modProdStock" type="number" placeholder="Ej: 15">
             
-            <label style="font-weight: 500; font-size: 0.9rem;">Enlace URL de la imagen:</label>
+            <label>Enlace URL de la imagen:</label>
             <input id="modProdImagen" placeholder="https://ejemplo.com/imagen.jpg">
 
-            <label style="font-weight: 500; font-size: 0.9rem; display: block; margin-top: 10px;">Categoría del producto:</label>
-            <select id="modProdCategoria" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-size: 0.9rem;">
+            <label>Categoría del producto:</label>
+            <select id="modProdCategoria">
                 <option value="">Cargando categorías...</option>
             </select>
             
@@ -134,7 +186,7 @@
 
     <div id="vistaPerfil" class="hidden">
         <section class="card auth-card perfil-card">
-            <h2>👤 Mi Perfil</h2>
+            <h2><span class="ico" data-icon="user"></span> Mi Perfil</h2>
             <p class="text-muted" id="perfilSubtitulo">Estos son los datos de tu cuenta</p>
 
             <label>Nombre:</label>
@@ -168,16 +220,6 @@
     </div>
 
     <div id="vistaTienda" class="hidden">
-        <header>
-    <div class="header-wrap">
-        <h1>Saraitel 🛒</h1>
-        <div id="userPanel">
-            <span id="userInfo">No logueado</span>
-            <button class="btn-dark-blue" onclick="abrirPerfil()">Mi Perfil</button>
-            <button class="btn-danger" onclick="logout()">Cerrar Sesión</button>
-        </div>
-    </div>
-</header>
 
         <main class="store-layout">
             
@@ -185,72 +227,228 @@
                 <section class="card">
                     <div class="card-header-admin">
                         <h2>Productos Disponibles</h2>
+
+                        <!-- Filtro por categoría: etiquetas que se deslizan con las flechas -->
+                        <div class="categorias-filtro">
+                            <button id="flechaCategoriasIzq" class="flecha-categorias" onclick="deslizarCategorias(-1)" aria-label="Ver categorías anteriores">
+                                <span class="ico" data-icon="arrowLeft"></span>
+                            </button>
+                            <div id="categoriasTienda" class="categorias-carril" role="tablist" aria-label="Filtrar por categoría"></div>
+                            <button id="flechaCategoriasDer" class="flecha-categorias" onclick="deslizarCategorias(1)" aria-label="Ver más categorías">
+                                <span class="ico" data-icon="arrowRight"></span>
+                            </button>
+                        </div>
+
                         <div class="header-acciones">
-                            <button id="btnBuscarProducto" class="btn-dark-blue" onclick="toggleBusquedaProductos()">🔍 Buscar producto</button>
-                            <button id="btnCrearProductoAdmin" class="btn-success hidden" onclick="crearProducto()">➕ Nuevo Producto</button>
+                            <button id="btnBuscarProducto" class="btn-dark-blue" onclick="toggleBusquedaProductos()"><span class="ico" data-icon="search"></span> Buscar producto</button>
+                            <button id="btnCrearProductoAdmin" class="btn-success hidden" onclick="crearProducto()"><span class="ico" data-icon="plus"></span> Nuevo Producto</button>
                         </div>
                     </div>
                     <div id="barraBusqueda" class="barra-busqueda hidden">
                         <input id="inputBusquedaProducto" type="text" placeholder="Escribe el nombre del producto..." oninput="filtrarProductos()" autocomplete="off">
-                        <button class="btn-danger" onclick="cerrarBusquedaProductos()">✖</button>
+                        <button class="btn-danger btn-solo-icono" onclick="cerrarBusquedaProductos()" aria-label="Cerrar búsqueda"><span class="ico" data-icon="x"></span></button>
                     </div>
                     <div id="productos" class="productos-grid"></div>
+                    <nav id="paginacion" class="paginacion" aria-label="Páginas de productos"></nav>
                 </section>
                 
                 <section id="panelAdministrador" class="card hidden">
-                    <h2>📊 Panel de Gestión del Administrador</h2>
+                    <h2><span class="ico" data-icon="chart"></span> Panel de Gestión del Administrador</h2>
                     <hr>
-                    
-                    <div class="admin-sections-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 15px;">
-                        <div class="admin-box" style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <h3>📦 Historial de Pedidos Globales</h3>
-                            <button class="btn-dark-blue" style="width:100%; margin-bottom:10px;" onclick="verPedidos()">Ver todos los pedidos</button>
-                            <div style="display: flex; gap: 4px;">
-                                <input type="text" id="searchPedidoCorreo" placeholder="Correo del cliente..." style="flex:1; padding:6px;">
-                                <button class="btn-success" onclick="buscarPedidoPorCorreo()" style="padding:6px 12px;">Buscar</button>
-                            </div>
-                            <div id="listaPedidosAdmin" style="margin-top: 10px; max-height:200px; overflow-y:auto;"></div>
-                        </div>
 
-                        <div class="admin-box" style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <h3>🛠 Gestión de Categorías Generales</h3>
-                            <button id="btnCrearCategoriaAdmin" class="btn-success" style="width:100%; margin-bottom:10px;" onclick="agregarCategoriaPrompt()">➕ Crear Nueva Categoría</button>
+                    <div class="admin-sections-grid">
+                        <div class="admin-box">
+                            <h3><span class="ico" data-icon="wrench"></span> Gestión de Categorías Generales</h3>
+                            <button id="btnCrearCategoriaAdmin" class="btn-success" style="width:100%; margin-bottom:10px;" onclick="agregarCategoriaPrompt()"><span class="ico" data-icon="plus"></span> Crear Nueva Categoría</button>
                             <div id="categorias" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
                         </div>
-
-                        <div class="admin-box" style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <h3>💬 Mensajes de Soporte</h3>
-                            <button class="btn-dark-blue" style="width:100%; margin-bottom:10px;" onclick="cargarSoportesAdmin()">🔄 Actualizar Mensajes</button>
-                            <div id="listaSoportesAdmin" style="max-height:200px; overflow-y:auto;"></div>
-                        </div>
                     </div>
-                </section>
-            </div>
-
-            <div id="componentesCliente" class="col-side">
-                <section class="card side-card">
-                    <h2>Mi Carrito</h2>
-                    <hr>
-                    <div id="carrito">
-                        <p class="text-muted">El carrito está vacío</p>
-                    </div>
-                    <div class="cart-buttons" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
-                        <button class="btn-success" style="width: 100%;" onclick="comprar()">Comprar Pedido</button>
-                        <button class="btn-danger" style="width: 100%;" onclick="vaciarCarrito()">Vaciar Carrito</button>
-                    </div>
-                </section>
-
-                <section class="card side-card" style="margin-top: 16px;">
-                    <h2>Soporte Técnico</h2>
-                    <hr>
-                    <textarea id="msgSoporte" rows="3" placeholder="Escribe tu duda o problema aquí..." style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1; resize: none; font-family: inherit; font-size: 0.9rem; margin-bottom: 8px; box-sizing: border-box;"></textarea>
-                    <button class="btn-dark-blue" style="width: 100%;" onclick="crearSoporte()">Enviar a Soporte</button>
                 </section>
             </div>
 
         </main>
     </div>
 
+    <!-- ==========================================
+         HU-15: CHECKOUT (confirmación de productos)
+    =========================================== -->
+    <div id="vistaCheckout" class="hidden">
+        <div class="checkout">
+
+            <!-- Resumen del pedido (columna derecha; en celular va arriba y se puede plegar) -->
+            <aside class="checkout-resumen">
+                <button class="checkout-resumen-toggle" onclick="toggleResumenCheckout()" aria-expanded="false" aria-controls="checkoutResumenContenido">
+                    <span><span class="ico" data-icon="cart"></span> <span id="checkoutResumenToggleTexto">Mostrar resumen del pedido</span></span>
+                    <b id="checkoutResumenToggleTotal"></b>
+                </button>
+                <div id="checkoutResumenContenido" class="checkout-resumen-contenido"></div>
+            </aside>
+
+            <!-- Formulario (columna izquierda) -->
+            <form id="formCheckout" class="checkout-form" novalidate onsubmit="enviarCheckout(event)">
+                <div class="checkout-contacto">
+                    <span id="checkoutAvatar" class="checkout-avatar"></span>
+                    <span id="checkoutCorreo" class="checkout-correo"></span>
+                </div>
+
+                <div id="checkoutError" class="checkout-error hidden" role="alert"></div>
+
+                <h2 class="checkout-titulo">Entrega</h2>
+                <div id="camposEnvio"></div>
+
+                <h3 class="checkout-subtitulo">Métodos de envío</h3>
+                <div class="opcion-caja opcion-unica">
+                    <span>Estándar</span>
+                    <b id="checkoutCostoEnvio"></b>
+                </div>
+
+                <h2 class="checkout-titulo">Pago</h2>
+                <p class="checkout-nota">Todas las transacciones son seguras y están encriptadas.</p>
+                <div class="opciones-grupo">
+                    <label class="opcion-caja opcion-activa">
+                        <input type="radio" name="metodoPago" value="Wompi" checked>
+                        <span class="opcion-texto">Wompi: tarjeta, PSE, Nequi y Botón Bancolombia</span>
+                        <span class="medios-pago">
+                            <span class="medio-pago">Tarjeta</span>
+                            <span class="medio-pago">PSE</span>
+                            <span class="medio-pago">Nequi</span>
+                        </span>
+                    </label>
+                    <div class="opcion-detalle">
+                        Se te redirigirá a Wompi para completar tu compra de forma segura.
+                    </div>
+                </div>
+
+                <h3 class="checkout-subtitulo">Dirección de facturación</h3>
+                <div class="opciones-grupo">
+                    <label class="opcion-caja" id="opcionFacturacionIgual">
+                        <input type="radio" name="facturacion" value="igual" checked onchange="cambiarFacturacion()">
+                        <span class="opcion-texto">La misma dirección de envío</span>
+                    </label>
+                    <label class="opcion-caja" id="opcionFacturacionDistinta">
+                        <input type="radio" name="facturacion" value="distinta" onchange="cambiarFacturacion()">
+                        <span class="opcion-texto">Usar una dirección de facturación distinta</span>
+                    </label>
+                    <div id="camposFacturacion" class="opcion-detalle opcion-detalle-form hidden"></div>
+                </div>
+
+                <button type="submit" id="btnPagarAhora" class="btn-success btn-pagar">Pagar ahora</button>
+
+                <button type="button" class="link-volver" onclick="irAlCarrito()">
+                    <span class="ico" data-icon="arrowLeft"></span> Volver al carrito
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pedido creado: confirmación -->
+    <div id="vistaConfirmacion" class="hidden">
+        <section class="card confirmacion" id="confirmacionContenido"></section>
+    </div>
+
+    <!-- ==========================================
+         HU-18: CONSULTA DE COMPRAS
+    =========================================== -->
+    <div id="vistaMisPedidos" class="hidden">
+        <section class="card mis-pedidos">
+            <div class="carrito-encabezado">
+                <h2>Mis pedidos</h2>
+                <button class="btn-secondary" onclick="irATienda()">
+                    <span class="ico" data-icon="arrowLeft"></span> Seguir comprando
+                </button>
+            </div>
+
+            <div id="filtrosPedidos" class="filtros-pedidos" role="tablist" aria-label="Filtrar pedidos"></div>
+            <div id="listaMisPedidos" class="lista-pedidos"></div>
+            <nav id="paginacionPedidos" class="paginacion" aria-label="Páginas de pedidos"></nav>
+        </section>
+    </div>
+
+    <!-- Gestión de pedidos del administrador: Pagado → Enviado → Entregado -->
+    <div id="vistaGestionPedidos" class="hidden">
+        <section class="card mis-pedidos admin-pedidos">
+            <div class="carrito-encabezado">
+                <h2>Gestión de pedidos</h2>
+                <button class="btn-secondary" onclick="irATienda()">
+                    <span class="ico" data-icon="arrowLeft"></span> Volver a la tienda
+                </button>
+            </div>
+
+            <div class="admin-pedidos-buscar">
+                <span class="ico" data-icon="search"></span>
+                <input id="buscarPedidoAdmin" type="text" placeholder="Buscar por # de pedido, cliente o cédula..." oninput="buscarPedidosAdmin()" autocomplete="off">
+            </div>
+            <div id="avisoAdminPedidos" class="aviso-pago hidden" role="status"></div>
+            <div id="filtrosPedidosAdmin" class="filtros-pedidos" role="tablist" aria-label="Filtrar pedidos"></div>
+            <div id="listaPedidosAdmin" class="lista-pedidos"></div>
+            <nav id="paginacionPedidosAdmin" class="paginacion" aria-label="Páginas de pedidos"></nav>
+        </section>
+    </div>
+
+    <!-- Detalle informativo de un pedido -->
+    <div id="vistaPedido" class="hidden">
+        <section class="card detalle-pedido" id="pedidoContenido"></section>
+    </div>
+
+    <div id="vistaCarrito" class="hidden">
+        <section class="card carrito-pagina">
+            <div class="carrito-encabezado">
+                <h2>Mi carrito</h2>
+                <button class="btn-secondary" onclick="irATienda()">
+                    <span class="ico" data-icon="arrowLeft"></span> Seguir comprando
+                </button>
+            </div>
+
+            <div id="carritoPaginaLista"></div>
+
+            <div id="carritoPaginaPie" class="carrito-pie hidden">
+                <div class="carrito-total-final">
+                    <span>Total</span>
+                    <b id="carritoPaginaTotal">$0</b>
+                </div>
+                <div class="carrito-pie-botones">
+                    <button class="btn-danger" onclick="vaciarCarrito()">Vaciar carrito</button>
+                    <button class="btn-success" onclick="irAlCheckout()">Finalizar compra</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Panel lateral del carrito (ocupa todo el alto de la página).
+         Va fuera del header para que el desenfoque del header no lo recorte. -->
+    <div id="panelCarritoFondo" class="panel-fondo" onclick="cerrarPanelCarrito()"></div>
+    <aside id="panelCarrito" class="panel-carrito" aria-hidden="true" aria-label="Carrito de compras">
+        <div class="panel-cabecera">
+            <h2>Mi carrito <span id="panelCarritoConteo" class="panel-conteo"></span></h2>
+            <button class="btn-quitar panel-cerrar" onclick="cerrarPanelCarrito()" aria-label="Cerrar carrito">
+                <span class="ico" data-icon="x"></span>
+            </button>
+        </div>
+
+        <div id="miniCarritoLista" class="panel-lista"></div>
+
+        <div id="panelCarritoPie" class="panel-pie hidden">
+            <div class="panel-subtotal">
+                <span>Subtotal</span>
+                <b id="miniCarritoTotal">$0</b>
+            </div>
+            <button class="btn-dark-blue" onclick="irAlCarrito()">Ir al carrito</button>
+            <button class="btn-success" onclick="irAlCheckout()">Finalizar compra</button>
+        </div>
+    </aside>
+
+    <!-- Ventana propia de Saraitel para preguntas importantes (por ejemplo,
+         cuando se cierra el pago de Wompi sin terminar la compra) -->
+    <div id="modalFondo" class="panel-fondo modal-fondo" onclick="cerrarModal()"></div>
+    <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo" aria-hidden="true">
+        <h3 id="modalTitulo"></h3>
+        <p id="modalMensaje"></p>
+        <div id="modalContenido"></div>
+        <div id="modalBotones" class="modal-botones"></div>
+    </div>
+
+    <!-- HU-16: widget de pagos de Wompi -->
+    <script src="https://checkout.wompi.co/widget.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

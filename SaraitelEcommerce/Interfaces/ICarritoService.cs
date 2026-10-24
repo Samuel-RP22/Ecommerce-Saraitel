@@ -10,6 +10,8 @@ namespace Saraitel.API.Interfaces
 
         string EliminarProducto(int idUsuario, int idProducto);
 
+        string ActualizarCantidad(int idUsuario, int idProducto, int cantidad);
+
         string VaciarCarrito(int idUsuario);
 
         decimal CalcularTotal(int idUsuario);

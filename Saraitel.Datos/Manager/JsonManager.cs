@@ -8,6 +8,10 @@ namespace Saraitel.Datos.Managers
     public class JsonManager
     {
         private static JsonManager? _instance;
+
+        // HU-16: ahora también escribe un servicio en segundo plano (pedidos
+        // vencidos), así que el archivo se lee y escribe de a un hilo a la vez
+        private static readonly object _bloqueoArchivo = new object();
         private readonly string _filePath;
 
         private JsonManager()
@@ -54,7 +58,12 @@ namespace Saraitel.Datos.Managers
                     Console.WriteLine("NO EXISTE EL ARCHIVO JSON");
                     return new DataStore();
                 }
-                string json = File.ReadAllText(_filePath);
+                string json;
+
+                lock (_bloqueoArchivo)
+                {
+                    json = File.ReadAllText(_filePath);
+                }
                 if (string.IsNullOrWhiteSpace(json))
                 {
                     Console.WriteLine("JSON VACÍO");
@@ -79,7 +88,11 @@ namespace Saraitel.Datos.Managers
         {
             var opciones = new JsonSerializerOptions { WriteIndented = true };
             string json = JsonSerializer.Serialize(data, opciones);
-            File.WriteAllText(_filePath, json);
+
+            lock (_bloqueoArchivo)
+            {
+                File.WriteAllText(_filePath, json);
+            }
         }
     }
 }
