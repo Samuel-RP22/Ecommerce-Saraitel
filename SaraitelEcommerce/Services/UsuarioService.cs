@@ -2,6 +2,7 @@
 using Saraitel.Datos.Repositories;
 using Saraitel.Entidades;
 using Saraitel.Entidades.Factories;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Cryptography;
@@ -13,8 +14,18 @@ namespace Saraitel.API.Services
         private readonly
             UsuarioRepository _usuarioRepository;
 
-        private static int
-            _intentosFallidos = 0;
+        // Intentos fallidos de inicio de sesión, contados POR CORREO (antes era un
+        // solo número para todos, que mezclaba los intentos de cuentas distintas).
+        // Se guardan en memoria; al reiniciar la API se borran.
+        private const int MaxIntentos = 3;
+        private static readonly TimeSpan DuracionBloqueo = TimeSpan.FromMinutes(5);
+        private static readonly ConcurrentDictionary<string, IntentosLogin> _intentosPorCorreo = new();
+
+        private class IntentosLogin
+        {
+            public int Fallidos;
+            public DateTime? BloqueadoHasta;
+        }
 
         private readonly IEmailService _emailService;
 
@@ -46,15 +57,52 @@ namespace Saraitel.API.Services
 
         public string RegistrarUsuario(string rol,string nombre,string correo,string telefono,string contrasena,string direccion = "")
         {
+            // Si un campo no llega en la petición viene como null: se trata como vacío
+            nombre = (nombre ?? "").Trim();
+            correo = (correo ?? "").Trim();
+            telefono = (telefono ?? "").Trim();
+            direccion = (direccion ?? "").Trim();
+            contrasena ??= "";
+
+            // Todos los campos del registro son obligatorios.
+            // Esta validación es la que manda: la del navegador se puede saltar
+            // (por ejemplo, llamando la API desde Swagger o Postman)
+            if (nombre == "")
+                return "El nombre es obligatorio";
+
+            if (correo == "")
+                return "El correo es obligatorio";
+
+            if (!EsCorreoValido(correo))
+                return "El correo no es válido";
+
+            if (telefono == "")
+                return "El teléfono es obligatorio";
+
+            if (!EsTelefonoValido(telefono))
+                return "El teléfono debe tener entre 7 y 15 dígitos";
+
+            if (string.IsNullOrWhiteSpace(contrasena))
+                return "La contraseña es obligatoria";
+
+            if (contrasena.Length < 6)
+                return "La contraseña debe tener al menos 6 caracteres";
+
+            if (direccion == "")
+                return "La dirección es obligatoria";
+
             var usuarioExistente = _usuarioRepository.ObtenerUsuarioPorCorreo(correo);
 
-            if (usuarioExistente!= null)
+            if (usuarioExistente != null)
             {
                 return
                     "El correo ya está registrado";
             }
 
-            // El id lo asigna la base de datos al guardar.
+            if (_usuarioRepository.ExisteTelefono(telefono))
+                return "El teléfono ya está registrado";
+
+            // El id lo asigna la base de datos al guardar (1, 2, 3...).
             // La contraseña se guarda cifrada con BCrypt, nunca en texto plano
             Usuario usuario = UsuarioFactory.CrearUsuario(
                     rol,
@@ -64,7 +112,21 @@ namespace Saraitel.API.Services
                     telefono,
                     CifrarContrasena(contrasena),
                     direccion);
-            _usuarioRepository.AgregarUsuario(usuario);
+
+            try
+            {
+                _usuarioRepository.AgregarUsuario(usuario);
+            }
+            catch (CorreoDuplicadoException)
+            {
+                // Dos registros con el mismo correo al mismo tiempo: la base de datos
+                // frena el segundo y aquí se convierte en un mensaje claro
+                return "El correo ya está registrado";
+            }
+            catch (TelefonoDuplicadoException)
+            {
+                return "El teléfono ya está registrado";
+            }
 
             return
                 "Usuario registrado correctamente";
@@ -72,18 +134,44 @@ namespace Saraitel.API.Services
 
         public string IniciarSesion(string correo, string contrasena)
         {
-            var usuario = ObtenerUsuarioPorCorreo(correo);
-            if (usuario == null)
-            {
-                return "Usuario no encontrado";
-            }
-            if (!ContrasenaCorrecta(contrasena, usuario.Contrasena))
-            {
-                _intentosFallidos++;
+            string clave = (correo ?? "").Trim().ToLower();
+            var intentos = _intentosPorCorreo.GetOrAdd(clave, _ => new IntentosLogin());
 
-                return $"Contrasena incorrecta. Intentos restantes: {3 - _intentosFallidos}";
+            // ¿La cuenta sigue bloqueada por intentos anteriores?
+            if (intentos.BloqueadoHasta != null && intentos.BloqueadoHasta > DateTime.UtcNow)
+            {
+                int minutos = (int)Math.Ceiling((intentos.BloqueadoHasta.Value - DateTime.UtcNow).TotalMinutes);
+                return $"Demasiados intentos fallidos. Intenta de nuevo en {minutos} minuto(s).";
             }
-            _intentosFallidos = 0;
+
+            var usuario = ObtenerUsuarioPorCorreo(correo);
+
+            // Mismo mensaje si el correo no existe o si la contraseña está mal:
+            // así nadie puede averiguar qué correos están registrados probando el login
+            if (usuario == null || !ContrasenaCorrecta(contrasena, usuario.Contrasena))
+            {
+                intentos.Fallidos++;
+                int restantes = MaxIntentos - intentos.Fallidos;
+
+                if (restantes <= 0)
+                {
+                    // Se agotaron los intentos: se bloquea por un rato y se reinicia el contador
+                    intentos.BloqueadoHasta = DateTime.UtcNow.Add(DuracionBloqueo);
+                    intentos.Fallidos = 0;
+
+                    return "El correo o la contraseña que se ingresaron son incorrectos.\n" +
+                           $"Has superado los {MaxIntentos} intentos. Intenta de nuevo en {(int)DuracionBloqueo.TotalMinutes} minutos.";
+                }
+
+                string textoIntentos = restantes == 1 ? "1 intento restante" : $"{restantes} intentos restantes";
+
+                return "El correo o la contraseña que se ingresaron son incorrectos.\n" +
+                       $"Tienes {textoIntentos}.";
+            }
+
+            // Entró bien: se olvidan los intentos fallidos de este correo
+            _intentosPorCorreo.TryRemove(clave, out _);
+
             return $"Bienvenido {usuario.Nombre} ({usuario.Rol})";
         }
 
@@ -109,15 +197,16 @@ namespace Saraitel.API.Services
             if (!EsCorreoValido(correo))
                 return "El correo no es válido";
 
-            if (telefono != "" &&
-                (telefono.Length < 7 || telefono.Length > 15 ||
-                 !telefono.All(c => c >= '0' && c <= '9')))
+            if (telefono != "" && !EsTelefonoValido(telefono))
                 return "El teléfono debe tener entre 7 y 15 dígitos";
 
             var otroUsuario = _usuarioRepository.ObtenerUsuarioPorCorreo(correo);
 
             if (otroUsuario != null && otroUsuario.IdUsuario != idUsuario)
                 return "El correo ya está registrado por otro usuario";
+
+            if (_usuarioRepository.ExisteTelefono(telefono, idUsuario))
+                return "El teléfono ya está registrado por otro usuario";
 
             usuario.Nombre = nombre;
             usuario.Correo = correo;
@@ -126,7 +215,18 @@ namespace Saraitel.API.Services
             if (usuario is Cliente cliente)
                 cliente.Direccion = direccion;
 
-            _usuarioRepository.ActualizarUsuario(usuario);
+            try
+            {
+                _usuarioRepository.ActualizarUsuario(usuario);
+            }
+            catch (CorreoDuplicadoException)
+            {
+                return "El correo ya está registrado por otro usuario";
+            }
+            catch (TelefonoDuplicadoException)
+            {
+                return "El teléfono ya está registrado por otro usuario";
+            }
 
             return "Perfil actualizado correctamente";
         }
@@ -240,6 +340,13 @@ namespace Saraitel.API.Services
                 // Lo guardado no es un cifrado BCrypt válido
                 return false;
             }
+        }
+
+        // Solo dígitos, entre 7 y 15
+        private static bool EsTelefonoValido(string telefono)
+        {
+            return telefono.Length >= 7 && telefono.Length <= 15 &&
+                   telefono.All(c => c >= '0' && c <= '9');
         }
 
         private static bool EsCorreoValido(string correo)

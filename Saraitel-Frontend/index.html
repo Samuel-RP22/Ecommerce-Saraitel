@@ -94,11 +94,11 @@
 
         <section id="formRegistro" class="card auth-card hidden">
             <h2>Registro de Usuario</h2>
-            <input id="regNombre" placeholder="Nombre">
-            <input id="regCorreo" placeholder="Correo">
-            <input id="regTelefono" placeholder="Teléfono">
-            <input id="regPassword" type="password" placeholder="Contraseña">
-            <input id="regDireccion" placeholder="Dirección">
+            <input id="regNombre" placeholder="Nombre" autocomplete="name" maxlength="100" required>
+            <input id="regCorreo" type="email" placeholder="Correo" autocomplete="email" maxlength="150" required>
+            <input id="regTelefono" type="tel" inputmode="numeric" placeholder="Teléfono" autocomplete="tel" maxlength="15" required>
+            <input id="regPassword" type="password" placeholder="Contraseña (mínimo 6 caracteres)" autocomplete="new-password" required>
+            <input id="regDireccion" placeholder="Dirección" autocomplete="street-address" maxlength="200" required>
             
             <div class="form-actions">
                 <button class="btn-success" onclick="ejecutarRegistro()">Registrar</button>
@@ -139,16 +139,19 @@
             <p class="text-muted form-subtitulo">Añade un nuevo accesorio al catálogo</p>
             
             <label>Nombre del accesorio:</label>
-            <input id="prodNombre" placeholder="Ej: Estuche iPhone 17 Pro Max">
+            <input id="prodNombre" placeholder="Ej: Estuche iPhone 17 Pro Max" maxlength="150" required>
             
             <label>Descripción o especificaciones:</label>
-            <input id="prodDescripcion" placeholder="Ej: Material silicona, anti-impactos">
+            <input id="prodDescripcion" placeholder="Ej: Material silicona, anti-impactos" maxlength="1000">
             
             <label>Precio de venta ($):</label>
-            <input id="prodPrecio" type="number" placeholder="Ej: 45000">
+            <input id="prodPrecio" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Ej: 45000" required>
+
+            <label>Unidades en stock:</label>
+            <input id="prodStock" type="number" min="0" step="1" inputmode="numeric" placeholder="Ej: 15" required>
             
             <label>Enlace URL de la imagen:</label>
-            <input id="prodImagen" placeholder="https://ejemplo.com/imagen.jpg">
+            <input id="prodImagen" type="url" placeholder="https://ejemplo.com/imagen.jpg" maxlength="1000">
 
             <label>Categoría del producto:</label>
             <select id="prodCategoria">
@@ -170,19 +173,19 @@
             <input type="hidden" id="modProdId">
 
             <label>Nombre del accesorio:</label>
-            <input id="modProdNombre" placeholder="Ej: Estuche iPhone 17 Pro Max">
+            <input id="modProdNombre" placeholder="Ej: Estuche iPhone 17 Pro Max" maxlength="150" required>
             
             <label>Descripción o especificaciones:</label>
-            <input id="modProdDescripcion" placeholder="Ej: Material silicona, anti-impactos">
+            <input id="modProdDescripcion" placeholder="Ej: Material silicona, anti-impactos" maxlength="1000">
             
             <label>Precio de venta ($):</label>
-            <input id="modProdPrecio" type="number" placeholder="Ej: 45000">
+            <input id="modProdPrecio" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Ej: 45000" required>
 
             <label>Stock disponible (Unidades):</label>
-            <input id="modProdStock" type="number" placeholder="Ej: 15">
+            <input id="modProdStock" type="number" min="0" step="1" inputmode="numeric" placeholder="Ej: 15" required>
             
             <label>Enlace URL de la imagen:</label>
-            <input id="modProdImagen" placeholder="https://ejemplo.com/imagen.jpg">
+            <input id="modProdImagen" type="url" placeholder="https://ejemplo.com/imagen.jpg" maxlength="1000">
 
             <label>Categoría del producto:</label>
             <select id="modProdCategoria">
@@ -567,6 +570,6 @@
 
     <!-- HU-16: widget de pagos de Wompi -->
     <script src="https://checkout.wompi.co/widget.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=7"></script>
 </body>
 </html>

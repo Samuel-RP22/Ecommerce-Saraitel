@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Saraitel.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3275e495ab1463ba2d3d90279380d0a9e1c270c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7a887c907d2a57ca05c0d47a870dd35a473a6ea8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Saraitel.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Saraitel.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

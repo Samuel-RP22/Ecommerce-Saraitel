@@ -288,7 +288,7 @@ function reiniciarEstadoSesion() {
 
     // Formularios de producto y perfil
     limpiarCampos([
-        "prodNombre", "prodDescripcion", "prodPrecio", "prodImagen",
+        "prodNombre", "prodDescripcion", "prodPrecio", "prodStock", "prodImagen",
         "modProdId", "modProdNombre", "modProdDescripcion", "modProdPrecio", "modProdStock", "modProdImagen",
         "perfNombre", "perfCorreo", "perfTelefono", "perfDireccion", "perfRol"
     ]);
@@ -402,17 +402,13 @@ function login() {
     })
     .then(async r => {
 
-        const data = await r.json();
-
+        // En caso de error, la API responde un texto (no JSON): se lee aparte
+        // para no romper con "Unexpected token ... is not valid JSON"
         if (!r.ok) {
-            throw new Error(
-                data.message ||
-                data.title ||
-                "Error al iniciar sesión"
-            );
+            throw new Error(await leerErrorApi(r, "El correo o la contraseña son incorrectos"));
         }
 
-        return data;
+        return r.json();
     })
     .then(data => {
 
@@ -441,26 +437,57 @@ function login() {
         console.log("Admin:", esAdministrador);
     })
     .catch(err => {
-        alert("Login fallido: " + err.message);
+        // TypeError = no hubo respuesta (API apagada o sin internet)
+        const mensaje = err instanceof TypeError
+            ? "No hay conexión con el servidor. Revisa tu internet o intenta más tarde."
+            : err.message;
+        alert(mensaje);
         contrasenaInput.value = "";
     });
 }
 
 function ejecutarRegistro() {
-    const nombre = document.getElementById("regNombre").value;
-    const correo = document.getElementById("regCorreo").value;
-    const telefono = document.getElementById("regTelefono").value;
-    const contrasena = document.getElementById("regPassword").value; 
-    const direccion = document.getElementById("regDireccion").value;
+    const nombre = document.getElementById("regNombre").value.trim();
+    const correo = document.getElementById("regCorreo").value.trim();
+    const telefono = document.getElementById("regTelefono").value.trim();
+    const contrasena = document.getElementById("regPassword").value;
+    const direccion = document.getElementById("regDireccion").value.trim();
+
+    // Todos los campos son obligatorios. La API vuelve a validar lo mismo,
+    // esto solo evita el viaje al servidor y avisa de una vez qué falta
+    const faltantes = [];
+    if (!nombre) faltantes.push("Nombre");
+    if (!correo) faltantes.push("Correo");
+    if (!telefono) faltantes.push("Teléfono");
+    if (!contrasena.trim()) faltantes.push("Contraseña");
+    if (!direccion) faltantes.push("Dirección");
+
+    if (faltantes.length > 0) {
+        return alert("Completa los campos obligatorios: " + faltantes.join(", ") + ".");
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+        return alert("El correo no es válido.");
+    }
+
+    if (!/^[0-9]{7,15}$/.test(telefono)) {
+        return alert("El teléfono debe tener entre 7 y 15 dígitos (solo números).");
+    }
+
+    if (contrasena.length < 6) {
+        return alert("La contraseña debe tener al menos 6 caracteres.");
+    }
+
     const url = `${API}/usuario/registro?nombre=${encodeURIComponent(nombre)}&correo=${encodeURIComponent(correo)}&telefono=${encodeURIComponent(telefono)}&contrasena=${encodeURIComponent(contrasena)}&direccion=${encodeURIComponent(direccion)}`;
     
     fetch(url, { method: "POST" })
-    .then(res => {
-        if (res.ok) { return res.text(); } 
-        else { return res.text().then(text => { throw new Error(text) }); }
+    .then(async res => {
+        if (res.ok) { return res.text(); }
+        if (res.status >= 500) throw new Error("Ocurrió un error en el servidor. Intenta de nuevo en unos minutos.");
+        throw new Error(await leerErrorApi(res, "Revisa los datos e intenta de nuevo."));
     })
-    .then(msg => {
-        alert(msg); 
+    .then(() => {
+        alert("¡Tu cuenta se creó correctamente! Ya puedes iniciar sesión con tu correo y contraseña.");
         document.getElementById("regNombre").value = "";
         document.getElementById("regCorreo").value = "";
         document.getElementById("regTelefono").value = "";
@@ -469,7 +496,11 @@ function ejecutarRegistro() {
         mostrarFormulario('login');
     })
     .catch(err => {
-        alert("No se pudo registrar: " + err.message);
+        // TypeError = no hubo respuesta (API apagada o sin internet)
+        const mensaje = err instanceof TypeError
+            ? "No hay conexión con el servidor. Revisa tu internet o intenta más tarde."
+            : err.message;
+        alert("No se pudo registrar: " + mensaje);
     });
 }
 
@@ -1178,22 +1209,83 @@ function crearProducto() {
         });
 }
 
+/* ---------- Validación de productos (crear y modificar) ----------
+   Mismas reglas que valida la API. Recibe los textos tal como están
+   en el formulario y devuelve { error } o { precio, stock } ya convertidos */
+function validarDatosProducto({ nombre, descripcion, precioTexto, stockTexto, imagen, categoria }) {
+    if (!nombre) return { error: "El nombre del producto es obligatorio." };
+    if (nombre.length > 150) return { error: "El nombre del producto no puede tener más de 150 caracteres." };
+    if (descripcion.length > 1000) return { error: "La descripción no puede tener más de 1000 caracteres." };
+
+    // Se acepta coma o punto como separador decimal (45000, 45000.50, 45000,50)
+    const precioNormalizado = precioTexto.replace(",", ".");
+    if (!precioNormalizado) return { error: "El precio es obligatorio y debe ser un número mayor que cero." };
+    if (!/^\d+(\.\d{1,2})?$/.test(precioNormalizado)) {
+        return { error: "El precio debe ser un número mayor que cero, con máximo dos decimales (sin puntos de miles ni signos)." };
+    }
+    const precio = Number(precioNormalizado);
+    if (!(precio > 0)) return { error: "El precio debe ser mayor que cero." };
+    if (precio >= 1000000000) return { error: "El precio es demasiado alto." };
+
+    if (!stockTexto) return { error: "El stock es obligatorio y debe ser un número entero mayor o igual a cero." };
+    if (!/^\d+$/.test(stockTexto)) {
+        return { error: "El stock debe ser un número entero mayor o igual a cero (sin decimales ni signos)." };
+    }
+    const stock = Number(stockTexto);
+    if (stock > 2147483647) return { error: "El stock es demasiado alto." };
+
+    if (imagen) {
+        if (imagen.length > 1000) return { error: "El enlace de la imagen es demasiado largo." };
+        let valida = false;
+        try {
+            const u = new URL(imagen);
+            valida = u.protocol === "http:" || u.protocol === "https:";
+        } catch { valida = false; }
+        if (!valida) return { error: "El enlace de la imagen debe empezar por http:// o https://" };
+    }
+
+    if (!categoria) return { error: "Por favor, selecciona una categoría." };
+
+    return { precio, stock };
+}
+
+// Saca un mensaje legible de una respuesta de error de la API
+// (texto plano del servicio o el JSON de validación de ASP.NET)
+async function leerErrorApi(r, porDefecto) {
+    const texto = await r.text();
+    try {
+        const data = JSON.parse(texto);
+        if (data && data.errors) {
+            return "Revisa los datos: hay un campo con un formato que no es válido.";
+        }
+        return data.mensaje || data.title || porDefecto;
+    } catch {
+        return texto || porDefecto;
+    }
+}
+
 function ejecutarCrearProducto() {
     const nombre = document.getElementById("prodNombre").value.trim();
     const description = document.getElementById("prodDescripcion").value.trim();
-    const precio = parseFloat(document.getElementById("prodPrecio").value) || 0;
     const imagen = document.getElementById("prodImagen").value.trim();
     const nombreCategoriaSeleccionada = document.getElementById("prodCategoria").value; 
 
-    if (!nombre) return alert("El nombre del producto es obligatorio.");
-    if (!nombreCategoriaSeleccionada) return alert("Por favor, selecciona una categoría.");
+    const validacion = validarDatosProducto({
+        nombre,
+        descripcion: description,
+        precioTexto: document.getElementById("prodPrecio").value.trim(),
+        stockTexto: document.getElementById("prodStock").value.trim(),
+        imagen,
+        categoria: nombreCategoriaSeleccionada
+    });
+    if (validacion.error) return alert(validacion.error);
 
     const nuevoProducto = {
         nombre: nombre,
         descripcion: description,
-        precio: precio,
+        precio: validacion.precio,
         imagen: imagen || "",
-        stock: 10, 
+        stock: validacion.stock,
         categoria: {
             idCategoria: 0,
             nombreCategoria: nombreCategoriaSeleccionada
@@ -1207,8 +1299,7 @@ function ejecutarCrearProducto() {
     })
     .then(async r => {
         if (!r.ok) {
-            const textoError = await r.text();
-            throw new Error(textoError);
+            throw new Error(await leerErrorApi(r, "Error al crear el producto"));
         }
         return r.text();
     })
@@ -1217,6 +1308,7 @@ function ejecutarCrearProducto() {
         document.getElementById("prodNombre").value = "";
         document.getElementById("prodDescripcion").value = "";
         document.getElementById("prodPrecio").value = "";
+        document.getElementById("prodStock").value = "";
         document.getElementById("prodImagen").value = "";
         cancelarCrearProducto();
         cargarProductos(); 
@@ -1278,13 +1370,23 @@ function ejecutarModificarProducto() {
     const id = parseInt(document.getElementById("modProdId").value);
     const nombre = document.getElementById("modProdNombre").value.trim();
     const descripcion = document.getElementById("modProdDescripcion").value.trim();
-    const precio = parseFloat(document.getElementById("modProdPrecio").value) || 0;
-    const stock = parseInt(document.getElementById("modProdStock").value) || 0;
     const imagen = document.getElementById("modProdImagen").value.trim();
     const nombreCategoriaSeleccionada = document.getElementById("modProdCategoria").value;
 
-    if (!nombre) return alert("El nombre del producto es obligatorio.");
-    if (!nombreCategoriaSeleccionada) return alert("Por favor, selecciona una categoría.");
+    if (!id) return alert("No se encontró el producto a modificar. Vuelve a abrirlo desde la tienda.");
+
+    const validacion = validarDatosProducto({
+        nombre,
+        descripcion,
+        precioTexto: document.getElementById("modProdPrecio").value.trim(),
+        stockTexto: document.getElementById("modProdStock").value.trim(),
+        imagen,
+        categoria: nombreCategoriaSeleccionada
+    });
+    if (validacion.error) return alert(validacion.error);
+
+    const precio = validacion.precio;
+    const stock = validacion.stock;
 
     const productoActualizado = {
         IdProducto: id,
@@ -1306,8 +1408,7 @@ function ejecutarModificarProducto() {
     })
     .then(async r => {
         if (!r.ok) {
-            const textoError = await r.text();
-            throw new Error(textoError);
+            throw new Error(await leerErrorApi(r, "Error al actualizar el producto"));
         }
         return r.text();
     })
@@ -4308,13 +4409,19 @@ async function eliminarCategoriaSegura(idCategoria) {
 
     try {
         const res = await fetch(`${API}/categoria/${idCategoria}`, { method: "DELETE" });
-        if (!res.ok) throw new Error("No se pudo eliminar la categoría.");
+
+        // El servidor explica por qué no se pudo (por ejemplo, que tiene productos)
+        if (!res.ok) throw new Error(await leerErrorApi(res, "No se pudo eliminar la categoría."));
 
         alert("Categoría eliminada correctamente");
         cargarCategorias();
         cargarProductos();
     } catch (error) {
-        alert(error.message);
+        const mensaje = error instanceof TypeError
+            ? "No hay conexión con el servidor. Intenta de nuevo más tarde."
+            : error.message;
+        alert(mensaje);
+        cargarCategorias();
     }
 }
 
@@ -4348,9 +4455,14 @@ function agregarCategoriaPrompt() {
 function eliminarProducto(idProducto) {
     if(!confirm("¿Deseas eliminar este producto?")) return;
     fetch(`${API}/producto/${idProducto}`, { method: "DELETE" })
-    .then(() => {
+    .then(async r => {
+        if (!r.ok) throw new Error(await leerErrorApi(r, "Error al eliminar el producto"));
         alert("Producto eliminado del catálogo");
         cerrarDetalleProducto(); // si estabas en el detalle, vuelve a la tienda
+        cargarProductos();
+    })
+    .catch(err => {
+        alert("No se pudo eliminar el producto: " + err.message);
         cargarProductos();
     });
 }

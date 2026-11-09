@@ -56,19 +56,46 @@ namespace Saraitel.Datos.Repositories
             LimpiarCache();
         }
 
-        // Los productos de esta categoría quedan sin categoría (ON DELETE SET NULL)
-        public void EliminarCategoria(int id)
+        // Cuántos productos usan esta categoría (consulta directa, sin caché)
+        public int ContarProductos(int idCategoria)
         {
             using var conexion = ConexionBD.Abrir();
-            using var comando = new NpgsqlCommand("DELETE FROM categorias WHERE id_categoria = @id", conexion);
+            using var comando = new NpgsqlCommand(
+                "SELECT COUNT(*) FROM productos WHERE id_categoria = @id", conexion);
+
+            comando.Parametro("id", idCategoria);
+
+            return Convert.ToInt32(comando.ExecuteScalar());
+        }
+
+        // Elimina la categoría SOLO si ningún producto la usa.
+        // La condición va dentro del mismo DELETE: si alguien le asigna un producto
+        // justo en ese instante, no se borra. Devuelve false si no se eliminó
+        public bool EliminarCategoriaSinProductos(int id)
+        {
+            using var conexion = ConexionBD.Abrir();
+            using var comando = new NpgsqlCommand(@"
+                DELETE FROM categorias
+                WHERE id_categoria = @id
+                  AND NOT EXISTS (SELECT 1 FROM productos WHERE id_categoria = @id)", conexion);
 
             comando.Parametro("id", id);
-            comando.ExecuteNonQuery();
+
+            int filas;
+
+            try
+            {
+                filas = comando.ExecuteNonQuery();
+            }
+            catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.ForeignKeyViolation)
+            {
+                // La base de datos también lo impide (ON DELETE RESTRICT)
+                return false;
+            }
 
             LimpiarCache();
 
-            // Sus productos cambiaron de categoría
-            ProductoRepository.LimpiarCache();
+            return filas > 0;
         }
 
         public Categoria? ObtenerCategoriaPorId(int id)

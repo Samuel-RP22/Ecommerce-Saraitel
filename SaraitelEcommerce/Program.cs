@@ -98,7 +98,19 @@ if (Directory.Exists(carpetaTienda))
 
     // "/" abre index.html
     app.UseDefaultFiles(new DefaultFilesOptions { FileProvider = archivosTienda });
-    app.UseStaticFiles(new StaticFileOptions { FileProvider = archivosTienda });
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = archivosTienda,
+
+        // El navegador debe preguntar siempre si app.js, index.html o styles.css
+        // cambiaron. Sin esto, Chrome sigue usando la versión vieja guardada
+        // en caché después de actualizar los archivos (y parece que el cambio no sirvió).
+        // Si no cambiaron, el servidor responde "304 sin cambios" y es igual de rápido
+        OnPrepareResponse = contexto =>
+        {
+            contexto.Context.Response.Headers["Cache-Control"] = "no-cache";
+        }
+    });
 }
 else
 {

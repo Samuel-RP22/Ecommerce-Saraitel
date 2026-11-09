@@ -39,9 +39,36 @@ namespace Saraitel.API.Services
 
         public string EliminarCategoria(int id)
         {
-            // La base de datos deja sin categoría a sus productos (ON DELETE SET NULL)
-            _repo.EliminarCategoria(id);
-            return "Categoria eliminada";
+            var categoria = _repo.ObtenerCategoriaPorId(id);
+
+            if (categoria == null)
+                return "Categoría no encontrada";
+
+            // Una categoría con productos no se puede eliminar:
+            // primero hay que pasar esos productos a otra categoría o eliminarlos
+            int productos = _repo.ContarProductos(id);
+
+            if (productos > 0)
+                return MensajeConProductos(categoria.NombreCategoria, productos);
+
+            if (!_repo.EliminarCategoriaSinProductos(id))
+            {
+                // Le asignaron un producto mientras se intentaba eliminar
+                int ahora = _repo.ContarProductos(id);
+                return ahora > 0
+                    ? MensajeConProductos(categoria.NombreCategoria, ahora)
+                    : "Categoría no encontrada";
+            }
+
+            return "Categoría eliminada correctamente";
+        }
+
+        private static string MensajeConProductos(string nombre, int cantidad)
+        {
+            string productos = cantidad == 1 ? "1 producto la usa" : $"{cantidad} productos la usan";
+
+            return $"No se puede eliminar la categoría \"{nombre}\": {productos}. " +
+                   "Cambia esos productos a otra categoría o elimínalos primero.";
         }
     }
 }

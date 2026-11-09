@@ -78,6 +78,25 @@ namespace Saraitel.Datos.Repositories
             return CargarUsuario(sql, comando => comando.Parametro("correo", correo.Trim()));
         }
 
+        // ¿Otra cuenta ya usa este teléfono? excluirId permite ignorar la cuenta
+        // propia al actualizar el perfil (0 = no ignorar ninguna)
+        public bool ExisteTelefono(string telefono, int excluirId = 0)
+        {
+            if (string.IsNullOrWhiteSpace(telefono))
+                return false;
+
+            using var conexion = ConexionBD.Abrir();
+            using var comando = new NpgsqlCommand(@"
+                SELECT EXISTS (
+                    SELECT 1 FROM usuarios
+                    WHERE TRIM(telefono) = @telefono AND id_usuario <> @excluirId)", conexion);
+
+            comando.Parametro("telefono", telefono.Trim());
+            comando.Parametro("excluirId", excluirId);
+
+            return (bool)comando.ExecuteScalar()!;
+        }
+
         // Guarda el usuario y le asigna el id que generó la base de datos
         public void AgregarUsuario(Usuario usuario)
         {
@@ -90,7 +109,18 @@ namespace Saraitel.Datos.Repositories
             AgregarParametros(comando, usuario);
             comando.Parametro("tipo", usuario is Administrador ? "Administrador" : "Cliente");
 
-            usuario.IdUsuario = (int)comando.ExecuteScalar()!;
+            try
+            {
+                usuario.IdUsuario = (int)comando.ExecuteScalar()!;
+            }
+            catch (PostgresException ex) when (EsCorreoDuplicado(ex))
+            {
+                throw new CorreoDuplicadoException(ex);
+            }
+            catch (PostgresException ex) when (EsTelefonoDuplicado(ex))
+            {
+                throw new TelefonoDuplicadoException(ex);
+            }
         }
 
         // Perfil, contraseña y código de recuperación (el carrito se guarda aparte)
@@ -111,7 +141,18 @@ namespace Saraitel.Datos.Repositories
             AgregarParametros(comando, usuario);
             comando.Parametro("id", usuario.IdUsuario);
 
-            comando.ExecuteNonQuery();
+            try
+            {
+                comando.ExecuteNonQuery();
+            }
+            catch (PostgresException ex) when (EsCorreoDuplicado(ex))
+            {
+                throw new CorreoDuplicadoException(ex);
+            }
+            catch (PostgresException ex) when (EsTelefonoDuplicado(ex))
+            {
+                throw new TelefonoDuplicadoException(ex);
+            }
         }
 
         // Reemplaza el carrito guardado por el que tiene el cliente en memoria.
@@ -154,6 +195,20 @@ namespace Saraitel.Datos.Repositories
         }
 
         /* ---------- Ayudas ---------- */
+
+        // Índice único del teléfono (ux_usuarios_telefono, ver el .sql que lo crea)
+        private static bool EsTelefonoDuplicado(PostgresException ex)
+        {
+            return ex.SqlState == PostgresErrorCodes.UniqueViolation &&
+                   (ex.ConstraintName ?? "").Contains("telefono", StringComparison.OrdinalIgnoreCase);
+        }
+
+        // 23505 = violación de un índice único; ux_usuarios_correo es el del correo
+        private static bool EsCorreoDuplicado(PostgresException ex)
+        {
+            return ex.SqlState == PostgresErrorCodes.UniqueViolation &&
+                   (ex.ConstraintName ?? "").Contains("correo", StringComparison.OrdinalIgnoreCase);
+        }
 
         private static Usuario? CargarUsuario(string sql, Action<NpgsqlCommand> parametros)
         {

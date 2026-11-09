@@ -32,19 +32,32 @@ namespace Saraitel.API.Controllers
         [HttpPost]
         public IActionResult Post(Producto producto)
         {
-            return Ok(_service.AgregarProducto(producto));
+            return Responder(_service.AgregarProducto(producto));
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return Ok(_service.EliminarProducto(id));
+            return Responder(_service.EliminarProducto(id));
         }
 
         [HttpPut]
         public IActionResult Put(Producto producto)
         {
-            return Ok(_service.ActualizarProducto(producto));
+            return Responder(_service.ActualizarProducto(producto));
+        }
+
+        // El servicio devuelve un texto: si salió bien es 200,
+        // si el producto no existe 404, y si un dato está mal 400 con el motivo
+        private IActionResult Responder(string resultado)
+        {
+            if (resultado == "Producto no encontrado")
+                return NotFound(resultado);
+
+            if (resultado.Contains("correctamente"))
+                return Ok(resultado);
+
+            return BadRequest(resultado);
         }
     }
 }

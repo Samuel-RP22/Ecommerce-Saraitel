@@ -92,7 +92,14 @@ namespace Saraitel.Datos.Repositories
 
             AgregarParametros(comando, producto);
 
-            producto.IdProducto = (int)comando.ExecuteScalar()!;
+            try
+            {
+                producto.IdProducto = (int)comando.ExecuteScalar()!;
+            }
+            catch (PostgresException ex) when (DatosInvalidosException.Desde(ex) is { } invalido)
+            {
+                throw invalido;
+            }
 
             LimpiarCache();
         }
@@ -126,7 +133,14 @@ namespace Saraitel.Datos.Repositories
             AgregarParametros(comando, producto);
             comando.Parametro("id", producto.IdProducto);
 
-            comando.ExecuteNonQuery();
+            try
+            {
+                comando.ExecuteNonQuery();
+            }
+            catch (PostgresException ex) when (DatosInvalidosException.Desde(ex) is { } invalido)
+            {
+                throw invalido;
+            }
 
             LimpiarCache();
         }

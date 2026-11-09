@@ -27,7 +27,16 @@ namespace Saraitel.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return Ok(_service.EliminarCategoria(id));
+            var resultado = _service.EliminarCategoria(id);
+
+            if (resultado == "Categoría no encontrada")
+                return NotFound(resultado);
+
+            if (resultado.Contains("correctamente"))
+                return Ok(resultado);
+
+            // 409 Conflict: la categoría existe pero tiene productos que dependen de ella
+            return Conflict(resultado);
         }
     }
 }
